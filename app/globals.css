@@ -108,6 +108,55 @@ main { min-height: 100vh; overflow: hidden; }
 }
 .live-state i { width: 7px; height: 7px; border-radius: 50%; background: var(--success); box-shadow: 0 0 12px var(--success); }
 
+.social-content-cta {
+  width: min(680px, 100%);
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+  padding: 13px 17px;
+  border: 1px solid rgba(139, 92, 246, 0.72);
+  border-radius: 12px;
+  background:
+    linear-gradient(100deg, rgba(139, 92, 246, 0.13), rgba(32, 217, 255, 0.06)),
+    rgba(8, 17, 31, 0.88);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18), inset 0 1px rgba(255,255,255,.035);
+  transition: transform 180ms ease-out, border-color 180ms ease-out, box-shadow 180ms ease-out;
+}
+.social-content-cta:hover,
+.social-content-cta:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--cyan);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24), 0 0 24px rgba(32,217,255,.08);
+  outline: none;
+}
+.social-content-cta span { min-width: 0; }
+.social-content-cta b { display: block; color: #f4f0ff; font-size: 14px; }
+.social-content-cta small {
+  display: block;
+  margin-top: 5px;
+  overflow: hidden;
+  color: #7f91aa;
+  font: 8px/1.25 ui-monospace, monospace;
+  letter-spacing: .06em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.social-content-cta i {
+  padding: 7px 9px;
+  border: 1px solid rgba(38,230,179,.34);
+  border-radius: 999px;
+  color: var(--success);
+  background: rgba(38,230,179,.055);
+  font: 700 8px/1 ui-monospace, monospace;
+  font-style: normal;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.social-content-cta strong { color: var(--cyan); font-size: 24px; }
+
 .hero {
   position: relative;
   min-height: 620px;
@@ -474,6 +523,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 }
 
 @media (max-width: 520px) {
+  .social-content-cta { grid-template-columns: minmax(0, 1fr) auto; }
+  .social-content-cta i { display: none; }
+  .social-content-cta small { white-space: normal; }
   .live-state { display: none; }
   .topbar { grid-template-columns: 1fr; }
   .hero h1 span { display: block; }
