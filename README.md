@@ -12,8 +12,11 @@
 
 目前正式網站：<https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site>
 
+每週社群內容：<https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/social-content/index.html>
+
 - `/`：最新一期閱讀清單
 - `/archive`：歷史閱讀資料庫
+- `/social-content/index.html`：每週社群媒體／內容創意存檔
 
 ## 本機開發
 
