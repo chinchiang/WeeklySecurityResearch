@@ -1,0 +1,91 @@
+# AI 透明不再是標註一個小圖示：8 月 2 日後，它是一條可稽核的內容供應鏈
+
+> **本週主題：** AI Governance  
+> **研究期間：** 2026-07-20 — 2026-07-27  
+> **產出日期：** 2026-07-27  
+> **建議優先度：** P1 / 時效優先  
+> **證據狀態：** Ready
+
+## 標題／Hook
+
+截至 7 月 27 日，距 EU AI Act Article 50 開始適用只剩 6 天；企業真正缺的通常不是圖示，而是能證明誰產生、誰審查、誰負責的 evidence chain。
+
+## 切入點
+
+把歐盟執委會本週發布的 Article 50 指引，從「AI 內容要不要標示」提升為營運治理議題：provider／deployer 角色判定、machine-readable marking、清楚可感知的 disclosure，以及具有專業判斷的 human review 都必須能留下稽核證據。
+
+### 發布價值
+
+這個角度兼具法規時效、治理深度與企業可執行性，可讓讀者理解 AI transparency 並非單純的 UI 或行銷標示要求。
+
+## 本週新聞支撐論點
+
+| 論點 | 來源 | 日期 | 資訊性質 |
+|---|---|---|---|
+| 歐盟執委會於 2026-07-20 發布 Article 50 指引；相關透明義務自 2026-08-02 起適用。 | European Commission — Commission publishes guidelines on transparency obligations for providers and deployers of certain AI systems | 2026-07-20 | 已證實／官方 |
+| Providers 必須讓直接互動者知道對方是 AI，並對生成或操弄內容加入可機器讀取的標記；deployers 則須對 deepfake、特定公共利益文字、emotion recognition 與 biometric categorisation 做揭露。 | European Commission — Guidelines on Transparency of AI-Generated Content | 2026-07-20 | 已證實／官方 |
+| 執委會 FAQ（2026-07-24 更新）指出，公共利益文字若要主張 human review／editorial control，必須有具相關知識與專業判斷的實質審查；僅做拼字、文法或形式檢查不算。 | European Commission — Transparency obligations under Article 50 of the AI Act | 2026-07-24 | 已證實／官方 |
+
+## LinkedIn 草稿（English）
+
+```
+AI transparency is no longer a design preference. In the EU, it becomes an operational obligation on 2 August 2026.
+
+The European Commission’s new Article 50 guidelines clarify three points leaders should act on now:
+
+1) Providers must inform people when they are interacting with AI and apply machine-readable marks to synthetic content.
+2) Deployers must disclose deepfakes and certain AI-generated public-interest text.
+3) “Human review” means substantive examination by a qualified person; spell-checking or grammatical edits are not enough.
+
+For global manufacturers, this reaches beyond marketing. Customer chatbots, training media, product-support content, recruitment material, and AI-assisted public statements may sit in different legal roles and workflows.
+
+The practical response is an evidence chain: system inventory, provider/deployer classification, disclosure controls, named editorial accountability, and retained proof of review.
+
+The deadline is close, but the durable capability is bigger than a label: content provenance that can survive an audit.
+
+Can your organization prove—not merely claim—where AI touched each externally published asset?
+```
+
+## Twitter / X 草稿（English）
+
+> 1/4 EU AI Act Article 50 starts applying on 2 Aug 2026. AI transparency is no longer a design choice; it is an operating requirement.
+
+> 2/4 Providers need AI-interaction notices and machine-readable marks. Deployers need clear disclosures for deepfakes and certain public-interest content.
+
+> 3/4 The Commission’s new guidance is explicit: spell-checking is not “human review.” Substantive expert review, editorial authority and evidence matter.
+
+> 4/4 The control objective is not “add a label.” It is an auditable content-provenance chain across chatbots, training media, support content and public communications.
+
+## Blog 架構
+
+### EU AI Act Article 50：從標示義務走向可稽核的 AI 內容生命週期
+
+- 先判定企業在每一項 AI workflow 中是 provider、deployer，或同時扮演兩種角色。
+- 把 AI interaction notice、machine-readable marking 與 visible disclosure 拆成不同控制，不以單一浮水印代替。
+- 為公共利益文字建立實質 human review：指定具專業判斷的 reviewer、可退回或拒絕發布的權限，以及查核證據。
+- 將 chatbot、產品支援、教育訓練、行銷素材、招募與企業公開聲明納入同一份 AI content inventory。
+- 在供應商合約中要求 marking、detectability、metadata preservation 與合規證據，避免內容經轉檔後失去 provenance。
+
+## Newsletter／簡訊
+
+歐盟執委會於 7 月 20 日發布 EU AI Act Article 50 透明義務指引，並於 7 月 24 日更新 FAQ；規則自 8 月 2 日起適用。企業除需處理 AI interaction notice、machine-readable marking 與 deepfake disclosure，更應能證明公共利益文字經過具專業判斷的實質 human review，而非只有文法修正。（來源：European Commission，2026-07-20／07-24）
+
+## Hashtags
+
+#EUAIAct #AIGovernance #ResponsibleAI #AICompliance #ContentProvenance
+
+## 查核與限制
+
+- 法規適用日期、provider／deployer 義務與 human review 定義均來自 European Commission 官方頁面。
+- 「內容供應鏈」與 evidence chain 是本報告依官方要求提出的企業治理分析，不是執委會原文用語。
+- 本文未主張所有工業內部 AI 輸出都必須標記；官方 FAQ 明列 machine-to-machine、部分 closed-loop industrial contexts 與 standard editing 的範圍／例外，實際適用仍須逐案判定。
+
+## 完整來源
+
+1. [Commission publishes guidelines on transparency obligations for providers and deployers of certain AI systems](https://digital-strategy.ec.europa.eu/en/news/commission-publishes-guidelines-transparency-obligations-providers-and-deployers-certain-ai-systems) — European Commission，2026-07-20
+2. [Guidelines on Transparency of AI-Generated Content](https://digital-strategy.ec.europa.eu/en/policies/guidelines-transparency-ai-generated-content) — European Commission，2026-07-20
+3. [Transparency obligations under Article 50 of the AI Act](https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act) — European Commission，2026-07-24 update
+
+---
+
+本文件僅使用公開來源，不代表任何公司官方立場；涉及法規適用或 OT 緊急處置時，仍應由法務、產品／內容 owner 與 OT engineering 依實際情境確認。
