@@ -1,4 +1,6 @@
-# Social Content Archive
+# 每週社群內容創意存檔
+
+正式網站：<https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/social-content/index.html>
 
 每週社群內容創意的獨立存檔區，主題涵蓋 AI Governance、AI Security、Electronic Manufacturing 與 OT／ICS Security。
 
