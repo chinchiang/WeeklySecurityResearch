@@ -529,6 +529,7 @@ export default function Home() {
           <a href="#index">主題索引</a>
           <a href="#progress">閱讀進度</a>
           <a href="/archive">歷史資料</a>
+          <a href="/social-content/index.html">社群內容</a>
         </nav>
         <div className="live-state"><i /> VERIFIED SOURCES</div>
       </header>
@@ -547,6 +548,11 @@ export default function Home() {
             <div className="kpi purple"><b>04</b><span>深入審閱</span><i>HIGH PRIORITY</i></div>
             <div className="kpi blue"><b>02</b><span>選讀</span><i>SELECTIVE</i></div>
           </div>
+          <a className="social-content-cta" href="/social-content/index.html">
+            <span><b>每週社群內容創意</b><small>AI Governance · AI Security · Electronic Manufacturing</small></span>
+            <i>3 READY POSTS</i>
+            <strong>→</strong>
+          </a>
         </div>
 
         <div className="hero-intel" aria-label="本週安全態勢摘要">
