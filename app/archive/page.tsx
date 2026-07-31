@@ -12,7 +12,10 @@ const filters = [
   "Threat Modeling",
 ];
 
-const archiveReadings = readings.filter((reading) => !reading.week);
+const CURRENT_WEEK = "2026.07.31";
+const archiveReadings = readings.filter(
+  (reading) => reading.week !== CURRENT_WEEK,
+);
 
 export default function ArchivePage() {
   const [topic, setTopic] = useState("全部");
@@ -127,7 +130,7 @@ export default function ArchivePage() {
         <div className="archive-stat" aria-label="歷史資料統計">
           <b>{String(archiveReadings.length).padStart(2, "0")}</b>
           <span>ARCHIVED READINGS</span>
-          <p>2026.07.17</p>
+          <p>2026.07.17—2026.07.24</p>
         </div>
       </section>
 
@@ -189,7 +192,7 @@ export default function ArchivePage() {
 
         <div className="archive-period">
           <span>週次</span>
-          <b>2026.07.17</b>
+          <b>2026.07.17—2026.07.24</b>
           <i />
           <small>{archiveReadings.length} 項已封存</small>
         </div>
@@ -216,7 +219,7 @@ export default function ArchivePage() {
                   </span>
                 </div>
                 <div className="card-kind">
-                  <span>{reading.kind}</span><i />{reading.date}
+                  <span>{reading.kind}</span><i />{reading.date}<i />週次 {reading.week ?? "2026.07.17"}
                 </div>
                 <h3>{reading.title}</h3>
                 <p className="card-subtitle">{reading.subtitle}</p>
@@ -327,8 +330,8 @@ export default function ArchivePage() {
               ×
             </button>
             <div className="modal-rank">
-              #{String(selected.id).padStart(2, "0")} · {selected.kind} ·
-              2026.07.17
+              #{String(selected.rank ?? selected.id).padStart(2, "0")} · {selected.kind} ·
+              {selected.week ?? "2026.07.17"}
             </div>
             <h2 id="archive-detail-title">{selected.title}</h2>
             <p className="modal-subtitle">{selected.subtitle}</p>
