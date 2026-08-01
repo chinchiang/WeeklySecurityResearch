@@ -16,8 +16,12 @@ const CURRENT_WEEK = "2026.07.31";
 const archiveReadings = readings.filter(
   (reading) => reading.week !== CURRENT_WEEK,
 );
+const archiveWeeks = Array.from(
+  new Set(archiveReadings.map((reading) => reading.week ?? "2026.07.17")),
+).sort((a, b) => b.localeCompare(a));
 
 export default function ArchivePage() {
+  const [week, setWeek] = useState("全部週次");
   const [topic, setTopic] = useState("全部");
   const [decision, setDecision] = useState("全部判定");
   const [query, setQuery] = useState("");
@@ -55,6 +59,8 @@ export default function ArchivePage() {
     const normalized = query.trim().toLowerCase();
     return archiveReadings
       .filter((reading) => {
+        const readingWeek = reading.week ?? "2026.07.17";
+        const matchesWeek = week === "全部週次" || readingWeek === week;
         const matchesTopic =
           topic === "全部" || reading.topics.includes(topic);
         const matchesDecision =
@@ -70,6 +76,7 @@ export default function ArchivePage() {
           .join(" ")
           .toLowerCase();
         return (
+          matchesWeek &&
           matchesTopic &&
           matchesDecision &&
           haystack.includes(normalized)
@@ -80,7 +87,7 @@ export default function ArchivePage() {
           ? b.dateValue.localeCompare(a.dateValue)
           : a.id - b.id,
       );
-  }, [decision, query, sort, topic]);
+  }, [decision, query, sort, topic, week]);
 
   const toggleComplete = (id: number) => {
     setCompleted((current) =>
@@ -107,6 +114,7 @@ export default function ArchivePage() {
             <small>READING INTELLIGENCE HUB</small>
           </span>
         </a>
+        <a className="mobile-history-link" href="/">最新一期</a>
         <nav aria-label="歷史資料導覽">
           <a href="/">最新一期</a>
           <a href="#archive-index">歷史索引</a>
@@ -143,6 +151,26 @@ export default function ArchivePage() {
           <p className="result-count">
             顯示 <b>{visibleReadings.length}</b> / {archiveReadings.length} 項
           </p>
+        </div>
+
+        <div className="week-selector" role="group" aria-label="選擇歷史週次">
+          <button
+            className={week === "全部週次" ? "active" : ""}
+            onClick={() => setWeek("全部週次")}
+            aria-pressed={week === "全部週次"}
+          >
+            全部週次
+          </button>
+          {archiveWeeks.map((archiveWeek) => (
+            <button
+              key={archiveWeek}
+              className={week === archiveWeek ? "active" : ""}
+              onClick={() => setWeek(archiveWeek)}
+              aria-pressed={week === archiveWeek}
+            >
+              {archiveWeek}
+            </button>
+          ))}
         </div>
 
         <div className="control-panel archive-controls">
@@ -192,9 +220,9 @@ export default function ArchivePage() {
 
         <div className="archive-period">
           <span>週次</span>
-          <b>2026.07.17—2026.07.24</b>
+          <b>{week === "全部週次" ? "2026.07.17—2026.07.24" : week}</b>
           <i />
-          <small>{archiveReadings.length} 項已封存</small>
+          <small>{visibleReadings.length} 項符合條件</small>
         </div>
 
         <div className="reading-grid">
