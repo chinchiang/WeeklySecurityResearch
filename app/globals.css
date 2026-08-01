@@ -434,6 +434,34 @@ footer > a:hover { color: var(--cyan); }
 .archive-stat span { margin-top: 10px; color: #9379c9; font: 9px/1.2 ui-monospace, monospace; letter-spacing: .16em; }
 .archive-stat p { margin: 22px 0 0; color: #566b86; font: 11px/1 ui-monospace, monospace; }
 .archive-library { padding-top: 68px; }
+.mobile-history-link { display: none; }
+.week-selector {
+  max-width: 1480px;
+  display: flex;
+  gap: 8px;
+  margin: 0 auto 18px;
+  overflow-x: auto;
+  padding: 2px 0 8px;
+  scrollbar-width: none;
+}
+.week-selector::-webkit-scrollbar { display: none; }
+.week-selector button {
+  min-width: max-content;
+  min-height: 44px;
+  padding: 0 17px;
+  border: 1px solid #36516d;
+  border-radius: 999px;
+  color: #9bacc1;
+  background: #081321;
+  font: 600 11px/1 ui-monospace, monospace;
+  cursor: pointer;
+}
+.week-selector button.active {
+  color: #07111f;
+  border-color: var(--cyan);
+  background: var(--cyan);
+  box-shadow: 0 0 18px rgba(32,217,255,.18);
+}
 .archive-controls { grid-template-columns: minmax(240px, .85fr) minmax(530px, 1.6fr) 150px 170px; }
 .archive-period {
   max-width: 1480px;
@@ -471,7 +499,20 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 @media (max-width: 1180px) {
   .topbar { grid-template-columns: 1fr auto; }
   .topbar nav { display: none; }
-  .live-state { display: flex; }
+  .mobile-history-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: end;
+    padding: 0 14px;
+    border: 1px solid #36516d;
+    border-radius: 999px;
+    color: var(--cyan);
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .live-state { display: none; }
   .hero { grid-template-columns: 1fr 340px; padding-inline: 4vw; gap: 3vw; }
   .kpi-row { max-width: 640px; }
   .featured-card { grid-template-columns: 95px 1fr; }
@@ -527,7 +568,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
   .social-content-cta i { display: none; }
   .social-content-cta small { white-space: normal; }
   .live-state { display: none; }
-  .topbar { grid-template-columns: 1fr; }
+  .topbar { grid-template-columns: minmax(0, 1fr) auto; }
   .hero h1 span { display: block; }
   .posture-row { grid-template-columns: 95px 1fr; gap: 12px; }
   .donut { width: 88px; height: 88px; }
