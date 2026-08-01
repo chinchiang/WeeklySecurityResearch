@@ -722,6 +722,7 @@ export default function Home() {
             <small>READING INTELLIGENCE HUB</small>
           </span>
         </a>
+        <a className="mobile-history-link" href="/archive">過去必讀</a>
         <nav aria-label="主要導覽">
           <a href="#weekly">本週精選</a>
           <a href="#index">主題索引</a>
