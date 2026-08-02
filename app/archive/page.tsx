@@ -124,6 +124,12 @@ export default function ArchivePage() {
         <div className="live-state"><i /> ARCHIVE VERIFIED</div>
       </header>
 
+      <nav className="mobile-dock" aria-label="手機快捷導覽">
+        <a href="/"><span>⌂</span>最新一期</a>
+        <a href="#archive-index"><span>◆</span>歷史清單</a>
+        <a href="#archive-progress"><span>✓</span>閱讀進度</a>
+      </nav>
+
       <section className="archive-hero" id="top">
         <div className="grid-noise" aria-hidden="true" />
         <div>
@@ -154,22 +160,9 @@ export default function ArchivePage() {
         </div>
 
         <div className="week-selector" role="group" aria-label="選擇歷史週次">
-          <button
-            className={week === "全部週次" ? "active" : ""}
-            onClick={() => setWeek("全部週次")}
-            aria-pressed={week === "全部週次"}
-          >
-            全部週次
-          </button>
+          <button className={week === "全部週次" ? "active" : ""} onClick={() => setWeek("全部週次")} aria-pressed={week === "全部週次"}>全部週次</button>
           {archiveWeeks.map((archiveWeek) => (
-            <button
-              key={archiveWeek}
-              className={week === archiveWeek ? "active" : ""}
-              onClick={() => setWeek(archiveWeek)}
-              aria-pressed={week === archiveWeek}
-            >
-              {archiveWeek}
-            </button>
+            <button key={archiveWeek} className={week === archiveWeek ? "active" : ""} onClick={() => setWeek(archiveWeek)} aria-pressed={week === archiveWeek}>{archiveWeek}</button>
           ))}
         </div>
 
