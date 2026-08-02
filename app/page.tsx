@@ -733,6 +733,12 @@ export default function Home() {
         <div className="live-state"><i /> VERIFIED SOURCES</div>
       </header>
 
+      <nav className="mobile-dock" aria-label="手機快捷導覽">
+        <a href="#top"><span>⌂</span>首頁</a>
+        <a href="#weekly"><span>◆</span>本週必讀</a>
+        <a href="/archive"><span>▤</span>歷史清單</a>
+      </nav>
+
       <section className="hero" id="top">
         <div className="grid-noise" aria-hidden="true" />
         <div className="hero-copy">
@@ -742,6 +748,13 @@ export default function Home() {
             聚焦製造業 AI Security、DSPM、DLP、Data Lineage、DDR
             與 AI System Threat Modeling
           </p>
+          <figure className="hero-character">
+            <img
+              src="/assets/anime-cyber-researcher.png"
+              alt="成年漫畫風女性資安研究員手持資安遙測平板"
+            />
+            <figcaption><i /> AI SECURITY ANALYST</figcaption>
+          </figure>
           <div className="kpi-row" aria-label="本週清單統計">
             <div className="kpi"><b>06</b><span>本週入選</span><i>6 NEW · 0 CATCH-UP</i></div>
             <div className="kpi purple"><b>05</b><span>深入審閱</span><i>HIGH PRIORITY</i></div>
