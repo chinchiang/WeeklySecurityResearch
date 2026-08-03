@@ -306,14 +306,14 @@ export default function ArchivePage() {
           <div className="progress-value">
             <b>{progress}%</b>
             <span>
-              {archiveCompleted.length} / {archiveReadings.length} COMPLETED
+              {archiveCompleted.length} / {archiveReadings.length} 已完成
             </span>
           </div>
           <div className="progress-track">
             <i style={{ width: `${progress}%` }} />
           </div>
           <div className="progress-labels">
-            <span>0</span><span>ARCHIVE TARGET</span><span>100</span>
+            <span>0%</span><span>歷史清單閱讀目標</span><span>100%</span>
           </div>
         </div>
       </section>
