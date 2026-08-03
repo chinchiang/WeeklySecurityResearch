@@ -16,6 +16,8 @@
   --line: #203650;
   --line-bright: #315171;
   --success: #26e6b3;
+  --font-ui: var(--font-noto-sans-tc), var(--font-geist-sans), "Segoe UI", "PingFang TC", "Microsoft JhengHei UI", sans-serif;
+  --font-display: var(--font-geist-sans), var(--font-noto-sans-tc), "Segoe UI", "PingFang TC", "Microsoft JhengHei UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -28,7 +30,7 @@ body {
     radial-gradient(circle at 52% -10%, rgba(29, 83, 146, 0.16), transparent 34%),
     var(--bg);
   color: var(--text);
-  font-family: Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -36,6 +38,58 @@ button, input, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; text-decoration: none; }
 button { color: inherit; }
+
+/* Typography system — readable sans-serif first; mono styling is decorative only. */
+h1, h2, h3, .brand strong, .kpi b, .progress-value b, .archive-stat b { font-family: var(--font-display); }
+:is(.brand small, .live-state, .eyebrow, .social-content-cta small, .social-content-cta i,
+  .hero-character figcaption, .kpi i, .intel-head, .trend-head, .verified-badge,
+  .rank-panel b, .rank-panel small, .meta-line, .card-kind, .modal-meta, .text-link,
+  .risk-core span, .risk-core small, .stage span, .map-caption, .result-count,
+  .decision, .metric, .topic-list span, .empty-state b, .progress-value span,
+  .progress-labels, .next-actions li b, .method-grid article > span, .mark,
+  footer p, .modal-rank, .modal-tags span, .archive-stat span, .archive-stat p,
+  .week-selector button, .archive-period) {
+  font-family: var(--font-ui);
+}
+
+.eyebrow { font-size: 13px; font-weight: 700; line-height: 1.45; letter-spacing: .08em; }
+.brand small { font-size: 11px; font-weight: 600; letter-spacing: .1em; }
+.live-state { font-size: 11px; font-weight: 650; letter-spacing: .08em; }
+.social-content-cta small, .social-content-cta i { font-size: 11px; line-height: 1.4; }
+.hero-character figcaption { font-size: 10px; }
+.kpi i { font-size: 10px; font-weight: 600; letter-spacing: .06em; }
+.intel-head, .trend-head { color: #8da4bf; font-size: 11px; font-weight: 650; letter-spacing: .07em; }
+.verified-badge { font-size: 12px; font-weight: 650; letter-spacing: .03em; }
+.rank-panel small { font-size: 10px; font-weight: 650; letter-spacing: .08em; }
+.meta-line, .card-kind, .modal-meta { color: #9bb0c9; font-size: 12px; font-weight: 550; letter-spacing: .02em; line-height: 1.5; }
+.result-count { color: #8fa5bf; font-size: 13px; font-weight: 550; letter-spacing: .02em; }
+.search-box input { font-size: 14px; }
+.filter-row button, .control-panel select { font-size: 12px; font-weight: 600; }
+.decision { font-size: 11px; font-weight: 700; letter-spacing: .02em; }
+.card-subtitle { color: #82bce7; font-size: 13px; }
+.card-summary { color: #b2c0d2; font-size: 14px; line-height: 1.78; }
+.metric { color: #d1e2ef; font-size: 12px; line-height: 1.45; }
+.topic-list span { color: #9eb0c5; font-size: 11px; font-weight: 550; }
+.card-actions button, .card-actions a, .progress-toggle { font-size: 12px; font-weight: 650; }
+.progress-section > div:first-child > p:last-child,
+.archive-progress > div:first-child > p:last-child { color: #9eb0c6; font-size: 14px; line-height: 1.75; }
+.progress-console { padding: 32px; border-color: #355a78; background: linear-gradient(145deg, rgba(11,29,48,.98), rgba(7,20,35,.98)); box-shadow: inset 0 1px rgba(255,255,255,.035), 0 18px 50px rgba(0,0,0,.18); }
+.progress-value b { color: #42ddff; font-size: 52px; font-weight: 780; letter-spacing: -.04em; text-shadow: 0 0 22px rgba(32,217,255,.18); }
+.progress-value span { color: #c1d0df; font-size: 13px; font-weight: 650; letter-spacing: .02em; }
+.progress-track { height: 10px; border-radius: 999px; background: #17324a; }
+.progress-track i { border-radius: inherit; }
+.progress-labels { color: #8da4bc; font-size: 11px; font-weight: 600; letter-spacing: .02em; }
+.next-actions li { color: #b4c2d3; font-size: 13px; line-height: 1.65; }
+.next-actions li b { font-size: 12px; font-weight: 750; }
+.method-grid article > span { font-size: 13px; font-weight: 750; }
+.method-grid p, .method-note { color: #aebdce; font-size: 13px; line-height: 1.75; }
+.mark { font-size: 11px; }
+footer p { color: #8299b4; font-size: 11px; letter-spacing: .03em; }
+.modal-rank, .modal-tags span { font-size: 11px; font-weight: 650; letter-spacing: .03em; }
+.detail-section p, .detail-grid p, .cross-check p, .caveat p,
+.detail-section ul { color: #b6c4d5; font-size: 14px; line-height: 1.75; }
+.archive-stat span { font-size: 11px; font-weight: 650; letter-spacing: .09em; }
+.archive-stat p, .week-selector button, .archive-period { font-size: 12px; font-weight: 600; letter-spacing: .02em; }
 
 main { min-height: 100vh; overflow: hidden; }
 .mobile-dock { display: none; }
@@ -583,6 +637,60 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
   .method-grid { grid-template-columns: 1fr; }
   .method-grid article { min-height: 165px; }
   .method-grid h3 { margin-top: 25px; }
+}
+
+/* Final typography priority: prevents legacy micro/mono styles from winning. */
+.brand small { font: 600 11px/1.35 var(--font-ui); letter-spacing: .08em; }
+.live-state { font: 650 11px/1.3 var(--font-ui); letter-spacing: .06em; }
+.eyebrow { font: 700 13px/1.45 var(--font-ui); letter-spacing: .07em; }
+.social-content-cta small, .social-content-cta i { font: 600 11px/1.4 var(--font-ui); letter-spacing: .02em; }
+.hero-character figcaption { font: 700 11px/1.2 var(--font-ui); letter-spacing: .04em; }
+.kpi i { font: 600 10px/1.35 var(--font-ui); letter-spacing: .04em; }
+.intel-head, .trend-head { color: #9ab0c8; font: 650 11px/1.35 var(--font-ui); letter-spacing: .05em; }
+.verified-badge { font: 650 12px/1.35 var(--font-ui); letter-spacing: .02em; }
+.rank-panel b { font-family: var(--font-display); }
+.rank-panel small { font: 650 10px/1.35 var(--font-ui); letter-spacing: .06em; }
+.meta-line, .card-kind, .modal-meta { color: #a4b7cd; font: 550 12px/1.5 var(--font-ui); letter-spacing: .01em; }
+.text-link { font: 650 12px/1.3 var(--font-ui); }
+.risk-core span, .risk-core small, .stage span, .stage small, .map-caption { font-family: var(--font-ui); }
+.risk-core small, .stage small, .map-caption { font-size: 11px; font-weight: 650; letter-spacing: .03em; }
+.result-count { color: #97abc2; font: 550 13px/1.45 var(--font-ui); letter-spacing: .01em; }
+.search-box input { font-size: 14px; }
+.filter-row button, .control-panel select { font-size: 12px; font-weight: 650; }
+.decision { font: 700 11px/1.25 var(--font-ui); letter-spacing: .01em; }
+.card-subtitle { color: #88c2ec; font-size: 13px; }
+.card-summary { color: #b9c6d6; font-size: 14px; line-height: 1.78; }
+.metric { color: #d2e2ee; font: 600 12px/1.45 var(--font-ui); }
+.topic-list span { color: #a7b8ca; font: 600 11px/1.3 var(--font-ui); }
+.card-actions button, .card-actions a, .progress-toggle { font-size: 12px; font-weight: 650; }
+.progress-section > div:first-child > p:last-child,
+.archive-progress > div:first-child > p:last-child { color: #a6b7ca; font-size: 14px; line-height: 1.75; }
+.progress-console { padding: 32px; border-color: #3a617f; background: linear-gradient(145deg, rgba(11,29,48,.98), rgba(7,20,35,.98)); box-shadow: inset 0 1px rgba(255,255,255,.035), 0 18px 50px rgba(0,0,0,.18); }
+.progress-value b { color: #42ddff; font: 780 52px/1 var(--font-display); letter-spacing: -.04em; text-shadow: 0 0 22px rgba(32,217,255,.18); }
+.progress-value span { color: #c8d5e2; font: 650 13px/1.35 var(--font-ui); letter-spacing: .01em; }
+.progress-track { height: 10px; border-radius: 999px; background: #1b3851; }
+.progress-track i { border-radius: inherit; }
+.progress-labels { color: #9cb0c5; font: 600 11px/1.35 var(--font-ui); letter-spacing: .01em; }
+.next-actions li { color: #b9c6d5; font-size: 13px; line-height: 1.65; }
+.next-actions li b { font: 750 12px/1.6 var(--font-ui); }
+.method-grid article > span { font: 750 13px/1 var(--font-ui); }
+.method-grid p, .method-note { color: #b4c1d0; font-size: 13px; line-height: 1.75; }
+.mark { font: 700 11px/1.25 var(--font-ui); letter-spacing: .03em; }
+footer p { color: #8fa4bb; font: 600 11px/1.5 var(--font-ui); letter-spacing: .02em; }
+.modal-rank, .modal-tags span { font: 650 11px/1.35 var(--font-ui); letter-spacing: .02em; }
+.detail-section p, .detail-grid p, .cross-check p, .caveat p,
+.detail-section ul { color: #bdc9d7; font-size: 14px; line-height: 1.75; }
+.archive-stat span { font: 650 11px/1.35 var(--font-ui); letter-spacing: .07em; }
+.archive-stat p, .week-selector button, .archive-period { font: 600 12px/1.4 var(--font-ui); letter-spacing: .01em; }
+.mobile-history-link { font-size: 12px; font-weight: 700; }
+.mobile-dock a { font-size: 11px; }
+.mobile-dock span { font-family: var(--font-ui); }
+@media (max-width: 820px) {
+  .kpi span { font-size: 11px; font-weight: 650; }
+  .hero-character figcaption { font-size: 10px; }
+  .progress-console { padding: 24px 20px; }
+  .progress-value b { font-size: 46px; }
+  .progress-value span { font-size: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
