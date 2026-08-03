@@ -1,0 +1,52 @@
+{
+  "week": "2026-08-03",
+  "generatedAt": "2026-08-03T08:00:00+08:00",
+  "window": {
+    "start": "2026-07-27",
+    "end": "2026-08-03"
+  },
+  "ideas": [
+    {
+      "id": "article-50-evidence-day",
+      "topic": "AI Governance",
+      "code": "GOV",
+      "priority": "P1",
+      "title": "EU AI Act Article 50：倒數結束，現在是「證據日」",
+      "hook": "Article 50 已正式適用；焦點從標籤轉向可稽核的角色、review 與 provenance 證據鏈.",
+      "tags": [
+        "EUAIAct",
+        "AIGovernance",
+        "AICompliance"
+      ],
+      "file": "2026-08-03_01_article-50-evidence-day.md"
+    },
+    {
+      "id": "cyber-eval-containment",
+      "topic": "AI Security",
+      "code": "SEC",
+      "priority": "P0 · FIRST",
+      "title": "The AI Security Test Became the Incident",
+      "hook": "Cyber-capability evaluations must be treated as privileged offensive workloads, with verified isolation and real-time kill controls.",
+      "tags": [
+        "AISecurity",
+        "AgenticAI",
+        "AIRedTeam"
+      ],
+      "file": "2026-08-03_02-cyber-eval-containment.md"
+    },
+    {
+      "id": "ot-manual-mode",
+      "topic": "OT / Manufacturing",
+      "code": "OT",
+      "priority": "P0",
+      "title": "Internet-Exposed PLCs Turned “Manual Mode” into a Requirement",
+      "hook": "The Minnesota water incidents make safe degraded operation a current control lesson for industrial environments.",
+      "tags": [
+        "OTSecurity",
+        "ICSSecurity",
+        "OperationalResilience"
+      ],
+      "file": "2026-08-03_03-ot-manual-mode.md"
+    }
+  ]
+}
