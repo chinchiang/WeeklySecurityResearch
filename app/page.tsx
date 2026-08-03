@@ -750,10 +750,10 @@ export default function Home() {
           </p>
           <figure className="hero-character">
             <img
-              src="/assets/anime-cyber-researcher.png"
-              alt="成年漫畫風女性資安研究員手持資安遙測平板"
+              src="/assets/anime-cyber-researcher-summer.png"
+              alt="Sindy，成年漫畫風女性 AI 資安分析師，手持資安遙測平板"
             />
-            <figcaption><i /> AI SECURITY ANALYST</figcaption>
+            <figcaption><i /> SINDY · AI SECURITY ANALYST</figcaption>
           </figure>
           <div className="kpi-row" aria-label="本週清單統計">
             <div className="kpi"><b>06</b><span>本週入選</span><i>6 NEW · 0 CATCH-UP</i></div>
@@ -931,9 +931,9 @@ export default function Home() {
           <p>進度只儲存在目前瀏覽器，不會傳送到外部服務。</p>
         </div>
         <div className="progress-console">
-          <div className="progress-value"><b>{progress}%</b><span>{currentCompleted.length} / {currentReadings.length} COMPLETED</span></div>
+          <div className="progress-value"><b>{progress}%</b><span>{currentCompleted.length} / {currentReadings.length} 已完成</span></div>
           <div className="progress-track"><i style={{ width: `${progress}%` }} /></div>
-          <div className="progress-labels"><span>0</span><span>READING TARGET</span><span>100</span></div>
+          <div className="progress-labels"><span>0%</span><span>閱讀目標</span><span>100%</span></div>
         </div>
         <div className="next-actions">
           <h3>建議下一步</h3>
