@@ -12,7 +12,7 @@ const filters = [
   "Threat Modeling",
 ];
 
-const CURRENT_WEEK = "2026.07.31";
+const CURRENT_WEEK = "2026.08.07";
 const archiveReadings = readings.filter(
   (reading) => reading.week !== CURRENT_WEEK,
 );
@@ -144,7 +144,7 @@ export default function ArchivePage() {
         <div className="archive-stat" aria-label="歷史資料統計">
           <b>{String(archiveReadings.length).padStart(2, "0")}</b>
           <span>ARCHIVED READINGS</span>
-          <p>2026.07.17—2026.07.24</p>
+          <p>2026.07.17—2026.07.31</p>
         </div>
       </section>
 
@@ -213,7 +213,7 @@ export default function ArchivePage() {
 
         <div className="archive-period">
           <span>週次</span>
-          <b>{week === "全部週次" ? "2026.07.17—2026.07.24" : week}</b>
+          <b>{week === "全部週次" ? "2026.07.17—2026.07.31" : week}</b>
           <i />
           <small>{visibleReadings.length} 項符合條件</small>
         </div>
