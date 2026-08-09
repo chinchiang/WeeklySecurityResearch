@@ -979,13 +979,6 @@ export default function Home() {
             聚焦製造業 AI Security、DSPM、DLP、Data Lineage、DDR
             與 AI System Threat Modeling
           </p>
-          <figure className="hero-character">
-            <img
-              src="/assets/anime-cyber-researcher-summer.png"
-              alt="Sindy，成年漫畫風女性 AI 資安分析師，手持資安遙測平板"
-            />
-            <figcaption><i /> SINDY · AI SECURITY ANALYST</figcaption>
-          </figure>
           <div className="kpi-row" aria-label="本週清單統計">
             <div className="kpi"><b>07</b><span>本週入選</span><i>7 NEW · 0 CATCH-UP</i></div>
             <div className="kpi purple"><b>06</b><span>深入審閱</span><i>HIGH PRIORITY</i></div>
@@ -997,6 +990,18 @@ export default function Home() {
             <strong>→</strong>
           </a>
         </div>
+
+        <figure className="hero-character" aria-label="AI 資安分析師 Sindy">
+          <img
+            src="/assets/sindy-analyst-v2.png"
+            alt="Sindy，成年漫畫風 AI 資安分析師，身穿黑藍科技服裝與盾徽披風"
+            fetchPriority="high"
+          />
+          <figcaption>
+            <i />
+            <span><b>Sindy</b><small>AI Security Analyst</small></span>
+          </figcaption>
+        </figure>
 
         <div className="hero-intel" aria-label="本週安全態勢摘要">
           <div className="intel-head"><span>WEEKLY SECURITY POSTURE</span><i /></div>
