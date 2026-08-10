@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "rotation": {
-    "strategy": "weekly-round-robin",
-    "currentWeek": "2026-08-10",
-    "currentHostId": "neon",
+    "strategy": "iso-week-round-robin",
+    "anchorIsoWeek": "2026-W32",
+    "anchorHostId": "neon",
     "avoidImmediateRepeatWhenMultipleHostsExist": true
   },
   "hosts": [
@@ -11,6 +11,8 @@
       "id": "neon",
       "name": "Neon",
       "asset": "assets/neon-host.webp",
+      "heroFocusDesktop": "50% 8%",
+      "heroFocusMobile": "50% 6%",
       "roleZh": "本週內容主播 · AI Security & Global Risk",
       "roleEn": "Weekly Host · AI Security & Global Risk",
       "enabled": true
@@ -19,6 +21,8 @@
       "id": "ukami",
       "name": "Ukami",
       "asset": "assets/ukami-host.webp",
+      "heroFocusDesktop": "50% 25%",
+      "heroFocusMobile": "50% 22%",
       "roleZh": "內容主播 · SOC 指揮與事件應變",
       "roleEn": "Weekly Host · SOC Command & Incident Response",
       "enabled": true
