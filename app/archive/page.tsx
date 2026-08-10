@@ -1,24 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { readings, type Reading } from "../page";
-
-const filters = [
-  "全部",
-  "Agent Security",
-  "DSPM / DLP",
-  "Data Lineage",
-  "DDR",
-  "Threat Modeling",
-];
-
-const CURRENT_WEEK = "2026.08.07";
-const archiveReadings = readings.filter(
-  (reading) => reading.week !== CURRENT_WEEK,
-);
-const archiveWeeks = Array.from(
-  new Set(archiveReadings.map((reading) => reading.week ?? "2026.07.17")),
-).sort((a, b) => b.localeCompare(a));
+import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import {
+  TOPIC_FILTERS,
+  allWeeks,
+  archiveDateRange,
+  archiveReadings,
+  archiveWeeks,
+  readingSearchText,
+  type Reading,
+} from "../data/readings";
 
 export default function ArchivePage() {
   const [week, setWeek] = useState("全部週次");
@@ -28,16 +20,21 @@ export default function ArchivePage() {
   const [sort, setSort] = useState("newest");
   const [selected, setSelected] = useState<Reading | null>(null);
   const [completed, setCompleted] = useState<number[]>([]);
+  const modalRef = useRef<HTMLElement>(null);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const saved = window.localStorage.getItem("ai-security-reading-progress");
     if (!saved) return;
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) setCompleted(parsed);
-    } catch {
-      setCompleted([]);
-    }
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        const parsed = JSON.parse(saved);
+        setCompleted(Array.isArray(parsed) ? parsed.filter(Number.isInteger) : []);
+      } catch {
+        setCompleted([]);
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
@@ -47,39 +44,62 @@ export default function ArchivePage() {
     );
   }, [completed]);
 
+  function openReading(reading: Reading, trigger?: HTMLElement) {
+    lastTriggerRef.current = trigger ?? document.activeElement as HTMLElement;
+    setSelected(reading);
+    window.history.replaceState(null, "", `#reading-${reading.id}`);
+  }
+
+  function closeReading() {
+    setSelected(null);
+    if (window.location.hash.startsWith("#reading-")) window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+  }
+
   useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelected(null);
+    const syncFromHash = () => {
+      const match = window.location.hash.match(/^#reading-(\d+)$/);
+      if (!match) return;
+      const reading = archiveReadings.find((item) => item.id === Number(match[1]));
+      if (reading) setSelected(reading);
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
   }, []);
+
+  useEffect(() => {
+    if (!selected || !modalRef.current) return;
+    const dialog = modalRef.current;
+    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])'));
+    focusable()[0]?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); closeReading(); return; }
+      if (event.key !== "Tab") return;
+      const items = focusable();
+      if (!items.length) return;
+      const first = items[0]; const last = items.at(-1)!;
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    dialog.addEventListener("keydown", onKeyDown);
+    return () => dialog.removeEventListener("keydown", onKeyDown);
+  }, [selected]);
 
   const visibleReadings = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return archiveReadings
       .filter((reading) => {
-        const readingWeek = reading.week ?? "2026.07.17";
-        const matchesWeek = week === "全部週次" || readingWeek === week;
+        const matchesWeek = week === "全部週次" || reading.week === week;
         const matchesTopic =
           topic === "全部" || reading.topics.includes(topic);
         const matchesDecision =
           decision === "全部判定" || reading.decision === decision;
-        const haystack = [
-          reading.title,
-          reading.subtitle,
-          reading.authors,
-          reading.summary,
-          reading.relevance,
-          ...reading.topics,
-        ]
-          .join(" ")
-          .toLowerCase();
         return (
           matchesWeek &&
           matchesTopic &&
           matchesDecision &&
-          haystack.includes(normalized)
+          readingSearchText(reading).includes(normalized)
         );
       })
       .sort((a, b) =>
@@ -107,16 +127,16 @@ export default function ArchivePage() {
   return (
     <main>
       <header className="topbar">
-        <a className="brand" href="/" aria-label="返回最新一期">
+        <Link className="brand" href="/" aria-label="返回最新一期">
           <span className="brand-mark">AI</span>
           <span>
             <strong>Manufacturing AI Security</strong>
             <small>READING INTELLIGENCE HUB</small>
           </span>
-        </a>
-        <a className="mobile-history-link" href="/">最新一期</a>
+        </Link>
+        <Link className="mobile-history-link" href="/">最新一期</Link>
         <nav aria-label="歷史資料導覽">
-          <a href="/">最新一期</a>
+          <Link href="/">最新一期</Link>
           <a href="#archive-index">歷史索引</a>
           <a href="#archive-progress">閱讀進度</a>
           <a href="/social-content/index.html">社群內容</a>
@@ -125,7 +145,7 @@ export default function ArchivePage() {
       </header>
 
       <nav className="mobile-dock" aria-label="手機快捷導覽">
-        <a href="/"><span>⌂</span>最新一期</a>
+        <Link href="/"><span>⌂</span>最新一期</Link>
         <a href="#archive-index"><span>◆</span>歷史清單</a>
         <a href="#archive-progress"><span>✓</span>閱讀進度</a>
       </nav>
@@ -133,18 +153,18 @@ export default function ArchivePage() {
       <section className="archive-hero" id="top">
         <div className="grid-noise" aria-hidden="true" />
         <div>
-          <p className="eyebrow">RESEARCH ARCHIVE · SINCE 2026.07.17</p>
+          <p className="eyebrow">RESEARCH ARCHIVE · SINCE {allWeeks[0]}</p>
           <h1>歷史<span>閱讀資料庫</span></h1>
           <p>
             保存過往每週入選內容，與最新一期分開管理。可依主題、判定與關鍵字查詢，
             並直接開啟原始來源或 PDF。
           </p>
-          <a className="secondary-button" href="/">← 返回最新一期</a>
+          <Link className="secondary-button" href="/">← 返回最新一期</Link>
         </div>
         <div className="archive-stat" aria-label="歷史資料統計">
           <b>{String(archiveReadings.length).padStart(2, "0")}</b>
           <span>ARCHIVED READINGS</span>
-          <p>2026.07.17—2026.07.31</p>
+          <p>{archiveDateRange}</p>
         </div>
       </section>
 
@@ -162,7 +182,7 @@ export default function ArchivePage() {
         <div className="week-selector" role="group" aria-label="選擇歷史週次">
           <button className={week === "全部週次" ? "active" : ""} onClick={() => setWeek("全部週次")} aria-pressed={week === "全部週次"}>全部週次</button>
           {archiveWeeks.map((archiveWeek) => (
-            <button key={archiveWeek} className={week === archiveWeek ? "active" : ""} onClick={() => setWeek(archiveWeek)} aria-pressed={week === archiveWeek}>{archiveWeek}</button>
+            <span className="week-choice" key={archiveWeek}><button className={week === archiveWeek ? "active" : ""} onClick={() => setWeek(archiveWeek)} aria-pressed={week === archiveWeek}>{archiveWeek}</button><a href={`/week/${archiveWeek.replaceAll(".", "-")}`} aria-label={`開啟 ${archiveWeek} 固定網址`}>↗</a></span>
           ))}
         </div>
 
@@ -182,7 +202,7 @@ export default function ArchivePage() {
             )}
           </label>
           <div className="filter-row" role="group" aria-label="主題篩選">
-            {filters.map((filter) => (
+            {TOPIC_FILTERS.map((filter) => (
               <button
                 key={filter}
                 className={topic === filter ? "active" : ""}
@@ -213,7 +233,7 @@ export default function ArchivePage() {
 
         <div className="archive-period">
           <span>週次</span>
-          <b>{week === "全部週次" ? "2026.07.17—2026.07.31" : week}</b>
+          <b>{week === "全部週次" ? archiveDateRange : week}</b>
           <i />
           <small>{visibleReadings.length} 項符合條件</small>
         </div>
@@ -228,7 +248,7 @@ export default function ArchivePage() {
               >
                 <div className="card-topline">
                   <span className="card-rank">
-                    #{String(reading.id).padStart(2, "0")}
+                    #{String(reading.rank).padStart(2, "0")}
                   </span>
                   <span
                     className={`decision ${
@@ -240,8 +260,9 @@ export default function ArchivePage() {
                   </span>
                 </div>
                 <div className="card-kind">
-                  <span>{reading.kind}</span><i />{reading.date}<i />週次 {reading.week ?? "2026.07.17"}
+                  <span>{reading.kind}</span><i />{reading.date}<i />週次 {reading.week}
                 </div>
+                <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
                 <h3>{reading.title}</h3>
                 <p className="card-subtitle">{reading.subtitle}</p>
                 <p className="card-summary">{reading.summary}</p>
@@ -254,7 +275,7 @@ export default function ArchivePage() {
                   ))}
                 </div>
                 <div className="card-actions">
-                  <button onClick={() => setSelected(reading)}>
+                  <button onClick={(event) => openReading(reading, event.currentTarget)}>
                     摘要與查核 <span>→</span>
                   </button>
                   <a
@@ -327,17 +348,18 @@ export default function ArchivePage() {
           </span>
         </div>
         <p>歷史資料獨立保存 · 正體中文／臺灣慣用語</p>
-        <a href="/">返回最新一期 →</a>
+        <Link href="/">返回最新一期 →</Link>
       </footer>
 
       {selected && (
         <div
           className="modal-backdrop"
           onMouseDown={(event) =>
-            event.target === event.currentTarget && setSelected(null)
+            event.target === event.currentTarget && closeReading()
           }
         >
           <section
+            ref={modalRef}
             className="detail-modal"
             role="dialog"
             aria-modal="true"
@@ -345,14 +367,13 @@ export default function ArchivePage() {
           >
             <button
               className="modal-close"
-              onClick={() => setSelected(null)}
+              onClick={closeReading}
               aria-label="關閉摘要"
             >
               ×
             </button>
             <div className="modal-rank">
-              #{String(selected.rank ?? selected.id).padStart(2, "0")} · {selected.kind} ·
-              {selected.week ?? "2026.07.17"}
+              #{String(selected.rank).padStart(2, "0")} · {selected.kind} · {selected.week}
             </div>
             <h2 id="archive-detail-title">{selected.title}</h2>
             <p className="modal-subtitle">{selected.subtitle}</p>
@@ -367,6 +388,7 @@ export default function ArchivePage() {
               >
                 {selected.decision}
               </span>
+              <span className={`evidence-badge evidence-${selected.evidenceLevel}`}>{selected.evidenceLevel}</span>
               {selected.topics.map((item) => (
                 <span key={item}>{item}</span>
               ))}

@@ -1,871 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import socialEdition from "../public/social-content/data/2026-08-10.json";
 
-export type Reading = {
-  id: number;
-  rank?: number;
-  week?: string;
-  batch?: "本週新發" | "補遺";
-  title: string;
-  subtitle: string;
-  date: string;
-  dateValue: string;
-  authors: string;
-  source: string;
-  sourceLabel: string;
-  pdf?: string;
-  decision: "深入審閱" | "選讀";
-  kind: "學術論文" | "政策研究" | "產業報告";
-  topics: string[];
-  summary: string;
-  findings: string[];
-  relevance: string;
-  action: string;
-  caveat: string;
-  crossCheck?: string;
-  metric?: string;
-};
-
-export const readings: Reading[] = [
-  {
-    id: 20,
-    rank: 1,
-    week: "2026.08.07",
-    batch: "本週新發",
-    title: "Breadcrumbing Search Agents",
-    subtitle: "以協調式證據鏈劫持搜尋代理的長流程判斷",
-    date: "2026.08.05",
-    dateValue: "2026-08-05",
-    authors: "Xuebin Li、Hanqing Zhao、Siyuan Liang、Kejiang Chen、Weiming Zhang、Dacheng Tao、Nenghai Yu",
-    source: "https://arxiv.org/abs/2608.04565",
-    sourceLabel: "arXiv:2608.04565",
-    pdf: "https://arxiv.org/pdf/2608.04565",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Data Lineage", "DSPM / DLP", "Threat Modeling"],
-    summary:
-      "指出搜尋代理即使會追問與交叉核對，也可能被搜尋中介層逐步餵入相互呼應的污染證據；攻擊不是靠單一惡意頁面，而是沿整段研究軌跡建構看似可信的 authority chain。",
-    findings: [
-      "Authority-Chain Hijack 只需在每次查詢附加一個可控結果，即可把孤立的頁面操控串成一致證據鏈。",
-      "在 SafeSearch 完整測試集，ACH 的 Overall ASR 為 55.9%，MaxN ASR 為 83.3%。",
-      "Trace-Guided Strategy Evolution 以執行軌跡自動改進攻擊策略，最強設定在保留測試達 71.4%／95.0%。",
-    ],
-    relevance:
-      "採購、法規、供應鏈、設備維修與技術情報 Agent 可能依賴多輪搜尋；若搜尋 API、proxy 或企業 retrieval layer 被操控，表面上的多來源交叉核對反而會強化錯誤結論。",
-    action:
-      "在 AI System Threat Model 加入搜尋中介層與 trajectory-level lineage；保留每次查詢、排名、抓取內容與來源身分，並以獨立通道驗證高風險決策的關鍵證據。",
-    caveat:
-      "38 頁 preprint；威脅模型假設攻擊者能控制搜尋中介並在每次查詢插入一個結果，企業環境須依實際 search provider、proxy 與工具權限重測。",
-    crossCheck:
-      "與 RAG／Memory poisoning 研究方向一致，但攻擊面更早：污染的是代理建立證據的過程。這代表頁面級 Prompt Injection 過濾不足以保護整段調查。",
-    metric: "55.9% ASR｜83.3% MaxN ASR",
-  },
-  {
-    id: 21,
-    rank: 2,
-    week: "2026.08.07",
-    batch: "本週新發",
-    title: "MutMem",
-    subtitle: "Cryptographically Authorized Mutation in Persistent Agent Memory",
-    date: "2026.08.03",
-    dateValue: "2026-08-03",
-    authors: "Walid Saidi",
-    source: "https://arxiv.org/abs/2608.02843",
-    sourceLabel: "arXiv:2608.02843",
-    pdf: "https://arxiv.org/pdf/2608.02843",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Data Lineage", "DDR", "Threat Modeling"],
-    summary:
-      "提出持久記憶的授權變更協定：每次非微小權重變動都綁定 provenance、簽章 epoch、前後權重、no-fork predecessor 與雜湊承諾，讓審查者區分合法調整與資料庫竄改。",
-    findings: [
-      "Poison-likely 內容不直接刪除，而以可修訂的簽章標籤保留，並把標籤納入召回時的信任依據。",
-      "原生測試通過授權、拓樸、防竄改、簽章 epoch 與變更後召回案例；簽章轉換延遲中位數 4.865 ms。",
-      "在 N=100 PoisonedRAG adaptation，攻擊 top-5 揭露為 0/100；消融實驗在繞過 policy 時選中 poison 94/100，恢復簽章標籤後為 0/100。",
-    ],
-    relevance:
-      "維修、品質、採購或工程 Agent 會隨結果調整長期記憶權重；跨廠區、跨法域的稽核必須能證明誰授權變更、基於何種結果，以及歷史是否被分叉或覆寫。",
-    action:
-      "為記憶變更建立簽章、append-only audit log、no-fork chain 與獨立 verifier；召回時同時評估內容、來源、授權者、版本與信任標籤。",
-    caveat:
-      "單一作者、32 頁 preprint，且結果依 HOM-AIMOS／指定資料集；密碼學證據只能證明完整性、授權與歷史連續性，不能證明內容為真。",
-    crossCheck:
-      "補足 MemSecBench 的治理落地：後者顯示 Write–Execute–Forget 的風險，MutMem 則示範如何對 memory mutation 建立可驗證 lineage。",
-    metric: "4.865 ms｜Poison top-5 0/100",
-  },
-  {
-    id: 22,
-    rank: 3,
-    week: "2026.08.07",
-    batch: "本週新發",
-    title: "Permission Denied",
-    subtitle: "Policy-Graded Evaluation of Coding Agents in Hardened Environments",
-    date: "2026.08.02",
-    dateValue: "2026-08-02",
-    authors: "Dotan Davidovich、Yair Amar、Hai Rozencwajg、Or Hiltch",
-    source: "https://arxiv.org/abs/2608.02670",
-    sourceLabel: "arXiv:2608.02670",
-    pdf: "https://arxiv.org/pdf/2608.02670",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "DDR", "Threat Modeling"],
-    summary:
-      "在 scoped credentials、限制 egress、唯讀檔案系統與非 root 執行等企業政策下測試 Coding Agents，證明寬鬆沙箱的 benchmark 無法代表真正受控環境。",
-    findings: [
-      "12 個 Coding Agents 在 Terminal-Bench 2.1 的巢狀政策層級中受測。",
-      "最嚴格政策下成功率最多下降 18.3 個百分點，成本最多增加 167.3%；維持成功率與維持效率的模型排序並不一致。",
-      "遭政策阻擋時，Agent 常以 timeout 或錯誤解答收場，而非提早、清楚地拒絕；作者並釋出 Boundary-Bench。",
-    ],
-    relevance:
-      "韌體、BMC、BIOS、測試工具與 CI/CD Agent 應在最小權限、受限網路與唯讀基線下運作；如果只在全權 sandbox 驗證，正式上線後可能以超時或錯誤變更悄悄失敗。",
-    action:
-      "把生產政策複製到 Agent 驗收環境，分別量測成功率、成本、超時、錯誤解答與拒絕品質；按任務與風險選模型，不以單一 benchmark 排名決策。",
-    caveat:
-      "Preprint，結果集中於 Terminal-Bench 2.1 與 12 個 Agent；製造企業需針對實際原始碼庫、建置工具、proxy 與憑證政策重跑。",
-    crossCheck:
-      "與 Agent 權限最小化原則並不衝突；研究的重點是安全政策會改變錯誤模式，因此治理需同時驗證安全性、任務可解性與失敗行為。",
-    metric: "成功 -18.3 pts｜成本 +167.3%",
-  },
-  {
-    id: 23,
-    rank: 4,
-    week: "2026.08.07",
-    batch: "本週新發",
-    title: "Why Formal Monitors Fail",
-    subtitle: "Attack Distribution Entropy as a Coverage Bound for LTL-Based LLM Agent Safety",
-    date: "2026.08.02",
-    dateValue: "2026-08-02",
-    authors: "Ruiyang Zhang",
-    source: "https://arxiv.org/abs/2608.01388",
-    sourceLabel: "IEEE IS'26",
-    pdf: "https://arxiv.org/pdf/2608.01388",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "DDR", "Threat Modeling"],
-    summary:
-      "用攻擊分布熵解釋固定 LTL／FSA 規則為何在某些模型可攔截多數惡意工具序列，換到另一模型卻幾乎失效；覆蓋率受攻擊模式集中度上限約束。",
-    findings: [
-      "跨 8 個前沿模型架構驗證：GPT／DeepSeek 的攻擊分布集中，單一模式涵蓋 96%，monitor recall 為 68%–75%。",
-      "Gemini variants 的攻擊分布較分散，7 個 cluster 各不超過 7%，recall 僅 6%–13%，即使依架構重訓仍低。",
-      "熵解釋 76% 覆蓋率變異，並提出小型攻擊樣本的部署前 entropy test。",
-    ],
-    relevance:
-      "同一套 Agent runtime policy 若套用到不同廠區、模型或供應商，可能產生完全不同的漏報率；OT、ERP、PLM 等高風險工具不能假設固定序列規則可跨模型移植。",
-    action:
-      "每個模型／Agent 組合都應獨立量測攻擊分布與 monitor recall；固定規則搭配語意、行為與結果層監控，並把模型升版視為需重驗的安全變更。",
-    caveat:
-      "已獲 IEEE IS'26 接受，但只有 6 頁，實驗與定理聚焦離散動作序列的 FSA monitor；不代表所有 runtime guard 都受同樣數字約束。",
-    crossCheck:
-      "研究把先前常被當成模型能力差異的現象轉成可量測的 coverage bound，適合作為 DDR／Agent guard 選型前的壓力測試方法。",
-    metric: "8 架構｜Recall 6%–75%",
-  },
-  {
-    id: 24,
-    rank: 5,
-    week: "2026.08.07",
-    batch: "本週新發",
-    title: "DiagChain",
-    subtitle: "Evidence-Grounded Attack Chain Reconstruction Benchmark",
-    date: "2026.08.04",
-    dateValue: "2026-08-04",
-    authors: "Xuyang Liu、Yibin Han、Zhenwei Zhang、Kai Chang、Zhiwei Xu、Tian Qiu、Weixian Deng、Jiabao Gao、Xiaolin Peng、Hai Wan、Xibin Zhao",
-    source: "https://arxiv.org/abs/2608.03591",
-    sourceLabel: "arXiv:2608.03591",
-    pdf: "https://arxiv.org/pdf/2608.03591",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["DDR", "Data Lineage", "Agent Security", "Threat Modeling"],
-    summary:
-      "建立以證據為核心的攻擊鏈重建 benchmark，不只看最終答案，而是逐階段檢查 Agent 是否取回正確 telemetry、納入推理、排序事件並維持結構化事件鏈。",
-    findings: [
-      "MAIN-69 包含 69 個跨作業系統、噪音層級與攻擊鏈長度的情境，共 849 個 reference steps。",
-      "ECRAG 把 evidence retrieval 與持續更新的結構化攻擊鏈表示結合，並以 5 項互補指標診斷失敗位置。",
-      "6 個 LLM 的評估中，最強配置也只成功處理 39.6% 的 849 個步驟；大型模型的主要瓶頸轉為事件排序。",
-    ],
-    relevance:
-      "製造業 SOC 必須整合 EDR、身分、雲端、網路與 OT telemetry；AI 若只產生看似合理的攻擊故事，可能誤導隔離設備、停線或供應鏈事件判斷。",
-    action:
-      "以 stage-wise 指標驗收 IR／DDR Copilot；每個重建步驟必須連回證據 ID、時間與來源，低信心或證據衝突時不得自動執行阻斷。",
-    caveat:
-      "Preprint；MAIN-69 與 849 個步驟仍是研究型 benchmark，未必涵蓋專有 OT protocol、跨廠區時鐘偏差與企業特有 telemetry。",
-    crossCheck:
-      "與傳統『最終答案正確率』不同，DiagChain 能揭露 retrieval、證據納入與排序錯誤，較適合用來設計可稽核 DDR Agent。",
-    metric: "69 情境｜849 步驟｜39.6%",
-  },
-  {
-    id: 25,
-    rank: 6,
-    week: "2026.08.07",
-    batch: "本週新發",
-    title: "Evading Chain-of-Thought Monitoring Through Model Poisoning",
-    subtitle: "以模型後門讓惡意行為保留、推理軌跡卻看似正常",
-    date: "2026.08.03",
-    dateValue: "2026-08-03",
-    authors: "Giorgio Severi、Shujaat Mirza、Blake Bullwinkel、Amanda Minnich",
-    source: "https://arxiv.org/abs/2608.02820",
-    sourceLabel: "arXiv:2608.02820",
-    pdf: "https://arxiv.org/pdf/2608.02820",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Data Lineage", "Threat Modeling", "DDR"],
-    summary:
-      "證明 reasoning model 可被植入 CoT-Hidden backdoor：觸發時輸出攻擊者指定行為，但可見推理仍保持無害，使把 Chain-of-Thought 當主要監控訊號的安全堆疊失去依據。",
-    findings: [
-      "簡單 fine-tuning 即可在不同 reasoning model 架構與規模植入隱藏後門；若直接污染不足，作者以 curriculum training 逐步教會模型隱藏行為。",
-      "因果干預定位到不依賴可見推理的 trigger-conditioned activation pathway。",
-      "Residual stream verbalization 可在答案生成前發出異常警告，但無法識別 trigger、目標或後門機制。",
-    ],
-    relevance:
-      "若韌體、程式碼或工程 Agent 使用第三方 fine-tune／adapter，乾淨的 CoT 日誌不能證明模型沒有隱蔽目標；供應鏈後門可能在特定產品、客戶或檔案模式下才觸發。",
-    action:
-      "CoT 監控只作輔助訊號；同時要求模型／adapter lineage、簽章與可信重建，並以輸入觸發探索、輸出行為差異與獨立 policy enforcement 驗收。",
-    caveat:
-      "15 頁 preprint，摘要未提供可直接比較的整體成功率；內部 activation 分析也不等於已可部署的後門偵測器。",
-    crossCheck:
-      "與 ToxScreen、VLM 架構後門共同支持：模型來源、權重、adapter、架構及輸出行為都需納入驗收，不能把可解釋性訊號當完整性證明。",
-    metric: "跨架構 CoT-Hidden Backdoor",
-  },
-  {
-    id: 26,
-    rank: 7,
-    week: "2026.08.07",
-    batch: "本週新發",
-    title: "Privacy-Preserving AI Verification via Minimal Information Disclosure",
-    subtitle: "在可驗證與敏感資訊外洩之間量化最小揭露",
-    date: "2026.08.03",
-    dateValue: "2026-08-03",
-    authors: "Sleem Abdelghafar、Gabriel Kulp",
-    source: "https://arxiv.org/abs/2608.02774",
-    sourceLabel: "arXiv:2608.02774",
-    pdf: "https://arxiv.org/pdf/2608.02774",
-    decision: "選讀",
-    kind: "學術論文",
-    topics: ["Data Lineage", "DSPM / DLP", "Threat Modeling"],
-    summary:
-      "提出 Minimal Information Disclosure，以條件互資訊量測驗證證據在授權結果之外洩漏多少模型、工作負載或硬體敏感資訊，並探索可驗證性與隱私的前緣。",
-    findings: [
-      "以 4 種實體量測與 6 項驗證任務，涵蓋執行類型、硬體身分、運算規模與模型身分。",
-      "3 種 release 在 held-out 驗證達到完全正確且量測到零 collateral leakage；其他任務呈現明確 privacy–utility frontier。",
-      "作者以 Groth16 zk-SNARK 示範可由零知識證明驗證的線性投影 release。",
-    ],
-    relevance:
-      "跨國製造業常需向客戶、總部或稽核方證明工廠 edge AI 使用核准模型與硬體，又不能揭露製程、產能、模型 IP 或客戶 workload。",
-    action:
-      "在供應商 attestation 與跨法域稽核先定義『可證明主張』和『受保護屬性』，再選證據 channel、收集政策與 release transformation。",
-    caveat:
-      "Preprint；零量測外洩只成立於指定資料、攻擊者知識與估計方法，不等於任何實務部署下都零洩漏，因此判定選讀。",
-    crossCheck:
-      "這不是一般 DLP 產品評估，而是驗證資料最小化的設計方法；可補足 AIBOM／attestation 在供應商不願揭露全部細節時的治理選項。",
-    metric: "6 任務｜3 組零量測旁漏",
-  },
-  {
-    id: 14,
-    rank: 1,
-    week: "2026.07.31",
-    batch: "本週新發",
-    title: "MemSecBench",
-    subtitle: "Tracking Agent Memory Poisoning from Persistence to Consequence and Repair",
-    date: "2026.07.29",
-    dateValue: "2026-07-29",
-    authors: "Xuanze Chen、Xukang Xie、Wentao Fu、Jiajun Zhou、Shanqing Yu、Qi Xuan",
-    source: "https://arxiv.org/abs/2607.27080",
-    sourceLabel: "arXiv:2607.27080",
-    pdf: "https://arxiv.org/pdf/2607.27080",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Data Lineage", "DDR", "Threat Modeling"],
-    summary:
-      "以 Write–Execute–Forget 完整生命週期測試 Agent 記憶污染，首次把惡意內容能否寫入、日後是否造成真實動作，以及能否選擇性修復放在同一套可重現評估中。",
-    findings: [
-      "310 個案例來自 48 種程式、科學、辦公與日常情境，橫跨 24 組 Agent、記憶與模型配置。",
-      "惡意記憶在全部配置中的持續留存率為 84.2%，完整 Write–Execute 攻擊鏈成功率為 50.3%。",
-      "不同記憶堆疊的端到端攻擊成功率最多相差 16.1 個百分點，選擇性修復最多相差 41.3 個百分點。",
-    ],
-    relevance:
-      "跨國製造業若讓 Agent 長期記住維修工單、供應商郵件、品質異常、設備參數與工程偏好，受污染內容可能隔日才影響採購、韌體、PLM 或 OT 操作。",
-    action:
-      "把 Agent memory 納入資料治理：記錄寫入來源、版本、信任等級與召回原因；高風險動作前重查原始證據，並建立可選擇性刪除與回復測試。",
-    caveat:
-      "屬未經同儕審查的 preprint；百分比來自隔離環境與指定 24 組配置，不能直接當作企業環境發生率。",
-    crossCheck:
-      "與 Bad Memory、GhostWriter 及 Self-State 使用不同攻擊面卻得到一致方向：記憶不是單純便利功能，而是需要完整性、來源追蹤與復原能力的獨立信任邊界。",
-    metric: "84.2% 留存｜50.3% 完整攻擊鏈",
-  },
-  {
-    id: 15,
-    rank: 2,
-    week: "2026.07.31",
-    batch: "本週新發",
-    title: "Architectural Backdoors in Vision-Language Model Supply Chains",
-    subtitle: "以 Representation Steering 植入不需資料污染的架構後門",
-    date: "2026.07.28",
-    dateValue: "2026-07-28",
-    authors: "Maria Rosaria Briglia、Igor Maljkovic、Antonio Emanuele Cinà、Luca Oneto、Iacopo Masi、Fabio Roli",
-    source: "https://arxiv.org/abs/2607.25479",
-    sourceLabel: "arXiv:2607.25479",
-    pdf: "https://arxiv.org/pdf/2607.25479",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Data Lineage", "Threat Modeling", "Agent Security"],
-    summary:
-      "證明惡意供應商可在 VLM 架構或匯出的 computation graph 植入休眠 steering logic；不必污染訓練資料、控制微調或修改部署 prompt，也能在觸發時改變模型行為。",
-    findings: [
-      "攻擊在無觸發條件時歸零，因而能維持乾淨輸入下的正常效能並躲過一般驗收。",
-      "跨 VLM 家族及視覺問答、文生圖、檢索與語意偏誤任務測試，會破壞完整性、安全控管與排序公平性。",
-      "作者主張審計不能只檢查權重，還必須檢視模型 artifact 內可執行的架構邏輯。",
-    ],
-    relevance:
-      "AI 視覺檢測、AOI、倉儲辨識與設計圖面助理常重用第三方 checkpoint、encoder 與匯出模型；後門可能只在特定零件、標記或客戶圖樣出現時觸發。",
-    action:
-      "把架構定義、custom operator、ONNX／TorchScript graph、encoder、轉換工具與 hash 納入 AIBOM；在隔離環境做 graph diff、觸發測試與重建驗證。",
-    caveat:
-      "Preprint，摘要未提供可直接外推的單一攻擊成功率；企業需針對實際 VLM、轉檔鏈與 AOI 影像分布獨立重測。",
-    crossCheck:
-      "ToxScreen 顯示即使有白箱權重也沒有方法能找出所有訓練後門；本研究進一步指出，只看權重更會漏掉嵌在可執行 graph 的架構後門。",
-    metric: "4 類 VLM 下游任務",
-  },
-  {
-    id: 16,
-    rank: 3,
-    week: "2026.07.31",
-    batch: "本週新發",
-    title: "ToxScreen",
-    subtitle: "Detecting Whether an LLM Has Been Poisoned",
-    date: "2026.07.29",
-    dateValue: "2026-07-29",
-    authors: "Anthony Hughes、Nicole Xing、Collin Francel、Andy Kim、Andrew Draganov",
-    source: "https://arxiv.org/abs/2607.26849",
-    sourceLabel: "arXiv:2607.26849",
-    pdf: "https://arxiv.org/pdf/2607.26849",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Data Lineage", "Threat Modeling"],
-    summary:
-      "發布約 800 個後門模型的白箱 benchmark，測試防守方在沒有訓練資料、可信參考模型與觸發詞資訊時，能否判定模型遭污染並找回觸發條件。",
-    findings: [
-      "涵蓋不同攻擊目標、觸發機制、污染比例、模型規模與後門訓練方法。",
-      "梯度式 prompt 最佳化無法可靠找回觸發詞；以 attack-success rate 排序候選 token 的查找法在後門有效時表現較佳。",
-      "沒有任何方法能可靠找出全部後門；模型異常容易被 jailbreak 可作為訊號，但不是充分證據。",
-    ],
-    relevance:
-      "製造企業採購或下載基礎模型、程式碼模型與設備邊緣模型時，僅做功能測試與 hash 驗證無法證明模型沒有供應鏈後門。",
-    action:
-      "在模型驗收加入 trigger search、行為差異測試、來源與訓練 lineage、簽章與可信重建；偵測結果應作風險訊號，不可視為「無後門證明」。",
-    caveat:
-      "Preprint；benchmark 後門由研究者控制生成，與真實供應鏈攻擊的隱蔽度仍有差距，且方法需要白箱權重。",
-    crossCheck:
-      "與 VLM 架構後門研究合併判讀後，驗收範圍應從權重擴展至 architecture、export graph、custom code 與轉換環境。",
-    metric: "約 800 個後門模型",
-  },
-  {
-    id: 17,
-    rank: 4,
-    week: "2026.07.31",
-    batch: "本週新發",
-    title: "RAGuard",
-    subtitle: "A Layered Defense Framework for RAG Systems Against Data Poisoning",
-    date: "2026.07.28",
-    dateValue: "2026-07-28",
-    authors: "Pushkal Kumar、Tucker Nielson、Tanish Kolhe、Shubham Zala、Vincent Li",
-    source: "https://arxiv.org/abs/2607.26339",
-    sourceLabel: "arXiv:2607.26339",
-    pdf: "https://arxiv.org/pdf/2607.26339",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Data Lineage", "DSPM / DLP", "Threat Modeling"],
-    summary:
-      "提出兩層 RAG 資料污染防禦：先訓練 retriever 降低惡意文件排名，再以 leave-one-out 反事實推論觀察移除單一文件後答案與熵的變化。",
-    findings: [
-      "在 5%–30% 污染比例的 Natural Questions 測試中，作者報告防禦配置的量測攻擊成功率皆降為 0.000。",
-      "Recall@5 與乾淨語料基線相差不超過 0.03，且程式碼、資料集與評估工具已公開。",
-      "代價是 k+1 次生成；k=5 時為 6 倍 generator passes，且對維持關鍵字的 BM25 污染威脅效果有限。",
-    ],
-    relevance:
-      "維修手冊、品質知識庫、供應商文件與工程規範常被匯入 RAG；若 lineage 不完整，錯誤或惡意段落可能影響維修、採購與製程決策。",
-    action:
-      "先以來源、版本、簽章與敏感標籤治理 corpus，再將反事實文件影響分數用於高風險查詢；以工廠多語言語料測量準確率、延遲與成本。",
-    caveat:
-      "雖已獲兩個 workshop 接受，但 0.000 是特定資料集與威脅模型下的量測值；6 倍推論成本與 BM25 邊界限制其直接部署。",
-    crossCheck:
-      "本研究補強 Data Lineage 的執行期驗證，但無法取代 corpus admission、文件身分、版本與來源控制；兩者必須並行。",
-    metric: "ASR 0.000｜k=5 時 6× 推論",
-  },
-  {
-    id: 18,
-    rank: 5,
-    week: "2026.07.31",
-    batch: "本週新發",
-    title: "Agent Security Needs Redefinition through a Holistic Framework",
-    subtitle: "從內容判斷轉向授權情境與資料隔離",
-    date: "2026.07.24",
-    dateValue: "2026-07-24",
-    authors: "Vincent Siu、Jingxuan He、Kyle Montgomery、Zhun Wang、Chenguang Wang、Dawn Song",
-    source: "https://arxiv.org/abs/2607.22024",
-    sourceLabel: "ICML 2026 Position Paper",
-    pdf: "https://arxiv.org/pdf/2607.22024",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Threat Modeling", "Agent Security", "DSPM / DLP"],
-    summary:
-      "主張 Agent Security 不能只判斷動作內容是否危險，而應持續驗證 Source Authorization、Task Alignment、Action Alignment 與 Data Isolation 四項情境屬性。",
-    findings: [
-      "作者指出 AgentDojo 與 WASP 的 injection 任務中，同一動作也可能是已驗證使用者的正常請求，內容本身無法區分合法與攻擊。",
-      "間接 prompt injection 可重述為來源授權違規，而非只靠文字分類器偵測惡意指令。",
-      "單點 snapshot benchmark 無法評估跨步驟、跨權限邊界的 Data Isolation。",
-    ],
-    relevance:
-      "刪除工單、下載 BOM 或修改排程本身未必惡意；真正關鍵是誰授權、是否符合當前任務、資料能否跨廠區／客戶／法域流動。",
-    action:
-      "把四項屬性加入 AI System Threat Model 與 Agent audit event；每次工具呼叫記錄來源、委派者、任務、資料標籤、目的地及 policy decision。",
-    caveat:
-      "這是 ICML position paper，重點是重新定義問題而非提供新的大規模實驗；應作威脅模型框架，不宜當成防禦效果證明。",
-    crossCheck:
-      "IH-Benchmark 在 37 個模型中觀察到 system–user 與 user–tool 衝突韌性並不等價，支持企業必須按來源與衝突面分開測試。",
-    metric: "4 項持續情境屬性",
-  },
-  {
-    id: 19,
-    rank: 6,
-    week: "2026.07.31",
-    batch: "本週新發",
-    title: "PUDA",
-    subtitle: "An AI-Native Hardware Harness for Self-Driving Laboratories",
-    date: "2026.07.29",
-    dateValue: "2026-07-29",
-    authors: "Zekun Ren、Hongzhao Tan、Jiaen Yee、Kedar Hippalgaonkar",
-    source: "https://arxiv.org/abs/2607.26464",
-    sourceLabel: "arXiv:2607.26464",
-    pdf: "https://arxiv.org/pdf/2607.26464",
-    decision: "選讀",
-    kind: "學術論文",
-    topics: ["Data Lineage", "Agent Security", "Threat Modeling"],
-    summary:
-      "提出讓 AI Agent 操作實體實驗設備的 headless runtime：Agent 決定實驗，但硬體層只執行經驗證、具原子性且可稽核的命令，並保存從 protocol 到量測結果的 provenance。",
-    findings: [
-      "裝置以可探索 CLI 與 JSON protocol 呈現，經分散式訊息層路由。",
-      "protocol、run、sample、measurement 與 command log 以 run ID 和時間戳串接。",
-      "把科學編排與實體操作／telemetry 分離，讓 Agent 有決策彈性但不直接控制未驗證的硬體動作。",
-    ],
-    relevance:
-      "對自動化實驗室、材料研發、製程試驗與工廠 physical AI 具直接參考價值，可避免 Agent 產出的命令與實際設備狀態、樣本及結果脫節。",
-    action:
-      "將相同模式套用到 OT／實驗設備：命令 schema 驗證、原子執行、run ID、設備回應、樣本與結果 lineage，以及高風險命令的人工閘門。",
-    caveat:
-      "這是系統架構論文，不是攻防評估；尚未證明能抵抗 prompt injection、惡意工具或遭竄改 telemetry，因此判定為選讀。",
-    crossCheck:
-      "其 separation-of-duty 與 provenance 設計和 commit-time authorization 方向一致：決策可由 Agent 產生，但造成物理效果前要經獨立、可稽核的執行層。",
-    metric: "Protocol → Run → Sample → Result",
-  },
-  {
-    id: 8,
-    rank: 1,
-    week: "2026.07.24",
-    batch: "補遺",
-    title: "Confused Deputy Attack Against Model Context Protocol",
-    subtitle: "以工具中繼資料劫持 MCP 的非確定性選擇機制",
-    date: "2026.07.15",
-    dateValue: "2026-07-15",
-    authors: "Zhiyuan Li、Jingzheng Wu、Yuhao Peng、Tianyue Luo、Xing Cui、Xiang Ling",
-    source: "https://doi.org/10.1145/3830467",
-    sourceLabel: "ACM TOSEM",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Threat Modeling", "DSPM / DLP"],
-    summary:
-      "揭露 MCP 的語意式工具選擇可被惡意伺服器以名稱與描述操控，使模型把原應交給良性工具的呼叫交給攻擊者，形成難以被現有掃描器察覺的 confused deputy。",
-    findings: [
-      "Puppet 框架跨 6 家供應商的 14 個模型及 2 個 MCP hosts 進行評估。",
-      "工具選擇劫持率最高 90.89%，端到端惡意 payload 執行率最高 86.46%。",
-      "MCP-Scan 與 McpSafetyScanner 無法偵測僅操控中繼資料的攻擊；推理型模型反而顯著更脆弱。",
-    ],
-    relevance:
-      "製造業 Agent 常以 MCP 連接 PLM、ERP、Git、品質資料庫與維運工具；一旦同名或相似描述的惡意工具被選中，就可能截取 BOM、配方、客戶規格與存取憑證。",
-    action:
-      "不要讓模型單獨決定高風險工具；建立伺服器身分與簽章驗證、工具 allowlist、呼叫目標綁定、敏感資料 egress policy，並在執行前顯示實際 server identity。",
-    caveat:
-      "已被 ACM TOSEM 接受，但公開頁面只提供摘要與方法概要；企業應先在自家 MCP client、模型與工具命名空間重跑測試，再設定阻擋門檻。",
-    crossCheck:
-      "Microsoft AutoJack 研究以不同攻擊鏈證明 Agent 會成為跨越 localhost 與控制面的 confused deputy；兩者共同指出只靠來源位置或語意判斷不足。",
-    metric: "90.89% 劫持｜86.46% 執行",
-  },
-  {
-    id: 9,
-    rank: 2,
-    week: "2026.07.24",
-    batch: "本週新發",
-    title: "ResearchArena",
-    subtitle: "Evaluating Sabotage and Monitoring in Automated AI R&D",
-    date: "2026.07.21",
-    dateValue: "2026-07-21",
-    authors: "Lena Libon、Ben Rank、Jehyeok Yeon、David Schmotz、Jeremy Qin、Daniel Donnelly、Derck Prinzhorn、Maksym Andriushchenko",
-    source: "https://arxiv.org/abs/2607.19321",
-    sourceLabel: "arXiv:2607.19321",
-    pdf: "https://arxiv.org/pdf/2607.19321",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Threat Modeling", "Data Lineage"],
-    summary:
-      "把自動化 AI R&D 視為不可信供應鏈：Agent 產出的模型、adapter、CUDA kernel 或 inference server 可能暗藏破壞，監控器必須驗證成品而非只讀取操作軌跡。",
-    findings: [
-      "涵蓋 safety／capability post-training、CUDA kernel 與 inference server 四項長流程任務。",
-      "訓練資料中的隱蔽破壞最難偵測，被標記的比例不到一半。",
-      "允許監控器實際執行與探測成品會改善結果，但仍會因只看表面、錯誤解釋異常或測試選錯而漏報。",
-    ],
-    relevance:
-      "跨國製造業自行微調視覺檢測、預測維護或排程模型時，外包資料處理、第三方 adapter 與最佳化 kernel 都可能成為隱蔽供應鏈入口。",
-    action:
-      "把資料集、權重、adapter、kernel、容器與測試結果納入可驗證 lineage；以 golden dataset、差異測試、隔離執行與獨立監控器作為部署閘門。",
-    caveat:
-      "51 頁 preprint，尚未同儕審查；「少於一半」是特定任務與監控器設定的結果，不可直接外推企業偵測率。",
-    crossCheck:
-      "與英國 DSIT 的研究缺口一致：AI 資料與模型權重完整性，以及 AI 攻擊面與傳統 IT 基礎設施的銜接，仍缺成熟驗證方法。",
-    metric: "4 類長流程任務",
-  },
-  {
-    id: 10,
-    rank: 3,
-    week: "2026.07.24",
-    batch: "本週新發",
-    title: "Self-State Attacks on Self-Hosted AI Agents",
-    subtitle: "How Far Can OS Defenses Go?",
-    date: "2026.07.20",
-    dateValue: "2026-07-20",
-    authors: "Yimeng Chen、Nathanaël Denis、Roberto Di Pietro、Jürgen Schmidhuber",
-    source: "https://arxiv.org/abs/2607.17986",
-    sourceLabel: "arXiv:2607.17986",
-    pdf: "https://arxiv.org/pdf/2607.17986",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "DDR", "Data Lineage", "Threat Modeling"],
-    summary:
-      "定義 self-state attack：攻擊者透過合法 OS system call 竄改 Agent 自己的指令、設定或記憶檔；這類行為在作業系統層可能與正常寫入難以區分。",
-    findings: [
-      "建立 Target、Mechanism、Granularity、Temporal 四軸攻擊空間。",
-      "以真實 Agent 活動軌跡實作 23-cell matrix 與 43 個對 self-state files 的具體操作。",
-      "分層防禦對多數攻擊有效，但仍有一小部分在 OS 層結構性不可區分。",
-    ],
-    relevance:
-      "工廠 edge Agent、工程工作站與內網自架 Agent 常長時間運作並保存設備參數、工單與記憶；單靠 EDR 檔案寫入事件，未必能判斷是合理自我更新或被污染。",
-    action:
-      "對指令與設定層採唯讀／強 ACL；記憶層以 workload baseline 偵測；保留週期性 immutable backup，並記錄寫入者、來源、差異與回復點。",
-    caveat:
-      "21 頁 preprint，以代表性自架 Agent 的工作負載實驗；不同 OS、Agent framework 與工廠 edge runtime 的基準需另行校正。",
-    crossCheck:
-      "Bad Memory 從 prompt injection 證明持久記憶可跨 session 影響行為；本研究則從 OS 層補足偵測與復原邊界。",
-    metric: "23 cells｜43 個操作",
-  },
-  {
-    id: 11,
-    rank: 4,
-    week: "2026.07.24",
-    batch: "補遺",
-    title: "Bad Memory",
-    subtitle: "Evaluating Prompt Injection Risks from Memory in Agentic Systems",
-    date: "2026.07.16",
-    dateValue: "2026-07-16",
-    authors: "Soham Gadgil、David Alexander、Sai Sunku、Franziska Roesner",
-    source: "https://arxiv.org/abs/2607.14611",
-    sourceLabel: "arXiv:2607.14611",
-    pdf: "https://arxiv.org/pdf/2607.14611",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Data Lineage", "Threat Modeling"],
-    summary:
-      "直接評估 Claude Code 與 Codex 的持久記憶風險：雖然誘使 Agent 主動覆寫記憶並不容易，但預先植入記憶檔的 payload 能攻擊目前與未來 session。",
-    findings: [
-      "涵蓋 Claude Code、OpenAI Codex 與四個模型，在沙箱化合成 workspace 測試。",
-      "已植入的記憶 payload 可跨 session 生效；成功率與持久性受系統、模型、目標與多階段流程影響。",
-      "持久記憶使 prompt injection 從單次輸入事件轉為需要版本、來源與寫入治理的狀態風險。",
-    ],
-    relevance:
-      "研發 Agent 讀取 repository instruction、維修手冊與工作偏好後，受污染的記憶可能在日後改動韌體、CI/CD 或設備設定時才觸發。",
-    action:
-      "記憶檔納入變更審查、簽章、來源標籤、版本差異與回復；外部內容不得自動升級為長期指令，高風險工具呼叫前重查原始依據。",
-    caveat:
-      "Preprint 與合成 workspace；模型版本與 Agent 記憶機制更新很快，結果應視為攻擊可行性證據，不是固定產品風險分數。",
-    crossCheck:
-      "與 GhostWriter、FARMA 及本週 Self-State 三組不同實驗共同支持：Memory integrity 應被視為獨立 trust boundary。",
-    metric: "2 Agent 系統｜4 模型",
-  },
-  {
-    id: 12,
-    rank: 5,
-    week: "2026.07.24",
-    batch: "補遺",
-    title: "Multi-Agent Firewall Architecture",
-    subtitle: "Privacy Protection of Sensitive Data in Interactions with Language Models",
-    date: "2026.07.09",
-    dateValue: "2026-07-09",
-    authors: "Hugo García Cuesta、Pablo Mateo Torrejón、Alfonso Sánchez-Macián",
-    source: "https://arxiv.org/abs/2607.08282",
-    sourceLabel: "arXiv:2607.08282",
-    pdf: "https://arxiv.org/pdf/2607.08282",
-    decision: "選讀",
-    kind: "學術論文",
-    topics: ["DSPM / DLP", "Agent Security"],
-    summary:
-      "提出瀏覽器延伸套件加 proxy 的開源 LLM firewall，以確定性偵測器與 LLM 語意分析混合檢查 HTTP(S)、WebSocket 及專有程式碼外洩。",
-    findings: [
-      "同時攔截網頁與程式化 LLM 互動，涵蓋 HTTP(S) 及 WebSocket。",
-      "以分層 pipeline 在成本、延遲與語意深度之間做部署取捨。",
-      "最佳設定的 F1 最高 94.93%，但不同資料類型與場景仍需分開看待。",
-    ],
-    relevance:
-      "可作為研發網段、工程師瀏覽器、IDE Agent 與 API gateway 的 GenAI DLP PoC 參考，保護原始碼、BOM、配方與客戶圖面。",
-    action:
-      "以工廠與研發真實語料重測 precision／recall、延遲、加密流量處理與誤擋；決定哪些類別採確定性規則、哪些送語意模型。",
-    caveat:
-      "Preprint；摘要只揭露最佳 F1，不能用單一數字判斷對各種敏感資料、語言及混淆手法的實際效果。",
-    crossCheck:
-      "研究方向與既有 Network／Endpoint DLP 一致，但它補上 WebSocket 與語意型程式碼洩漏；正式採用前仍須以企業資料集獨立驗證。",
-    metric: "F1 最高 94.93%",
-  },
-  {
-    id: 13,
-    rank: 6,
-    week: "2026.07.24",
-    batch: "補遺",
-    title: "Thematic Review and Gap Analysis on AI Security",
-    subtitle: "英國 DSIT 委託的 AI Security 系統性文獻與缺口分析",
-    date: "2026.07.10",
-    dateValue: "2026-07-10",
-    authors: "Lancaster University｜UK Department for Science, Innovation & Technology",
-    source: "https://www.gov.uk/government/publications/thematic-review-and-gap-analysis-on-ai-security/thematic-review-and-gap-analysis-on-ai-security",
-    sourceLabel: "GOV.UK / DSIT",
-    decision: "選讀",
-    kind: "政策研究",
-    topics: ["Data Lineage", "Threat Modeling", "Agent Security"],
-    summary:
-      "以 PRISMA 流程整理 2021 至 2026 年初的 9,109 篇同儕審查研究，辨識 12 個主題與五大缺口，適合作為企業研究投資與控制藍圖的基線。",
-    findings: [
-      "缺口包括 AI 資料／權重完整性驗證、第三方模型來源追蹤，以及 AI 與傳統 IT 攻擊面的銜接。",
-      "另外指出 end-user 風險、模型安全退役，以及 Agent 本身、工具與 agent-to-agent 通訊研究不足。",
-      "方法使用 Scopus、Web of Science、語意比對與抽樣人工查核；只收英文與指定高品質場域。",
-    ],
-    relevance:
-      "可把五項缺口直接對照跨國製造業的模型供應商管理、AIBOM／lineage、IT／OT SOC 整合、使用者治理與模型退役程序。",
-    action:
-      "做一次控制缺口工作坊：逐項指定 owner、現有證據、缺少的 telemetry／lineage、補強期限與驗證方式。",
-    caveat:
-      "雖具方法透明度，但限制於英文、Scopus／WoS 與指定場域；大規模分類包含語意嵌入與 LLM 輔助，未逐篇人工審查。",
-    crossCheck:
-      "ResearchArena、MCP confused deputy、Self-State 與 Bad Memory 正好落在報告列出的資料完整性、工具安全及 Agent 基礎設施缺口。",
-    metric: "9,109 篇｜12 主題｜5 缺口",
-  },
-  {
-    id: 1,
-    title: "Agent Skill Security",
-    subtitle: "Threat Models, Attacks, Defenses, and Evaluation",
-    date: "2026.07.15",
-    dateValue: "2026-07-15",
-    authors: "Sanket Badhe、Priyanka Tiwari",
-    source: "https://arxiv.org/abs/2607.13987",
-    sourceLabel: "arXiv:2607.13987",
-    pdf: "https://arxiv.org/pdf/2607.13987",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Threat Modeling"],
-    summary:
-      "提出 SkillSec-Eval，將 Agent Skill 的風險從單次 Prompt Injection 擴展到儲存庫收錄、語意檢索、規劃器選擇、執行與技能演進的完整生命週期。",
-    findings: [
-      "以 327 個真實 Agent Skills 進行生命週期安全評估。",
-      "弱點不只出現在執行階段；Skills 的收錄、搜尋與版本更新均可能遭操控。",
-      "需要把 Skill manifest、來源、版本、工具權限與行為納入持續驗證。",
-    ],
-    relevance:
-      "製造企業可能把 BOM 查詢、品質分析、韌體檢測、採購或 OT 維運封裝為 Skills；惡意技能可能接觸 PLM、ERP、NAS、原始碼庫與管理工具。",
-    action:
-      "建立 Skill 來源白名單、簽章驗證、版本鎖定、權限審查、沙箱測試與更新後重新驗證機制。",
-    caveat:
-      "尚未經同儕審查；327 個公開 Skills 是否能代表企業內部技能，仍須檢查資料集與抽樣方式。",
-    metric: "327 個真實 Skills",
-  },
-  {
-    id: 2,
-    title: "Driving AI Transparency",
-    subtitle: "Supply- and Demand-Based Paths Toward AIBOM",
-    date: "2026.06.16",
-    dateValue: "2026-06-16",
-    authors: "Allan Friedman、Nick Leiserson｜Institute for Security and Technology",
-    source:
-      "https://securityandtechnology.org/virtual-library/policy-memo/driving-ai-transparency/",
-    sourceLabel: "Institute for Security and Technology",
-    pdf: "https://securityandtechnology.org/wp-content/uploads/2026/06/Driving-AI-Transparency-Supply-and-Demand-Based-Paths-Toward-AIBOM-FULL.pdf",
-    decision: "深入審閱",
-    kind: "政策研究",
-    topics: ["Data Lineage", "DSPM / DLP"],
-    summary:
-      "以 AIBOM 建立 AI 供應鏈透明度，記錄模型、資料集、軟體、Agent middleware、工具層、版本、完整性識別、敏感等級與 Data Lineage。",
-    findings: [
-      "AIBOM 應與完整 SBOM 結合，而不是只記錄模型名稱。",
-      "SPDX 與 CycloneDX 已能表示部分模型、資料集、來源與 lineage 資訊。",
-      "目前仍沒有被廣泛接受、可一致交換的 AIBOM minimum elements。",
-    ],
-    relevance:
-      "可直接轉為 AI 視覺檢測、Digital Twin、PLM／ERP Copilot、第三方模型與資料集的採購及驗收要求。",
-    action:
-      "在 RFP 與合約要求模型／資料集版本、hash、來源、敏感等級、地理來源、處理歷程、RAG 來源及第三方依賴。",
-    caveat:
-      "商用基礎模型通常不揭露完整訓練資料；無法取得的欄位應明確標為 known unknown，不應以供應商保證替代證據。",
-    crossCheck:
-      "文件對照 NIST AI RMF、G7 SBOM for AI、SPDX、CycloneDX 與 EU AI Act Annex IV。",
-    metric: "AIBOM × Data Lineage",
-  },
-  {
-    id: 3,
-    title: "Trust but Verify?",
-    subtitle: "Uncovering the Security Debt of Autonomous Coding Agents",
-    date: "2026.07.14",
-    dateValue: "2026-07-14",
-    authors: "A H M Nazmus Sakib、Dipayan Banik、Murtuza Jadliwala",
-    source: "https://arxiv.org/abs/2607.12428",
-    sourceLabel: "arXiv:2607.12428",
-    pdf: "https://arxiv.org/pdf/2607.12428",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Threat Modeling", "DSPM / DLP"],
-    summary:
-      "大型實證研究量化 autonomous coding agents 帶來的 security debt，並指出人機協作本身會形成新的憑證與供應鏈風險。",
-    findings: [
-      "分析 4,022 個 PR、16,112 個檔案變更；38.9% PR 至少含一項 security smell。",
-      "供應鏈完整性問題占 82.3%；硬編碼憑證占重大問題的 99.6%。",
-      "67.6% 真實憑證洩漏由人類協作者加入，81.1% 在合併前未被發現。",
-    ],
-    relevance:
-      "BMC、BIOS、韌體、設備控制程式與客戶客製化原始碼屬高價值 IP；AI Agent 變更 CI/CD、dependency 或簽署流程會把風險直接帶入產品供應鏈。",
-    action:
-      "對 workflow、IaC、package manifest、secret-bearing files 與韌體簽署流程強制人工核准，並在人類修改後再次執行秘密掃描。",
-    caveat:
-      "部分分類採 LLM-as-a-judge；雖有人工驗證，仍須審閱標註一致性、false positive 與資料集代表性。",
-    metric: "38.9% PR 含風險訊號",
-  },
-  {
-    id: 4,
-    title: "When Agents Remember Too Much",
-    subtitle: "Memory Poisoning Attacks on Large Language Model Agents",
-    date: "2026.07.06",
-    dateValue: "2026-07-06",
-    authors: "George Torres、Sharad Shrestha、Satyajayant Misra",
-    source: "https://arxiv.org/abs/2607.06595",
-    sourceLabel: "arXiv:2607.06595",
-    pdf: "https://arxiv.org/pdf/2607.06595",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Data Lineage", "Threat Modeling"],
-    summary:
-      "提出 GhostWriter 兩階段攻擊：先把隱藏指令注入長期記憶，再等待未來工作檢索並啟動惡意行為。",
-    findings: [
-      "實驗報告約 98% 注入率及約 60% 平均啟動率。",
-      "風險根源是 Agent memory 缺少來源、信任與寫入治理。",
-      "作者提出 memory-saving policy 與 retrieval screen 的 AM-Sentry 防禦。",
-    ],
-    relevance:
-      "供應商郵件、工單、維修手冊、品質異常紀錄或 RAG 文件都可能先污染記憶，之後在採購、維修或設備操作時觸發。",
-    action:
-      "記憶項目應保存來源、時間、信任等級、敏感標籤與完整性證據；外部內容不得自動進入長期記憶。",
-    caveat:
-      "攻擊成功率尚未經獨立重現，不能直接視為企業真實環境發生率。",
-    crossCheck:
-      "同期 FARMA 研究亦證明 reasoning history 可被偽造；兩篇設計不同，數字不可直接比較，但結論互相支持。",
-    metric: "98% 注入｜60% 啟動",
-  },
-  {
-    id: 5,
-    title: "Temporary Authority, Permanent Effects",
-    subtitle: "Commit-Time Authorization for LLM Agents",
-    date: "2026.07.11",
-    dateValue: "2026-07-11",
-    authors: "Igor Santos-Grueiro",
-    source: "https://arxiv.org/abs/2607.10487",
-    sourceLabel: "arXiv:2607.10487",
-    pdf: "https://arxiv.org/pdf/2607.10487",
-    decision: "深入審閱",
-    kind: "學術論文",
-    topics: ["Agent Security", "Threat Modeling"],
-    summary:
-      "定義 commit-time authorization：Agent 造成永久效果前，必須重新確認先前的授權證據仍新鮮、有效且綁定同一動作。",
-    findings: [
-      "216 個授權關係已失效的案例中，有 207 個仍完成 commit。",
-      "只在任務開始時核准，無法控制長時間、多工具與多代理工作流程。",
-      "有效防禦必須在 durability boundary 重新驗證、重新綁定、重規劃或拒絕。",
-    ],
-    relevance:
-      "適用於 Agent 建立採購單、修改 ERP、發布韌體、調整防火牆、下達排程或執行 OT 維護等不可逆動作。",
-    action:
-      "在 commit boundary 重查身分、核准狀態、資料版本、作用範圍、目標與時間有效性。",
-    caveat:
-      "單一作者與受控測試環境；對不同 Agent framework、ERP 與 OT workflow 的適用性仍需驗證。",
-    metric: "207 / 216 未授權 Commit",
-  },
-  {
-    id: 6,
-    title: "2026 State of AI Security",
-    subtitle: "AI Is in Production. Security Isn’t.",
-    date: "2026.07.09",
-    dateValue: "2026-07-09",
-    authors: "Tyler Woo、Orca Research Pod",
-    source:
-      "https://orca.security/resources/blog/2026-state-of-ai-security-report-summary/",
-    sourceLabel: "Orca Security Research",
-    decision: "選讀",
-    kind: "產業報告",
-    topics: ["DSPM / DLP", "DDR", "Agent Security"],
-    summary:
-      "以超過 1,200 個生產環境的 2026 Q2 雲端遙測，呈現 Agent、Vector Database、AI credentials 與雲端設定的實際曝險。",
-    findings: [
-      "56% AI 採用者已部署 Agent framework；64% 使用連接企業資料的 vector database。",
-      "29.5% 至少有一組 AI credential 儲存在不安全位置。",
-      "報告主張把 AI 資產、權限、資料與 runtime activity 納入持續偵測與回應。",
-    ],
-    relevance:
-      "跨國製造業常同時存在 AWS、Azure、GCP、私有雲與工廠 edge AI，可作為 shadow AI infrastructure 與 Agent cloud permissions 盤點基準。",
-    action:
-      "把模型端點、Vector DB、RAG 權限、Secrets、公開曝露與 Agent runtime telemetry 串接至 DSPM／DDR／SIEM。",
-    caveat:
-      "資料來自 Orca 客戶環境，可能存在產品覆蓋與客戶組成偏差；百分比不宜直接推估整體產業。",
-    metric: "1,200+ 生產環境",
-  },
-  {
-    id: 7,
-    title: "AI Security Report 2026",
-    subtitle: "From AI Assistant to Attack Operator",
-    date: "2026.07.14",
-    dateValue: "2026-07-14",
-    authors: "Check Point Research",
-    source: "https://research.checkpoint.com/2026/ai-security-report-2026/",
-    sourceLabel: "Check Point Research",
-    decision: "選讀",
-    kind: "產業報告",
-    topics: ["DSPM / DLP", "DDR", "Agent Security"],
-    summary:
-      "彙整 AI 輔助攻擊、Agent configuration abuse、間接 Prompt Injection 與 GenAI 資料外洩遙測，觀察 AI 從輔助者轉向攻擊操作角色。",
-    findings: [
-      "2026 年 3 至 5 月，較長的惡意 Prompt Payload 偵測量約增加五倍。",
-      "高風險 GenAI Prompt 比例由約 2% 上升至 4%。",
-      "攻擊者逐漸利用 Agent 架構與持久設定，而非只進行單次 jailbreak。",
-    ],
-    relevance:
-      "支持在瀏覽器、Endpoint、Network 與 API 層檢查員工輸入 AI 的原始碼、BOM、客戶規格、測試結果及設備設定。",
-    action:
-      "以 Network／Endpoint DLP 控制資料外流，並把 Prompt、Agent configuration 與 tool invocation 納入 DDR／SOC 可視性。",
-    caveat:
-      "公開頁面未充分揭露組織數、Prompt 分類標準、誤判率與產業分布；數字只能代表 Check Point 可見範圍。",
-    crossCheck:
-      "風險方向與 Orca、Cyberhaven 遙測大致一致，但母體與定義不同，百分比不能直接相加或比較。",
-    metric: "高風險 Prompt 2% → 4%",
-  },
-];
-
-const filters = [
-  "全部",
-  "Agent Security",
-  "DSPM / DLP",
-  "Data Lineage",
-  "DDR",
-  "Threat Modeling",
-];
-
+import {
+  CURRENT_WEEK,
+  TOPIC_FILTERS,
+  currentReadings,
+  currentStats,
+  editorialMethod,
+  priorityReading,
+  readingSearchText,
+  weeklyEditorial,
+  type Reading,
+} from "./data/readings";
 function Mark({ children }: { children: React.ReactNode }) {
   return <span className="mark">{children}</span>;
 }
@@ -877,12 +25,19 @@ export default function Home() {
   const [sort, setSort] = useState("priority");
   const [selected, setSelected] = useState<Reading | null>(null);
   const [completed, setCompleted] = useState<number[]>([]);
+  const modalRef = useRef<HTMLElement>(null);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const saved = window.localStorage.getItem("ai-security-reading-progress");
     if (!saved) return;
     const frame = window.requestAnimationFrame(() => {
-      setCompleted(JSON.parse(saved));
+      try {
+        const parsed = JSON.parse(saved);
+        setCompleted(Array.isArray(parsed) ? parsed.filter(Number.isInteger) : []);
+      } catch {
+        setCompleted([]);
+      }
     });
     return () => window.cancelAnimationFrame(frame);
   }, []);
@@ -894,38 +49,73 @@ export default function Home() {
     );
   }, [completed]);
 
+  function openReading(reading: Reading, trigger?: HTMLElement) {
+    lastTriggerRef.current = trigger ?? document.activeElement as HTMLElement;
+    setSelected(reading);
+    window.history.replaceState(null, "", `#reading-${reading.id}`);
+  }
+
+  function closeReading() {
+    setSelected(null);
+    if (window.location.hash.startsWith("#reading-")) {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    }
+    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+  }
+
   useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelected(null);
+    const syncFromHash = () => {
+      const match = window.location.hash.match(/^#reading-(\d+)$/);
+      if (!match) return;
+      const reading = currentReadings.find((item) => item.id === Number(match[1]));
+      if (reading) setSelected(reading);
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
   }, []);
+
+  useEffect(() => {
+    if (!selected || !modalRef.current) return;
+    const dialog = modalRef.current;
+    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((element) => !element.hasAttribute("disabled"));
+    focusable()[0]?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeReading();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = focusable();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items.at(-1)!;
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    dialog.addEventListener("keydown", onKeyDown);
+    return () => {
+      dialog.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selected]);
 
   const visibleReadings = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    const result = readings.filter((reading) => {
-      const matchesCurrentWeek = reading.week === "2026.08.07";
+    const result = currentReadings.filter((reading) => {
       const matchesTopic = topic === "全部" || reading.topics.includes(topic);
       const matchesDecision =
         decision === "全部判定" || reading.decision === decision;
-      const haystack = [
-        reading.title,
-        reading.subtitle,
-        reading.authors,
-        reading.summary,
-        reading.relevance,
-        ...reading.topics,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return matchesCurrentWeek && matchesTopic && matchesDecision && haystack.includes(normalized);
+      return matchesTopic && matchesDecision && readingSearchText(reading).includes(normalized);
     });
 
     return result.sort((a, b) =>
       sort === "newest"
         ? b.dateValue.localeCompare(a.dateValue)
-        : (a.rank ?? a.id) - (b.rank ?? b.id),
+        : a.rank - b.rank,
     );
   }, [decision, query, sort, topic]);
 
@@ -937,11 +127,17 @@ export default function Home() {
     );
   };
 
-  const currentReadings = readings.filter((reading) => reading.week === "2026.08.07");
   const currentCompleted = completed.filter((id) =>
     currentReadings.some((reading) => reading.id === id),
   );
-  const progress = Math.round((currentCompleted.length / currentReadings.length) * 100);
+  const progress = currentReadings.length ? Math.round((currentCompleted.length / currentReadings.length) * 100) : 0;
+  const deepRate = currentStats.total ? Math.round((currentStats.deep / currentStats.total) * 100) : 0;
+  const evidenceCount = new Set(currentReadings.map((reading) => reading.evidenceLevel)).size;
+  const topicCounts = TOPIC_FILTERS.slice(1).map((item) => ({
+    topic: item,
+    count: currentReadings.filter((reading) => reading.topics.includes(item)).length,
+  })).filter((item) => item.count > 0).sort((a, b) => b.count - a.count);
+  const socialReadyCount = socialEdition.items.filter((item) => item.status === "Ready").length;
 
   return (
     <main>
@@ -961,7 +157,7 @@ export default function Home() {
           <a href="/archive">歷史資料</a>
           <a href="/social-content/index.html">社群內容</a>
         </nav>
-        <div className="live-state"><i /> VERIFIED SOURCES</div>
+        <a className="live-state" href="#verification"><i /> VERIFIED SOURCES · 定義</a>
       </header>
 
       <nav className="mobile-dock" aria-label="手機快捷導覽">
@@ -973,25 +169,36 @@ export default function Home() {
       <section className="hero" id="top">
         <div className="grid-noise" aria-hidden="true" />
         <div className="hero-copy">
-          <p className="eyebrow">WEEKLY INTELLIGENCE · 2026.08.07</p>
+          <p className="eyebrow">WEEKLY INTELLIGENCE · {CURRENT_WEEK}</p>
           <h1>AI Security <span>必讀清單</span></h1>
           <p className="hero-subtitle">
             聚焦製造業 AI Security、DSPM、DLP、Data Lineage、DDR
             與 AI System Threat Modeling
           </p>
+          <figure className="hero-character mobile-sindy" aria-label="AI 資安分析師 Sindy">
+            <img
+              src="/assets/sindy-analyst-v2.png"
+              alt="Sindy，成年漫畫風 AI 資安分析師，身穿黑藍科技服裝與盾徽披風"
+              fetchPriority="high"
+            />
+            <figcaption>
+              <i />
+              <span><b>Sindy</b><small>AI Security Analyst</small></span>
+            </figcaption>
+          </figure>
           <div className="kpi-row" aria-label="本週清單統計">
-            <div className="kpi"><b>07</b><span>本週入選</span><i>7 NEW · 0 CATCH-UP</i></div>
-            <div className="kpi purple"><b>06</b><span>深入審閱</span><i>HIGH PRIORITY</i></div>
-            <div className="kpi blue"><b>01</b><span>選讀</span><i>SELECTIVE</i></div>
+            <div className="kpi"><b>{String(currentStats.total).padStart(2, "0")}</b><span>本週入選</span><i>{currentStats.new} NEW · {currentStats.catchUp} CATCH-UP</i></div>
+            <div className="kpi purple"><b>{String(currentStats.deep).padStart(2, "0")}</b><span>深入審閱</span><i>HIGH PRIORITY</i></div>
+            <div className="kpi blue"><b>{String(currentStats.selective).padStart(2, "0")}</b><span>選讀</span><i>SELECTIVE</i></div>
           </div>
           <a className="social-content-cta" href="/social-content/index.html">
             <span><b>每週社群內容創意</b><small>AI Governance · AI Security · Electronic Manufacturing</small></span>
-            <i>3 READY POSTS</i>
+            <i>{socialReadyCount} READY POSTS</i>
             <strong>→</strong>
           </a>
         </div>
 
-        <figure className="hero-character" aria-label="AI 資安分析師 Sindy">
+        <figure className="hero-character desktop-sindy" aria-label="AI 資安分析師 Sindy">
           <img
             src="/assets/sindy-analyst-v2.png"
             alt="Sindy，成年漫畫風 AI 資安分析師，身穿黑藍科技服裝與盾徽披風"
@@ -1003,21 +210,19 @@ export default function Home() {
           </figcaption>
         </figure>
 
-        <div className="hero-intel" aria-label="本週安全態勢摘要">
-          <div className="intel-head"><span>WEEKLY SECURITY POSTURE</span><i /></div>
+        <div className="hero-intel" aria-label="由本週資料計算的統計摘要">
+          <div className="intel-head"><span>DATA-DERIVED SNAPSHOT</span><i /></div>
           <div className="posture-row">
-            <div className="donut"><span>92%</span><small>實務關聯</small></div>
+            <div className="donut" style={{ "--deep-rate": `${deepRate}%` } as React.CSSProperties}><span>{deepRate}%</span><small>深入審閱</small></div>
             <div className="posture-stats">
-              <p><span>查核來源</span><b>18</b></p>
-              <p><span>高風險訊號</span><b className="risk">06</b></p>
-              <p><span>核心控制</span><b>14</b></p>
+              <p><span>本週入選</span><b>{currentStats.total}</b></p>
+              <p><span>證據類型</span><b>{evidenceCount}</b></p>
+              <p><span>涵蓋主題</span><b>{topicCounts.length}</b></p>
             </div>
           </div>
-          <div className="trend-head"><span>RESEARCH SIGNAL (7D)</span><b>+31%</b></div>
-          <div className="trend-bars" aria-hidden="true">
-            {[35, 48, 42, 61, 52, 68, 73, 58, 86, 74, 96, 81].map((h, i) => (
-              <i key={i} style={{ height: `${h}%` }} />
-            ))}
+          <div className="trend-head"><span>TOPIC DISTRIBUTION</span><b>{currentStats.total} READINGS</b></div>
+          <div className="topic-signal">
+            {topicCounts.slice(0, 4).map((item) => <p key={item.topic}><span>{item.topic}</span><i><b style={{ width: `${Math.round(item.count / currentStats.total * 100)}%` }} /></i><strong>{item.count}</strong></p>)}
           </div>
         </div>
 
@@ -1043,20 +248,18 @@ export default function Home() {
         <article className="featured-card">
           <div className="rank-panel"><b>#01</b><small>CRITICAL READ</small></div>
           <div className="featured-copy">
-            <div className="meta-line">
-              <span>原始研究</span><i />2026.08.05<i />arXiv
-            </div>
-            <h3>Breadcrumbing Search Agents</h3>
-            <p className="featured-subtitle">Trajectory-level evidence-chain hijacking</p>
-            <p className="featured-summary">{readings[0].summary}</p>
+            <div className="meta-line"><span>{priorityReading.evidenceLevel}</span><i />{priorityReading.date}<i />{priorityReading.sourceLabel}</div>
+            <h3>{priorityReading.title}</h3>
+            <p className="featured-subtitle">{priorityReading.subtitle}</p>
+            <p className="featured-summary">{priorityReading.summary}</p>
             <div className="featured-actions">
-              <button className="primary-button" onClick={() => setSelected(readings[0])}>
+              <button className="primary-button" onClick={(event) => openReading(priorityReading, event.currentTarget)}>
                 閱讀摘要 <span>→</span>
               </button>
-              <a className="secondary-button" href={readings[0].source} target="_blank" rel="noreferrer">
+              <a className="secondary-button" href={priorityReading.source} target="_blank" rel="noreferrer">
                 原始論文 ↗
               </a>
-              <a className="text-link" href={readings[0].pdf} target="_blank" rel="noreferrer">PDF ↓</a>
+              {priorityReading.pdf && <a className="text-link" href={priorityReading.pdf} target="_blank" rel="noreferrer">PDF ↓</a>}
             </div>
           </div>
           <div className="lifecycle-map" aria-label="搜尋代理證據鏈劫持生命週期">
@@ -1100,7 +303,7 @@ export default function Home() {
             {query && <button onClick={() => setQuery("")} aria-label="清除搜尋">×</button>}
           </label>
           <div className="filter-row" role="group" aria-label="主題篩選">
-            {filters.map((filter) => (
+            {TOPIC_FILTERS.map((filter) => (
               <button
                 key={filter}
                 className={topic === filter ? "active" : ""}
@@ -1125,14 +328,15 @@ export default function Home() {
           {visibleReadings.map((reading) => {
             const isDone = completed.includes(reading.id);
             return (
-              <article className={`reading-card ${isDone ? "completed" : ""}`} key={reading.id}>
+              <article className={`reading-card ${isDone ? "completed" : ""}`} key={reading.id} id={`reading-${reading.id}-card`}>
                 <div className="card-topline">
-                  <span className="card-rank">#{String(reading.rank ?? reading.id).padStart(2, "0")}</span>
+                  <span className="card-rank">#{String(reading.rank).padStart(2, "0")}</span>
                   <span className={`decision ${reading.decision === "深入審閱" ? "deep" : "select"}`}>
                     {reading.decision === "深入審閱" ? "◇" : "▢"} {reading.decision}
                   </span>
                 </div>
-                <div className="card-kind"><span>{reading.kind}</span><i />{reading.date}{reading.batch && <><i />{reading.batch}</>}</div>
+                <div className="card-kind"><span>{reading.kind}</span><i />{reading.date}<i />{reading.batch}</div>
+                <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
                 <h3>{reading.title}</h3>
                 <p className="card-subtitle">{reading.subtitle}</p>
                 <p className="card-summary">{reading.summary}</p>
@@ -1141,7 +345,7 @@ export default function Home() {
                   {reading.topics.map((item) => <span key={item}>{item}</span>)}
                 </div>
                 <div className="card-actions">
-                  <button onClick={() => setSelected(reading)}>摘要與查核 <span>→</span></button>
+                  <button onClick={(event) => openReading(reading, event.currentTarget)}>摘要與查核 <span>→</span></button>
                   <a href={reading.source} target="_blank" rel="noreferrer" aria-label={`開啟 ${reading.title} 原始來源`}>來源 ↗</a>
                   {reading.pdf && <a href={reading.pdf} target="_blank" rel="noreferrer" aria-label={`下載 ${reading.title} PDF`}>PDF ↓</a>}
                 </div>
@@ -1160,8 +364,7 @@ export default function Home() {
         )}
         <div className="method-note">
           <Mark>本週略過</Mark>{" "}
-          <a href="https://arxiv.org/abs/2608.02687" target="_blank" rel="noreferrer">PolicyGuard</a>
-          （Prompt-Configurable Semantic DLP）於 2026.08.05 由作者撤稿，理由是仍需更多實驗驗證；其 96.5% 阻擋率與 3.0% 誤判率不列入成熟能力依據。
+          {weeklyEditorial.skipped.map((item, index) => <span key={item.title}>{index > 0 && "；"}<a href={item.source} target="_blank" rel="noreferrer">{item.title}</a>：{item.reason}</span>)}
         </div>
       </section>
 
@@ -1178,17 +381,11 @@ export default function Home() {
         </div>
         <div className="next-actions">
           <h3>建議下一步</h3>
-          <ol>
-            <li><b>01</b><span>保存搜尋代理每一步的 query、排名、來源與證據關係，並用獨立通道驗證高風險結論。</span></li>
-            <li><b>02</b><span>為 Agent memory mutation 加入簽章、授權者、no-fork chain 與獨立 verifier。</span></li>
-            <li><b>03</b><span>在受限網路、唯讀檔案系統、最小權限與 scoped credentials 下重新驗收 Coding Agents。</span></li>
-            <li><b>04</b><span>按模型量測 runtime monitor 的 attack entropy 與 recall，模型升版時強制重驗。</span></li>
-            <li><b>05</b><span>以 DiagChain 式逐階段指標驗收 DDR／IR Copilot，要求每個攻擊鏈步驟連回原始證據。</span></li>
-          </ol>
+          <ol>{[...currentReadings].sort((a, b) => a.rank - b.rank).slice(0, 5).map((reading, index) => <li key={reading.id}><b>{String(index + 1).padStart(2, "0")}</b><span>{reading.action}</span></li>)}</ol>
         </div>
       </section>
 
-      <section className="about" id="about">
+      <section className="about" id="verification">
         <div>
           <p className="eyebrow">EDITORIAL & VERIFICATION POLICY</p>
           <h2>篩選與查核原則</h2>
@@ -1199,25 +396,39 @@ export default function Home() {
           <article><span>03</span><h3>製造業實務映射</h3><p>對應 IP、BOM、PLM、ERP、韌體、OT、供應鏈與跨國資料治理情境。</p></article>
           <article><span>04</span><h3>排除行銷雜訊</h3><p>不以產品排行、無方法論的廠商文章或重複轉述填補閱讀清單。</p></article>
         </div>
+        <div className="rubric-panel">
+          <div className="rubric-heading"><div><Mark>公開評鑑 Rubric</Mark><h3>三軸判定與排序規則</h3></div><p>{editorialMethod.decisionRule}</p></div>
+          <div className="rubric-table" role="table" aria-label="深入審閱與選讀判定準則">
+            <div className="rubric-row rubric-head" role="row"><span>評鑑軸</span><span>權重</span><span>深入審閱</span><span>選讀</span></div>
+            {editorialMethod.rubric.map((item) => <div className="rubric-row" role="row" key={item.axis}><b>{item.axis}</b><strong>{item.weight}</strong><p>{item.deep}</p><p>{item.selective}</p></div>)}
+          </div>
+          <div className="ranking-rule"><b>排名邏輯</b><p>{editorialMethod.rankingRule}</p></div>
+        </div>
+        <div className="verification-grid">
+          <article><Mark>VERIFIED SOURCES 定義</Mark><h3>五項查核清單</h3><ul>{editorialMethod.verifiedChecklist.map((item) => <li key={item}>{item}</li>)}</ul></article>
+          <article><Mark>候選來源範圍</Mark><h3>固定掃描範圍</h3><ul>{editorialMethod.sourceScope.map((item) => <li key={item}>{item}</li>)}</ul></article>
+          <article><Mark>本週入選漏斗</Mark><h3><span>{weeklyEditorial.scanned ?? "未留存"}</span> 掃描 → <span>{weeklyEditorial.shortlisted ?? "未留存"}</span> 初篩 → <span>{weeklyEditorial.selected}</span> 入選</h3><p>{weeklyEditorial.note}</p></article>
+        </div>
         <div className="method-note"><Mark>判讀提醒</Mark> Preprint 的攻擊成功率尚未經獨立重現；廠商遙測僅代表其可見範圍，不能直接外推整體產業。</div>
       </section>
 
       <footer>
         <div className="brand footer-brand"><span className="brand-mark">AI</span><span><strong>Manufacturing AI Security</strong><small>SECURE · RELIABLE · RESPONSIBLE AI</small></span></div>
-        <p>本週更新：2026.08.07 · 正體中文／臺灣慣用語</p>
+        <p>本週更新：{CURRENT_WEEK} · 正體中文／臺灣慣用語</p>
         <a href="/archive">歷史資料庫 →</a>
       </footer>
 
       {selected && (
-        <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}>
-          <section className="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title">
-            <button className="modal-close" onClick={() => setSelected(null)} aria-label="關閉摘要">×</button>
-            <div className="modal-rank">#{String(selected.rank ?? selected.id).padStart(2, "0")} · {selected.kind}{selected.batch ? ` · ${selected.batch}` : ""}</div>
+        <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && closeReading()}>
+          <section ref={modalRef} className="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+            <button className="modal-close" onClick={closeReading} aria-label="關閉摘要">×</button>
+            <div className="modal-rank">#{String(selected.rank).padStart(2, "0")} · {selected.kind} · {selected.batch}</div>
             <h2 id="detail-title">{selected.title}</h2>
             <p className="modal-subtitle">{selected.subtitle}</p>
             <div className="modal-meta"><span>{selected.date}</span><i />{selected.authors}</div>
             <div className="modal-tags">
               <span className={selected.decision === "深入審閱" ? "deep" : "select"}>{selected.decision}</span>
+              <span className={`evidence-badge evidence-${selected.evidenceLevel}`}>{selected.evidenceLevel}</span>
               {selected.topics.map((item) => <span key={item}>{item}</span>)}
             </div>
             <div className="detail-section">

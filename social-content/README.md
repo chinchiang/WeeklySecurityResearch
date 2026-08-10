@@ -1,20 +1,9 @@
-# 每週社群內容創意存檔
+# Weekly Social Content
 
-正式網站：<https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/social-content/index.html>
+目前最新週次：2026-08-10。
 
-每週社群內容創意的獨立存檔區，主題涵蓋 AI Governance、AI Security、Electronic Manufacturing 與 OT／ICS Security。
+網站資料位於 `public/social-content/data/`。首頁 CTA 的 Ready 數量直接由最新一期 JSON 中 `status === "Ready"` 的項目計算，不再手動填寫。
 
-## 結構
+主持人輪值採 `hosts.json` 的 `iso-week-round-robin`：以 `anchorIsoWeek` 與 `anchorHostId` 為基準，按 ISO 週次差值對主持人陣列取餘數；新增主持人後不需每週修改 `currentHostId`。
 
-- `index.html`：可單檔直接開啟的累積網站。
-- `data/YYYY-MM-DD.json`：每週結構化資料，保留來源、日期、證據分類與所有管道草稿。
-- `posts/YYYY-MM-DD/*.md`：當週每個選題的獨立 Markdown。
-
-## 更新原則
-
-1. 只追加新週次，不刪除或覆寫歷史週次。
-2. 核心新聞以執行日前 7 天為限，舊資料只能作背景。
-3. 官方／原始來源優先；明確區分已證實、研究者或廠商主張、第三方報導與分析。
-4. 若無足夠新題材，建立 NO-QUALIFIED-NEWS 紀錄，不以常青內容補位。
-
-目前最新週次：2026-07-27
+每期內容應保留來源、證據邊界與 `NO-QUALIFIED-NEWS` 狀態，避免為湊數而發布缺乏查核的社群貼文。
