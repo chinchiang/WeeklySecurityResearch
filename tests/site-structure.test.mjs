@@ -39,3 +39,16 @@ test("canonical metadata is route-specific", () => {
   assert.match(archiveLayout, /canonical:\s*["']\/archive["']/);
   assert.match(weekLayout, /canonical:\s*`\/week\/\$\{canonicalWeek\}`/);
 });
+
+test("archive priority order is week-first and modal locks background scrolling", () => {
+  const archive = readFileSync(path.join(root, "app", "archive", "page.tsx"), "utf8");
+
+  assert.match(
+    archive,
+    /b\.week\.localeCompare\(a\.week\)\s*\|\|\s*a\.rank\s*-\s*b\.rank/,
+  );
+  assert.doesNotMatch(archive, /a\.id\s*-\s*b\.id/);
+  assert.match(archive, /const previousOverflow = document\.body\.style\.overflow/);
+  assert.match(archive, /document\.body\.style\.overflow = "hidden"/);
+  assert.match(archive, /document\.body\.style\.overflow = previousOverflow/);
+});
