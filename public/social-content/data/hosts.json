@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "rotation": {
+    "strategy": "weekly-round-robin",
+    "currentWeek": "2026-08-10",
+    "currentHostId": "neon",
+    "avoidImmediateRepeatWhenMultipleHostsExist": true
+  },
+  "hosts": [
+    {
+      "id": "neon",
+      "name": "Neon",
+      "asset": "assets/neon-host.webp",
+      "roleZh": "本週內容主播 · AI Security & Global Risk",
+      "roleEn": "Weekly Host · AI Security & Global Risk",
+      "enabled": true
+    },
+    {
+      "id": "ukami",
+      "name": "Ukami",
+      "asset": "assets/ukami-host.webp",
+      "roleZh": "內容主播 · SOC 指揮與事件應變",
+      "roleEn": "Weekly Host · SOC Command & Incident Response",
+      "enabled": true
+    }
+  ],
+  "analyst": {
+    "id": "sindy",
+    "name": "Sindy",
+    "asset": "assets/sindy-analyst.webp",
+    "roleZh": "AI Security Analyst · 研究、查核與策展",
+    "roleEn": "AI Security Analyst · Research, Verification & Curation"
+  }
+}
