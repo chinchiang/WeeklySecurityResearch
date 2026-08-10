@@ -71,8 +71,10 @@ export default function ArchivePage() {
   useEffect(() => {
     if (!selected || !modalRef.current) return;
     const dialog = modalRef.current;
-    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])'));
+    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((element) => !element.hasAttribute("disabled"));
     focusable()[0]?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") { event.preventDefault(); closeReading(); return; }
       if (event.key !== "Tab") return;
@@ -83,7 +85,10 @@ export default function ArchivePage() {
       if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     };
     dialog.addEventListener("keydown", onKeyDown);
-    return () => dialog.removeEventListener("keydown", onKeyDown);
+    return () => {
+      dialog.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [selected]);
 
   const visibleReadings = useMemo(() => {
@@ -105,7 +110,7 @@ export default function ArchivePage() {
       .sort((a, b) =>
         sort === "newest"
           ? b.dateValue.localeCompare(a.dateValue)
-          : a.id - b.id,
+          : b.week.localeCompare(a.week) || a.rank - b.rank,
       );
   }, [decision, query, sort, topic, week]);
 
