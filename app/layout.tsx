@@ -19,13 +19,11 @@ export const metadata: Metadata = {
   title: "Manufacturing AI Security 必讀清單",
   description: "製造業 AI Security 每週精選與歷史閱讀資料庫。",
   alternates: {
-    canonical: "/",
     types: { "application/atom+xml": "/feed.xml" },
   },
   openGraph: {
     type: "website",
     locale: "zh_TW",
-    url: "/",
     siteName: "Manufacturing AI Security 必讀清單",
     title: "Manufacturing AI Security 必讀清單",
     description: "具證據等級、查核限制與製造業實務映射的 AI Security 每週精選。",
