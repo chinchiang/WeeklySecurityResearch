@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import socialEdition from "../public/social-content/data/2026-08-10.json";
+import { latestSocialEdition } from "./data/social-latest.generated";
 
 import {
   CURRENT_WEEK,
@@ -137,7 +137,7 @@ export default function Home() {
     topic: item,
     count: currentReadings.filter((reading) => reading.topics.includes(item)).length,
   })).filter((item) => item.count > 0).sort((a, b) => b.count - a.count);
-  const socialReadyCount = socialEdition.items.filter((item) => item.status === "Ready").length;
+  const socialReadyCount = latestSocialEdition.readyCount;
 
   return (
     <main>
