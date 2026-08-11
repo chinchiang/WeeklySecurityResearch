@@ -26,6 +26,13 @@ npm run lint
 
 - `npm run test:data`：ID、排名、必填欄位、HTTPS URL、合法枚舉及 KPI 一致性。
 - `npm run check:links`：檢查原始來源與 PDF 是否仍可達。
-- `npm test`：正式建置與全部測試。
+- `npm run audit`：依賴漏洞稽核（`.npmrc` 關閉了安裝時的自動稽核，因此需要明確執行）。
+- `npm test`：正式建置與全部測試，包含以實際 HTTP 回應驗證安全標頭、各路由 canonical 與未知週次回 404。
+
+## 安全基準
+
+- `worker/index.ts` 對所有回應加上 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy`、`Permissions-Policy`、HSTS 與一組 CSP（`frame-ancestors`／`base-uri`／`object-src`／`form-action`）。因 RSC payload 以 inline script 傳遞，CSP 未限制 `script-src`；要加上需改用 per-request nonce。
+- `/week/<週次>` 只接受 `app/data/readings.ts` 既有的週次，其餘一律 404，避免任意字串以自我 canonical 被搜尋引擎收錄。
+- 依賴漏洞目前未全數修復；`npm audit fix` 會連帶升級 esbuild／miniflare 等建置鏈套件，需另行評估後再處理。
 
 閱讀進度只儲存在使用者瀏覽器的 Local Storage，不會傳送至外部服務。

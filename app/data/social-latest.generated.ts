@@ -6,6 +6,7 @@ export const latestSocialEdition = {
 } as const;
 export const socialEditionWeeks = [
   "2026-08-10",
+  "2026-08-09",
   "2026-08-03",
   "2026-07-27"
 ] as const;
