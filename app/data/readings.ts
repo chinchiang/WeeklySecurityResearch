@@ -977,6 +977,10 @@ export const currentStats = {
   catchUp: currentReadings.filter((reading) => reading.batch === "補遺").length,
 };
 export const allWeeks = [...new Set(readings.map((reading) => reading.week))].sort();
+
+/** Atom feed 涵蓋最近幾期：漏看一週的訂閱者仍能補上，不必回站上翻歷史。 */
+export const FEED_WEEKS = 3;
+export const feedWeeks = allWeeks.slice(-FEED_WEEKS).reverse();
 export const archiveDateRange = archiveWeeks.length ? [archiveWeeks.at(-1), archiveWeeks[0]].join("—") : "尚無歷史資料";
 
 export const evidenceOrder: Record<EvidenceLevel, number> = {

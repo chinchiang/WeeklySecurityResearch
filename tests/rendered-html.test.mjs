@@ -59,6 +59,35 @@ test("each HTML route declares its own canonical URL", async () => {
   }
 });
 
+test("the feed covers the most recent three weeks and links each entry to its own week", async () => {
+  const { FEED_WEEKS, allWeeks, readings } = await import("../app/data/readings.ts");
+
+  const response = await worker.fetch(new Request("https://localhost/feed.xml"), env, ctx);
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^application\/atom\+xml\b/);
+
+  const body = await response.text();
+  const weeks = allWeeks.slice(-FEED_WEEKS);
+  const expected = readings.filter((reading) => weeks.includes(reading.week));
+
+  assert.ok(weeks.length > 1, "測試資料應涵蓋多於一週，否則此測試無法區分行為");
+  assert.equal((body.match(/<entry>/g) ?? []).length, expected.length);
+
+  for (const reading of expected) {
+    const permalink = `/week/${reading.week.replaceAll(".", "-")}#reading-${reading.id}`;
+    assert.ok(body.includes(permalink), `feed 缺少 ${reading.id} 指向自身週次的連結：${permalink}`);
+  }
+  for (const reading of readings.filter((item) => !weeks.includes(item.week))) {
+    assert.ok(!body.includes(`#reading-${reading.id}<`), `feed 不應包含 ${FEED_WEEKS} 週以外的 ${reading.id}`);
+  }
+
+  // Text nodes must not carry raw markup characters.
+  for (const text of body.matchAll(/<(?:title|summary|subtitle)>([\s\S]*?)<\//g)) {
+    assert.doesNotMatch(text[1], /[<>]/, "feed 文字節點含未轉義字元");
+    assert.doesNotMatch(text[1], /&(?!amp;|lt;|gt;|quot;|#\d+;)/, "feed 文字節點含未轉義的 &");
+  }
+});
+
 test("unknown week slugs return 404 instead of indexable reflected text", async () => {
   const response = await request("/week/BUY-CHEAP-WATCHES");
 
