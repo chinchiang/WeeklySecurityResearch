@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
+import { SOCIAL_PAGES, canonicalItems, findEmbeddedItems, readEditions } from "../scripts/social-content-lib.mjs";
 
 const root = process.cwd();
 const socialDir = path.join(root, "public", "social-content");
@@ -94,6 +95,35 @@ test("the generated manifest covers every edition and points at the newest one",
     weeks,
     "manifest 的 editions 必須涵蓋每一期",
   );
+});
+
+test("the social pages embed exactly what the JSON says", () => {
+  // The pages keep their item list inline so they open straight from disk, but
+  // the JSON is the source of truth. Editing a page's ITEMS by hand, or adding
+  // an edition without re-running the generator, fails here rather than
+  // shipping two versions of the same week.
+  const editions = readEditions(dataDir);
+  const expected = canonicalItems(editions);
+  const latestWeek = editions.at(-1).week;
+
+  for (const page of SOCIAL_PAGES) {
+    const embedded = findEmbeddedItems(readFileSync(path.join(socialDir, page), "utf8"));
+
+    assert.equal(embedded.latest, latestWeek, `${page}: LATEST 與最新一期不符`);
+    assert.equal(embedded.items.length, expected.length, `${page}: 內嵌選題數與 data/ 不符`);
+    assert.deepEqual(embedded.items, expected, `${page}: 內嵌 ITEMS 與 data/ 內容不一致，請重新執行 scripts/generate-social-content.mjs`);
+  }
+});
+
+test("social pages render sources from data and refuse non-HTTPS links", () => {
+  for (const page of SOCIAL_PAGES) {
+    const html = readFileSync(path.join(socialDir, page), "utf8");
+
+    assert.match(html, /esc\(safeUrl\(s\.url\)\)/, `${page}: 來源連結未經 safeUrl 過濾`);
+    assert.match(html, /esc\(s\.publisher\)/, `${page}: 未使用資料中的 publisher`);
+    // The old domain lookup table is gone; publisher names come from the data.
+    assert.doesNotMatch(html, /function sourceName\(/, `${page}: sourceName 應已移除`);
+  }
 });
 
 test("latest social edition is derived instead of hard-coded in the homepage", () => {

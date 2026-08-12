@@ -18,7 +18,7 @@ if [[ ! -x "${vinext}" ]]; then
   exit 69
 fi
 
-node "${script_dir}/generate-social-manifest.mjs"
+node "${script_dir}/generate-social-content.mjs"
 
 echo "Running bounded vinext build..."
 timeout \
