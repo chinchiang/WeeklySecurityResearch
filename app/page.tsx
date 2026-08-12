@@ -181,7 +181,7 @@ export default function Home() {
           <figure className="hero-character mobile-sindy" aria-label="AI 資安分析師 Sindy">
             <img
               src="/assets/sindy-analyst-v2.png"
-              alt="Sindy，成年漫畫風 AI 資安分析師，身穿黑藍科技服裝與盾徽披風"
+              alt="Sindy，成年漫畫風 AI 資安分析師，身穿紅橘披風與黑金科技服裝，坐在全息平台上"
               fetchPriority="high"
             />
             <figcaption>
@@ -204,7 +204,7 @@ export default function Home() {
         <figure className="hero-character desktop-sindy" aria-label="AI 資安分析師 Sindy">
           <img
             src="/assets/sindy-analyst-v2.png"
-            alt="Sindy，成年漫畫風 AI 資安分析師，身穿黑藍科技服裝與盾徽披風"
+            alt="Sindy，成年漫畫風 AI 資安分析師，身穿紅橘披風與黑金科技服裝，坐在全息平台上"
             fetchPriority="high"
           />
           <figcaption>
