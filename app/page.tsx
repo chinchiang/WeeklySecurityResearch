@@ -3,15 +3,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { latestSocialEdition } from "./data/social-latest.generated";
 
+import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
 import {
   CURRENT_WEEK,
   TOPIC_FILTERS,
+  correctionLog,
+  currentEditorial,
   currentReadings,
   currentStats,
   editorialMethod,
+  isRetracted,
   priorityReading,
   readingSearchText,
-  weeklyEditorial,
   type Reading,
 } from "./data/readings";
 function Mark({ children }: { children: React.ReactNode }) {
@@ -81,7 +84,7 @@ export default function Home() {
     const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((element) => !element.hasAttribute("disabled"));
     focusable()[0]?.focus();
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.setProperty("overflow", "hidden");
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -99,7 +102,7 @@ export default function Home() {
     dialog.addEventListener("keydown", onKeyDown);
     return () => {
       dialog.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
+      document.body.style.setProperty("overflow", previousOverflow);
     };
   }, [selected]);
 
@@ -328,7 +331,7 @@ export default function Home() {
           {visibleReadings.map((reading) => {
             const isDone = completed.includes(reading.id);
             return (
-              <article className={`reading-card ${isDone ? "completed" : ""}`} key={reading.id} id={`reading-${reading.id}-card`}>
+              <article className={`reading-card ${isDone ? "completed" : ""} ${isRetracted(reading) ? "retracted" : ""}`} key={reading.id} id={`reading-${reading.id}-card`}>
                 <div className="card-topline">
                   <span className="card-rank">#{String(reading.rank).padStart(2, "0")}</span>
                   <span className={`decision ${reading.decision === "深入審閱" ? "deep" : "select"}`}>
@@ -339,7 +342,9 @@ export default function Home() {
                 <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
                 <h3>{reading.title}</h3>
                 <p className="card-subtitle">{reading.subtitle}</p>
+                <CorrectionNotice reading={reading} />
                 <p className="card-summary">{reading.summary}</p>
+                <ScoreBreakdown reading={reading} />
                 {reading.metric && <div className="metric">{reading.metric}</div>}
                 <div className="topic-list">
                   {reading.topics.map((item) => <span key={item}>{item}</span>)}
@@ -362,10 +367,12 @@ export default function Home() {
         {visibleReadings.length === 0 && (
           <div className="empty-state"><b>NO MATCHING INTELLIGENCE</b><p>沒有符合目前條件的資料，請調整搜尋或篩選條件。</p></div>
         )}
-        <div className="method-note">
-          <Mark>本週略過</Mark>{" "}
-          {weeklyEditorial.skipped.map((item, index) => <span key={item.title}>{index > 0 && "；"}<a href={item.source} target="_blank" rel="noreferrer">{item.title}</a>：{item.reason}</span>)}
-        </div>
+        {currentEditorial.skipped.length > 0 && (
+          <div className="method-note">
+            <Mark>本週略過</Mark>{" "}
+            {currentEditorial.skipped.map((item, index) => <span key={item.title}>{index > 0 && "；"}<a href={item.source} target="_blank" rel="noreferrer">{item.title}</a>：{item.reason}</span>)}
+          </div>
+        )}
       </section>
 
       <section className="progress-section" id="progress">
@@ -381,7 +388,8 @@ export default function Home() {
         </div>
         <div className="next-actions">
           <h3>建議下一步</h3>
-          <ol>{[...currentReadings].sort((a, b) => a.rank - b.rank).slice(0, 5).map((reading, index) => <li key={reading.id}><b>{String(index + 1).padStart(2, "0")}</b><span>{reading.action}</span></li>)}</ol>
+          {/* 已撤稿的項目仍保留在清單中供追溯，但不再作為行動依據。 */}
+          <ol>{[...currentReadings].filter((reading) => !isRetracted(reading)).sort((a, b) => a.rank - b.rank).slice(0, 5).map((reading, index) => <li key={reading.id}><b>{String(index + 1).padStart(2, "0")}</b><span>{reading.action}</span></li>)}</ol>
         </div>
       </section>
 
@@ -398,16 +406,35 @@ export default function Home() {
         </div>
         <div className="rubric-panel">
           <div className="rubric-heading"><div><Mark>公開評鑑 Rubric</Mark><h3>三軸判定與排序規則</h3></div><p>{editorialMethod.decisionRule}</p></div>
+          <p className="score-scale">{editorialMethod.scoreScale}</p>
           <div className="rubric-table" role="table" aria-label="深入審閱與選讀判定準則">
             <div className="rubric-row rubric-head" role="row"><span>評鑑軸</span><span>權重</span><span>深入審閱</span><span>選讀</span></div>
             {editorialMethod.rubric.map((item) => <div className="rubric-row" role="row" key={item.axis}><b>{item.axis}</b><strong>{item.weight}</strong><p>{item.deep}</p><p>{item.selective}</p></div>)}
           </div>
           <div className="ranking-rule"><b>排名邏輯</b><p>{editorialMethod.rankingRule}</p></div>
+          <div className="ranking-rule"><b>更正與撤稿</b><p>{editorialMethod.correctionRule}</p></div>
         </div>
         <div className="verification-grid">
           <article><Mark>VERIFIED SOURCES 定義</Mark><h3>五項查核清單</h3><ul>{editorialMethod.verifiedChecklist.map((item) => <li key={item}>{item}</li>)}</ul></article>
           <article><Mark>候選來源範圍</Mark><h3>固定掃描範圍</h3><ul>{editorialMethod.sourceScope.map((item) => <li key={item}>{item}</li>)}</ul></article>
-          <article><Mark>本週入選漏斗</Mark><h3><span>{weeklyEditorial.scanned ?? "未留存"}</span> 掃描 → <span>{weeklyEditorial.shortlisted ?? "未留存"}</span> 初篩 → <span>{weeklyEditorial.selected}</span> 入選</h3><p>{weeklyEditorial.note}</p></article>
+          <article><Mark>本週入選漏斗</Mark><h3><span>{currentEditorial.scanned ?? "未留存"}</span> 掃描 → <span>{currentEditorial.shortlisted ?? "未留存"}</span> 初篩 → <span>{currentEditorial.selected}</span> 入選</h3><p>{currentEditorial.note}</p></article>
+        </div>
+        <div className="correction-log" id="corrections">
+          <div className="correction-head"><Mark>更正紀錄</Mark><h3>已發佈項目的修訂軌跡</h3></div>
+          {correctionLog.length === 0 ? (
+            <p className="correction-empty">目前沒有已發佈項目被撤稿、更正或取代。若日後發生，該筆不會被刪除，而是在此列出並於卡片標示。</p>
+          ) : (
+            <ol>
+              {correctionLog.map(({ reading, correction }) => (
+                <li key={`${reading.id}-${correction.date}-${correction.type}`}>
+                  <b>{correction.type}</b>
+                  <span>{correction.date}</span>
+                  <a href={`#reading-${reading.id}`}>{reading.title}</a>
+                  <p>{correction.note}</p>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
         <div className="method-note"><Mark>判讀提醒</Mark> Preprint 的攻擊成功率尚未經獨立重現；廠商遙測僅代表其可見範圍，不能直接外推整體產業。</div>
       </section>
@@ -430,6 +457,12 @@ export default function Home() {
               <span className={selected.decision === "深入審閱" ? "deep" : "select"}>{selected.decision}</span>
               <span className={`evidence-badge evidence-${selected.evidenceLevel}`}>{selected.evidenceLevel}</span>
               {selected.topics.map((item) => <span key={item}>{item}</span>)}
+            </div>
+            <CorrectionNotice reading={selected} />
+            <div className="detail-section">
+              <h3>判定依據</h3>
+              <ScoreBreakdown reading={selected} />
+              <p className="score-note">{editorialMethod.decisionRule}</p>
             </div>
             <div className="detail-section">
               <h3>核心摘要</h3><p>{selected.summary}</p>

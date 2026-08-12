@@ -1,11 +1,37 @@
 export type EvidenceLevel = "同儕審查" | "已接受" | "Preprint" | "政策報告" | "廠商遙測";
 
+/** 三軸評分：1 = 明顯不足，2 = 部分達成，3 = 完整達成。 */
+export type RubricScore = 1 | 2 | 3;
+
+export type RubricScores = {
+  evidence: RubricScore;
+  relevance: RubricScore;
+  actionability: RubricScore;
+};
+
+export type CorrectionType = "更正" | "撤稿" | "取代";
+
+/**
+ * 已發佈項目的修訂紀錄。條目一律保留在清單中，不刪除，
+ * 以免歷史連結失效或讓錯誤結論悄悄消失。
+ */
+export type Correction = {
+  date: string;
+  type: CorrectionType;
+  note: string;
+  source?: string;
+  /** 當 type 為「取代」時，指向取代它的 reading id。 */
+  supersededBy?: number;
+};
+
 export type Reading = {
   id: number;
   rank: number;
   week: string;
   batch: "本週新發" | "補遺";
   evidenceLevel: EvidenceLevel;
+  scores: RubricScores;
+  corrections?: Correction[];
   title: string;
   subtitle: string;
   date: string;
@@ -33,6 +59,7 @@ export const readings: Reading[] = [
     week: "2026.08.07",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Breadcrumbing Search Agents",
     subtitle: "以協調式證據鏈劫持搜尋代理的長流程判斷",
     date: "2026.08.05",
@@ -67,6 +94,7 @@ export const readings: Reading[] = [
     week: "2026.08.07",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "MutMem",
     subtitle: "Cryptographically Authorized Mutation in Persistent Agent Memory",
     date: "2026.08.03",
@@ -101,6 +129,7 @@ export const readings: Reading[] = [
     week: "2026.08.07",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Permission Denied",
     subtitle: "Policy-Graded Evaluation of Coding Agents in Hardened Environments",
     date: "2026.08.02",
@@ -135,6 +164,7 @@ export const readings: Reading[] = [
     week: "2026.08.07",
     batch: "本週新發",
     evidenceLevel: "已接受",
+    scores: { evidence: 3, relevance: 3, actionability: 3 },
     title: "Why Formal Monitors Fail",
     subtitle: "Attack Distribution Entropy as a Coverage Bound for LTL-Based LLM Agent Safety",
     date: "2026.08.02",
@@ -169,6 +199,7 @@ export const readings: Reading[] = [
     week: "2026.08.07",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "DiagChain",
     subtitle: "Evidence-Grounded Attack Chain Reconstruction Benchmark",
     date: "2026.08.04",
@@ -203,6 +234,7 @@ export const readings: Reading[] = [
     week: "2026.08.07",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Evading Chain-of-Thought Monitoring Through Model Poisoning",
     subtitle: "以模型後門讓惡意行為保留、推理軌跡卻看似正常",
     date: "2026.08.03",
@@ -237,6 +269,7 @@ export const readings: Reading[] = [
     week: "2026.08.07",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 2, actionability: 2 },
     title: "Privacy-Preserving AI Verification via Minimal Information Disclosure",
     subtitle: "在可驗證與敏感資訊外洩之間量化最小揭露",
     date: "2026.08.03",
@@ -271,6 +304,7 @@ export const readings: Reading[] = [
     week: "2026.07.31",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "MemSecBench",
     subtitle: "Tracking Agent Memory Poisoning from Persistence to Consequence and Repair",
     date: "2026.07.29",
@@ -305,6 +339,7 @@ export const readings: Reading[] = [
     week: "2026.07.31",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Architectural Backdoors in Vision-Language Model Supply Chains",
     subtitle: "以 Representation Steering 植入不需資料污染的架構後門",
     date: "2026.07.28",
@@ -339,6 +374,7 @@ export const readings: Reading[] = [
     week: "2026.07.31",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "ToxScreen",
     subtitle: "Detecting Whether an LLM Has Been Poisoned",
     date: "2026.07.29",
@@ -373,6 +409,7 @@ export const readings: Reading[] = [
     week: "2026.07.31",
     batch: "本週新發",
     evidenceLevel: "已接受",
+    scores: { evidence: 3, relevance: 3, actionability: 3 },
     title: "RAGuard",
     subtitle: "A Layered Defense Framework for RAG Systems Against Data Poisoning",
     date: "2026.07.28",
@@ -407,6 +444,7 @@ export const readings: Reading[] = [
     week: "2026.07.31",
     batch: "本週新發",
     evidenceLevel: "已接受",
+    scores: { evidence: 3, relevance: 3, actionability: 2 },
     title: "Agent Security Needs Redefinition through a Holistic Framework",
     subtitle: "從內容判斷轉向授權情境與資料隔離",
     date: "2026.07.24",
@@ -441,6 +479,7 @@ export const readings: Reading[] = [
     week: "2026.07.31",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 2 },
     title: "PUDA",
     subtitle: "An AI-Native Hardware Harness for Self-Driving Laboratories",
     date: "2026.07.29",
@@ -475,6 +514,7 @@ export const readings: Reading[] = [
     week: "2026.07.24",
     batch: "補遺",
     evidenceLevel: "已接受",
+    scores: { evidence: 3, relevance: 3, actionability: 3 },
     title: "Confused Deputy Attack Against Model Context Protocol",
     subtitle: "以工具中繼資料劫持 MCP 的非確定性選擇機制",
     date: "2026.07.15",
@@ -508,6 +548,7 @@ export const readings: Reading[] = [
     week: "2026.07.24",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "ResearchArena",
     subtitle: "Evaluating Sabotage and Monitoring in Automated AI R&D",
     date: "2026.07.21",
@@ -542,6 +583,7 @@ export const readings: Reading[] = [
     week: "2026.07.24",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Self-State Attacks on Self-Hosted AI Agents",
     subtitle: "How Far Can OS Defenses Go?",
     date: "2026.07.20",
@@ -576,6 +618,7 @@ export const readings: Reading[] = [
     week: "2026.07.24",
     batch: "補遺",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Bad Memory",
     subtitle: "Evaluating Prompt Injection Risks from Memory in Agentic Systems",
     date: "2026.07.16",
@@ -610,6 +653,7 @@ export const readings: Reading[] = [
     week: "2026.07.24",
     batch: "補遺",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 2, actionability: 2 },
     title: "Multi-Agent Firewall Architecture",
     subtitle: "Privacy Protection of Sensitive Data in Interactions with Language Models",
     date: "2026.07.09",
@@ -644,6 +688,7 @@ export const readings: Reading[] = [
     week: "2026.07.24",
     batch: "補遺",
     evidenceLevel: "政策報告",
+    scores: { evidence: 2, relevance: 2, actionability: 2 },
     title: "Thematic Review and Gap Analysis on AI Security",
     subtitle: "英國 DSIT 委託的 AI Security 系統性文獻與缺口分析",
     date: "2026.07.10",
@@ -677,6 +722,7 @@ export const readings: Reading[] = [
     week: "2026.07.17",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Agent Skill Security",
     subtitle: "Threat Models, Attacks, Defenses, and Evaluation",
     date: "2026.07.15",
@@ -709,6 +755,7 @@ export const readings: Reading[] = [
     week: "2026.07.17",
     batch: "本週新發",
     evidenceLevel: "政策報告",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Driving AI Transparency",
     subtitle: "Supply- and Demand-Based Paths Toward AIBOM",
     date: "2026.06.16",
@@ -744,6 +791,7 @@ export const readings: Reading[] = [
     week: "2026.07.17",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Trust but Verify?",
     subtitle: "Uncovering the Security Debt of Autonomous Coding Agents",
     date: "2026.07.14",
@@ -776,6 +824,7 @@ export const readings: Reading[] = [
     week: "2026.07.17",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "When Agents Remember Too Much",
     subtitle: "Memory Poisoning Attacks on Large Language Model Agents",
     date: "2026.07.06",
@@ -810,6 +859,7 @@ export const readings: Reading[] = [
     week: "2026.07.17",
     batch: "本週新發",
     evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Temporary Authority, Permanent Effects",
     subtitle: "Commit-Time Authorization for LLM Agents",
     date: "2026.07.11",
@@ -842,6 +892,7 @@ export const readings: Reading[] = [
     week: "2026.07.17",
     batch: "本週新發",
     evidenceLevel: "廠商遙測",
+    scores: { evidence: 1, relevance: 2, actionability: 2 },
     title: "2026 State of AI Security",
     subtitle: "AI Is in Production. Security Isn’t.",
     date: "2026.07.09",
@@ -874,6 +925,7 @@ export const readings: Reading[] = [
     week: "2026.07.17",
     batch: "本週新發",
     evidenceLevel: "廠商遙測",
+    scores: { evidence: 1, relevance: 2, actionability: 2 },
     title: "AI Security Report 2026",
     subtitle: "From AI Assistant to Attack Operator",
     date: "2026.07.14",
@@ -925,6 +977,10 @@ export const currentStats = {
   catchUp: currentReadings.filter((reading) => reading.batch === "補遺").length,
 };
 export const allWeeks = [...new Set(readings.map((reading) => reading.week))].sort();
+
+/** Atom feed 涵蓋最近幾期：漏看一週的訂閱者仍能補上，不必回站上翻歷史。 */
+export const FEED_WEEKS = 3;
+export const feedWeeks = allWeeks.slice(-FEED_WEEKS).reverse();
 export const archiveDateRange = archiveWeeks.length ? [archiveWeeks.at(-1), archiveWeeks[0]].join("—") : "尚無歷史資料";
 
 export const evidenceOrder: Record<EvidenceLevel, number> = {
@@ -935,28 +991,99 @@ export const evidenceOrder: Record<EvidenceLevel, number> = {
   "廠商遙測": 1,
 };
 
+export const RUBRIC_WEIGHTS = {
+  evidence: 0.35,
+  relevance: 0.35,
+  actionability: 0.3,
+} as const;
+
+/** 加權總分達此門檻且無任一軸為 1 者列為深入審閱。 */
+export const DEEP_REVIEW_THRESHOLD = 2.4;
+
+/** 加權總分，範圍 1.00–3.00，四捨五入至小數兩位。 */
+export function weightedScore(scores: RubricScores): number {
+  const total =
+    scores.evidence * RUBRIC_WEIGHTS.evidence +
+    scores.relevance * RUBRIC_WEIGHTS.relevance +
+    scores.actionability * RUBRIC_WEIGHTS.actionability;
+  return Math.round(total * 100) / 100;
+}
+
+/**
+ * 由三軸分數推導判定。資料中仍保留 decision 欄位作為編輯當下的紀錄，
+ * 並以測試確保兩者一致；若日後調整分數而未同步判定，測試會失敗，
+ * 迫使判定的改變成為明確決定而不是副作用。
+ */
+export function deriveDecision(scores: RubricScores): Reading["decision"] {
+  const axes = [scores.evidence, scores.relevance, scores.actionability];
+  if (axes.includes(1)) return "選讀";
+  return weightedScore(scores) >= DEEP_REVIEW_THRESHOLD ? "深入審閱" : "選讀";
+}
+
+export function isRetracted(reading: Reading): boolean {
+  return (reading.corrections ?? []).some((correction) => correction.type === "撤稿");
+}
+
+export function hasCorrections(reading: Reading): boolean {
+  return (reading.corrections ?? []).length > 0;
+}
+
+/** 依日期新到舊列出所有已發佈項目的修訂紀錄。 */
+export const correctionLog = readings
+  .flatMap((reading) => (reading.corrections ?? []).map((correction) => ({ reading, correction })))
+  .sort((a, b) => b.correction.date.localeCompare(a.correction.date));
+
 export const editorialMethod = {
+  scoreScale: "每軸 1–3 分：1 = 明顯不足，2 = 部分達成，3 = 完整達成。",
   rubric: [
-    { axis: "證據等級", weight: "35%", deep: "原始研究、已接受／同儕審查，或方法透明的權威政策研究", selective: "Preprint 或廠商遙測，但限制清楚且可交叉核實" },
-    { axis: "製造業關聯", weight: "35%", deep: "可直接映射 IP、BOM、PLM、ERP、韌體、OT 或跨境治理", selective: "方向相關，但需大量情境轉譯或企業重測" },
-    { axis: "行動可落地性", weight: "30%", deep: "可轉換為 threat model、控制、驗收或偵測測試", selective: "主要用於趨勢理解或治理背景" },
+    { axis: "證據等級", key: "evidence" as const, weight: "35%", deep: "原始研究、已接受／同儕審查，或方法透明的權威政策研究", selective: "Preprint 或廠商遙測，但限制清楚且可交叉核實" },
+    { axis: "製造業關聯", key: "relevance" as const, weight: "35%", deep: "可直接映射 IP、BOM、PLM、ERP、韌體、OT 或跨境治理", selective: "方向相關，但需大量情境轉譯或企業重測" },
+    { axis: "行動可落地性", key: "actionability" as const, weight: "30%", deep: "可轉換為 threat model、控制、驗收或偵測測試", selective: "主要用於趨勢理解或治理背景" },
   ],
-  decisionRule: "三軸加權評估；總體證據充分、製造業關聯高且可轉為控制者列為深入審閱。任一核心軸仍需重大補證者列為選讀。",
+  decisionRule: `加權總分 = 證據等級×0.35 ＋ 製造業關聯×0.35 ＋ 行動可落地性×0.30。總分達 ${DEEP_REVIEW_THRESHOLD.toFixed(2)} 且無任一軸為 1 分者列為深入審閱，其餘列為選讀。每一筆的三軸分數與總分都公開於卡片與詳細頁，可逐項覆核。`,
   rankingRule: "同一週先依製造業風險急迫性與可採取行動程度排序，再以證據等級、交叉核實完整度及發布日期作為同分決勝。",
+  correctionRule: "已發佈項目不刪除。原始研究撤稿、數據更正或被後續研究取代時，於該筆加註修訂紀錄並在卡片與詳細頁顯示；撤稿項目不再進入「建議下一步」。",
   verifiedChecklist: ["原始連結可識別且使用 HTTPS", "作者／機構與發布日期已對照原始頁面", "摘要中的關鍵數字可回溯原文", "限制、樣本與不可外推範圍已揭露", "重要主張至少以獨立研究或權威框架交叉判讀"],
   sourceScope: ["arXiv 與已接受／同儕審查論文", "政府與權威政策研究", "具方法揭露的安全研究團隊報告", "製造業 AI、DSPM／DLP、Data Lineage、DDR 與 Agent Security 主題來源"],
 } as const;
 
-export const weeklyEditorial = {
-  week: CURRENT_WEEK,
-  scanned: null as number | null,
-  shortlisted: null as number | null,
-  selected: currentStats.total,
-  note: "本期未保留完整候選數與初篩數；依透明原則標示為未留存，不以推估值補填。自下一期起固定記錄。",
-  skipped: [
-    { title: "PolicyGuard", source: "https://arxiv.org/abs/2608.02687", reason: "作者已主動撤稿，表示發現重大不一致且無法確認報告數值；不列入核心證據。" },
-  ],
-} as const;
+export type WeeklyEditorial = {
+  scanned: number | null;
+  shortlisted: number | null;
+  note: string;
+  skipped: { title: string; source: string; reason: string }[];
+};
+
+const NOT_RETAINED =
+  "本期未保留完整候選數與初篩數；依透明原則標示為未留存，不以推估值補填。自 2026.08.14 當期起固定記錄。";
+
+/**
+ * 每週的入選漏斗與略過清單各自保存，新增週次不會覆寫既有紀錄。
+ */
+export const weeklyEditorials: Record<string, WeeklyEditorial> = {
+  "2026.07.17": { scanned: null, shortlisted: null, note: NOT_RETAINED, skipped: [] },
+  "2026.07.24": { scanned: null, shortlisted: null, note: NOT_RETAINED, skipped: [] },
+  "2026.07.31": { scanned: null, shortlisted: null, note: NOT_RETAINED, skipped: [] },
+  "2026.08.07": {
+    scanned: null,
+    shortlisted: null,
+    note: NOT_RETAINED,
+    skipped: [
+      { title: "PolicyGuard", source: "https://arxiv.org/abs/2608.02687", reason: "作者已主動撤稿，表示發現重大不一致且無法確認報告數值；不列入核心證據。" },
+    ],
+  },
+};
+
+export function editorialFor(week: string) {
+  const record = weeklyEditorials[week] ?? { scanned: null, shortlisted: null, note: NOT_RETAINED, skipped: [] };
+  return {
+    week,
+    ...record,
+    selected: readings.filter((reading) => reading.week === week).length,
+  };
+}
+
+export const currentEditorial = editorialFor(CURRENT_WEEK);
 
 export function readingSearchText(reading: Reading) {
   return [reading.title, reading.subtitle, reading.authors, reading.summary, reading.relevance, reading.action, reading.metric ?? "", ...reading.findings, ...reading.topics].join(" ").toLowerCase();

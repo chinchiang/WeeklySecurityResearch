@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { CorrectionNotice, ScoreBreakdown } from "../components/reading-meta";
 import {
   TOPIC_FILTERS,
   allWeeks,
@@ -74,7 +75,7 @@ export default function ArchivePage() {
     const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((element) => !element.hasAttribute("disabled"));
     focusable()[0]?.focus();
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.setProperty("overflow", "hidden");
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") { event.preventDefault(); closeReading(); return; }
       if (event.key !== "Tab") return;
@@ -87,7 +88,7 @@ export default function ArchivePage() {
     dialog.addEventListener("keydown", onKeyDown);
     return () => {
       dialog.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
+      document.body.style.setProperty("overflow", previousOverflow);
     };
   }, [selected]);
 
@@ -270,7 +271,9 @@ export default function ArchivePage() {
                 <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
                 <h3>{reading.title}</h3>
                 <p className="card-subtitle">{reading.subtitle}</p>
+                <CorrectionNotice reading={reading} />
                 <p className="card-summary">{reading.summary}</p>
+                <ScoreBreakdown reading={reading} />
                 {reading.metric && (
                   <div className="metric">{reading.metric}</div>
                 )}
@@ -397,6 +400,11 @@ export default function ArchivePage() {
               {selected.topics.map((item) => (
                 <span key={item}>{item}</span>
               ))}
+            </div>
+            <CorrectionNotice reading={selected} />
+            <div className="detail-section">
+              <h3>判定依據</h3>
+              <ScoreBreakdown reading={selected} />
             </div>
             <div className="detail-section">
               <h3>核心摘要</h3>

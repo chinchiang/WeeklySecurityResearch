@@ -12,6 +12,11 @@
       "dataUrl": "/social-content/data/2026-08-10.json"
     },
     {
+      "week": "2026-08-09",
+      "readyCount": 3,
+      "dataUrl": "/social-content/data/2026-08-09.json"
+    },
+    {
       "week": "2026-08-03",
       "readyCount": 3,
       "dataUrl": "/social-content/data/2026-08-03.json"
