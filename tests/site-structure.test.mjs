@@ -20,15 +20,22 @@ const postWeeks = () =>
     .filter((name) => weekPattern.test(name) && statSync(path.join(postsDir, name)).isDirectory())
     .sort();
 
-const editionEntries = (edition) => edition.items ?? edition.ideas ?? [];
-
-// Source lists exist in two historical shapes: a flat array of URLs and an
-// array of {url, publisher, ...} provenance objects. Both are accepted; the
-// point of the check is that every link is an HTTPS URL.
-const editionUrls = (edition) =>
-  editionEntries(edition).flatMap((entry) =>
-    (entry.sources ?? []).map((source) => (typeof source === "string" ? source : source?.url)),
-  );
+const CANONICAL_ITEM_KEYS = [
+  "id",
+  "week",
+  "topic",
+  "status",
+  "title",
+  "hook",
+  "tags",
+  "linkedin",
+  "twitter",
+  "blog",
+  "newsletter",
+  "evidence",
+  "sources",
+];
+const STATUSES = new Set(["Ready", "Draft", "Hold"]);
 
 test("every social edition has both structured data and posts", () => {
   assert.equal(existsSync(path.join(root, "social-content")), false, "舊的 social-content/ 目錄應已移除");
@@ -44,19 +51,35 @@ test("every social edition has both structured data and posts", () => {
   );
 });
 
-test("each social edition parses and every source link is HTTPS", () => {
+test("every social edition uses the canonical schema with structured sources", () => {
   for (const week of dataWeeks()) {
     const edition = JSON.parse(readFileSync(path.join(dataDir, `${week}.json`), "utf8"));
-    const entries = editionEntries(edition);
 
-    assert.ok(entries.length > 0, `${week}: 應至少有一個選題`);
-    for (const entry of entries) {
-      assert.equal(typeof entry.title, "string", `${week}: 選題缺少 title`);
-      assert.ok(entry.title.trim().length > 0, `${week}: title 不得為空`);
-    }
-    for (const url of editionUrls(edition)) {
-      assert.equal(typeof url, "string", `${week}: 來源缺少 url`);
-      assert.equal(new URL(url).protocol, "https:", `${week}: 來源必須是 HTTPS — ${url}`);
+    assert.equal(edition.week, week, `${week}: week 欄位須與檔名一致`);
+    assert.match(edition.range, /^\d{4}-\d{2}-\d{2}–\d{4}-\d{2}-\d{2}$/, `${week}: range 格式`);
+    assert.ok(Array.isArray(edition.items) && edition.items.length > 0, `${week}: 應至少有一個選題`);
+    assert.equal(
+      edition.qualified,
+      edition.items.filter((item) => item.status === "Ready").length,
+      `${week}: qualified 必須等於 Ready 選題數`,
+    );
+
+    for (const item of edition.items) {
+      for (const key of CANONICAL_ITEM_KEYS) {
+        assert.ok(key in item, `${week} / ${item.id ?? "?"}: 缺少欄位 ${key}`);
+      }
+      assert.equal(item.week, week, `${week} / ${item.id}: 選題 week 不一致`);
+      assert.ok(STATUSES.has(item.status), `${week} / ${item.id}: 未知的 status ${item.status}`);
+      assert.ok(item.title.trim().length > 0, `${week} / ${item.id}: title 不得為空`);
+      assert.ok(Array.isArray(item.tags) && item.tags.length > 0, `${week} / ${item.id}: 缺少 tags`);
+
+      // Sources are always objects, never bare strings.
+      assert.ok(Array.isArray(item.sources) && item.sources.length > 0, `${week} / ${item.id}: 缺少 sources`);
+      for (const source of item.sources) {
+        assert.equal(typeof source, "object", `${week} / ${item.id}: 來源必須是物件而非字串`);
+        assert.equal(new URL(source.url).protocol, "https:", `${week} / ${item.id}: 來源必須是 HTTPS — ${source.url}`);
+        assert.ok(source.publisher?.trim().length > 0, `${week} / ${item.id}: 來源缺少 publisher`);
+      }
     }
   }
 });

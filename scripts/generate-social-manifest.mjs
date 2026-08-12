@@ -18,14 +18,15 @@ const editions = [];
 for (const file of files) {
   const parsed = JSON.parse(await readFile(path.join(dataDir, file), "utf8"));
   const week = file.replace(/\.json$/, "");
-  const entries = Array.isArray(parsed.items)
-    ? parsed.items
-    : Array.isArray(parsed.ideas)
-      ? parsed.ideas
-      : [];
-  const explicitlyReady = entries.filter((entry) => entry.status === "Ready").length;
-  const readyCount = explicitlyReady ||
-    (Number.isInteger(parsed.qualified) ? parsed.qualified : entries.length);
+  if (week !== parsed.week) {
+    throw new Error(`${file}: 檔名與內部 week 欄位不符（${parsed.week}）`);
+  }
+  // Every edition is on the canonical schema, so no shape fallback: a file
+  // that does not match is a mistake to surface, not to paper over.
+  if (!Array.isArray(parsed.items) || parsed.items.length === 0) {
+    throw new Error(`${file}: 缺少 items 陣列`);
+  }
+  const readyCount = parsed.items.filter((entry) => entry.status === "Ready").length;
 
   editions.push({
     week,
