@@ -53,6 +53,7 @@ export type Reading = {
 };
 
 export const readings: Reading[] = [
+  {
     id: 27,
     rank: 1,
     week: "2026.08.14",
@@ -332,7 +333,6 @@ export const readings: Reading[] = [
       "補足 runtime contract 的 evidential face：結果正確不代表路徑可信。與 ColluSkill 相比，這篇主要影響資源與軌跡完整性，而非直接資料外洩。",
     metric: "491 任務｜Token +66.91%｜時間 +92.45%",
   },
-  {
   {
     id: 20,
     rank: 1,
