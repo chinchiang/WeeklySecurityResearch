@@ -53,6 +53,286 @@ export type Reading = {
 };
 
 export const readings: Reading[] = [
+    id: 27,
+    rank: 1,
+    week: "2026.08.14",
+    batch: "本週新發",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
+    title: "Agent Safety Should Be a Runtime Contract",
+    subtitle: "把 Agent 安全從模型屬性改寫為可驗證的執行期契約",
+    date: "2026.08.11",
+    dateValue: "2026-08-11",
+    authors: "Albus W. Ng、Yi Han、Jusheng Zhang、Wenhao Wang",
+    source: "https://arxiv.org/abs/2608.11274",
+    sourceLabel: "arXiv:2608.11274",
+    pdf: "https://arxiv.org/pdf/2608.11274",
+    decision: "深入審閱",
+    kind: "學術論文",
+    topics: ["Agent Security", "DDR", "Data Lineage", "Threat Modeling"],
+    summary:
+      "主張自主 Agent 的安全單位不應只是模型，而應是帶有可檢查證據的完整執行軌跡；harness 同時要在動作前阻擋危險行為，並在提交前要求測試、日誌、檔案差異與來源證據。",
+    findings: [
+      "彙整 52 起公開 AI Agent／LLM 安全事件，並以逐列 protocol 判讀可由哪一層 harness 預防或緩解。",
+      "31 個無爭議 false-completion 案例顯示 Agent 可能宣稱完成，實際產物卻破損、不完整、幻覺化或有害。",
+      "稽核 12 套公開 Agent 系統與 harness，只有 2 套記載類似提交前 evidence gate；另分析 28,560 篇頂會論文，部署期研究比訓練期少約 8–12 倍。",
+    ],
+    relevance:
+      "製造業 Agent 可能修改韌體、BOM、PLM、ERP、設備參數或品質資料；『Agent 說完成』不能成為驗收依據，尤其在跨廠區與供應商工作流程中，必須有可稽核的執行證據。",
+    action:
+      "為每類高風險 Agent 任務定義 runtime contract：授權來源、允許工具、資料邊界、commit 前檢查、預期產物與 evidence chain；未附測試、diff、log 或來源證據時不得提交。",
+    caveat:
+      "屬框架與立場型 preprint；52 起事件的反事實歸因、標題級論文分類與 evidence gate 定義仍可能受作者編碼選擇影響，不能視為防禦效果實驗。",
+    crossCheck:
+      "與 Temporary Authority 的 commit-time reauthorization、DiagChain 的逐步證據重建及 Permission Denied 的受限環境評估互相補強：安全必須由執行層證明，而非由模型自述。",
+    metric: "52 起事件｜31 false completion｜12 套 harness",
+  },
+  {
+    id: 28,
+    rank: 2,
+    week: "2026.08.14",
+    batch: "本週新發",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
+    title: "ColluSkill",
+    subtitle: "Adversarial Cross-Skill Composition for Evading Agent Skill Scanners",
+    date: "2026.08.10",
+    dateValue: "2026-08-10",
+    authors: "Puyu Zeng、Simeng Qin、Jingzhi Li、Ju Jia、Zheli Liu、Xiaojun Jia",
+    source: "https://arxiv.org/abs/2608.09732",
+    sourceLabel: "arXiv:2608.09732",
+    pdf: "https://arxiv.org/pdf/2608.09732",
+    decision: "深入審閱",
+    kind: "學術論文",
+    topics: ["Agent Security", "Data Lineage", "DSPM / DLP", "Threat Modeling"],
+    summary:
+      "證明逐一掃描 Skill 會漏掉組合風險：攻擊者可把一個惡意目的拆成多個外觀看似合理的 Skills，透過上下文依賴、artifact 傳遞與執行交接，在執行期才組成完整攻擊鏈。",
+    findings: [
+      "在 6 套代表性 Skill scanners 上，ColluSkill 平均攻擊成功率達 96.0%。",
+      "攻擊以 LLM 規劃跨 Skill chain，並依 scanner 回饋降低單一 Skill 的可疑訊號。",
+      "作者提出 ChainGuard，聯合分析已安裝與候選 Skill 的依賴、artifact flow、能力組合與下游行為；把 ASR 降至 22.5%，同時讓 99.5% 良性流程通過。",
+    ],
+    relevance:
+      "品質分析、BOM 匯出、採購、程式碼修改與 OT 維運可能被拆成可重用 Skills；單一元件都通過掃描，組合後仍可能把機密資料送到未授權位置或執行破壞性動作。",
+    action:
+      "Skill admission 除單件掃描外，新增安裝集合與實際 workflow 的 chain-level 分析；保留 artifact lineage、能力交集、呼叫順序與資料目的地，並在組合變更後重新驗證。",
+    caveat:
+      "9 頁 preprint；96.0% 與 22.5% 來自作者選定的 6 套 scanner、攻擊鏈與測試環境，企業內部 Skill 格式與政策需要重跑。",
+    crossCheck:
+      "與 Agent Skill Security 的生命週期威脅模型及 Confused Deputy 的工具選擇劫持一致，但把控制範圍從單一 Skill 擴展到跨元件資料流。",
+    metric: "96.0% ASR｜ChainGuard 22.5%｜99.5% 良性通過",
+  },
+  {
+    id: 29,
+    rank: 3,
+    week: "2026.08.14",
+    batch: "本週新發",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
+    title: "A Gateway Architecture for Enterprise MCP Authentication",
+    subtitle: "統一人員、非人員身分、委派與異質驗證的生產經驗",
+    date: "2026.08.11",
+    dateValue: "2026-08-11",
+    authors: "Suraj Kumar、Amy Wang、Srinivasan Manoharan",
+    source: "https://arxiv.org/abs/2608.10760",
+    sourceLabel: "arXiv:2608.10760",
+    pdf: "https://arxiv.org/pdf/2608.10760",
+    decision: "深入審閱",
+    kind: "學術論文",
+    topics: ["Agent Security", "DDR", "Data Lineage", "Threat Modeling"],
+    summary:
+      "以實際生產部署說明如何用集中式 MCP gateway 統一驗證、委派、稽核與離職撤權，解決各團隊自行實作 no-auth、API key 或 OAuth 所造成的治理斷裂。",
+    findings: [
+      "提出 persona（互動使用者／自動化非人員）× credential type 的雙軸驗證模型。",
+      "整理 BYOT、GYOT 與 RFC 8693 token exchange，以及 User-to-OAuth2、Non-user-to-Service-Account、User-to-Service-Account 三類端到端身分流。",
+      "架構已用於生產環境，橫跨 web、desktop、自訂 SDK 與 low-code clients，前置治理數十個 MCP servers。",
+    ],
+    relevance:
+      "跨國製造業的 MCP 可能連接 PLM、ERP、資料倉儲、研發 Git 與工廠維運；共用 API key 或 internal-only 假設會破壞使用者歸屬、最小權限、稽核與離職撤權。",
+    action:
+      "建立 MCP gateway 與 server identity registry；每次呼叫綁定人員／工作負載身分、委派鏈、token audience、工具與資料範圍，並把 gateway 與下游 server log 串入 SIEM／DDR。",
+    caveat:
+      "屬未經同儕審查的 experience paper；作者未公開企業名稱、事件數、效能、失敗率與完整威脅測試，生產部署本身不等於安全性已被獨立驗證。",
+    crossCheck:
+      "補足 Confused Deputy 與 Permission Denied 的控制落地：前者說明錯誤工具選擇的危險，後者顯示最小權限會改變失敗模式，本研究提供統一身分與 audit plane。",
+    metric: "3 身分流｜3 token 模型｜數十個 MCP servers",
+  },
+  {
+    id: 30,
+    rank: 4,
+    week: "2026.08.14",
+    batch: "本週新發",
+    evidenceLevel: "已接受",
+    scores: { evidence: 3, relevance: 3, actionability: 3 },
+    title: "Mind the Hook",
+    subtitle: "Source-Level Auditing of Privacy Defenses in Retrieval-Augmented Generation",
+    date: "2026.08.10",
+    dateValue: "2026-08-10",
+    authors: "Yanhang Li、Zhichao Fan、Zexin Zhuang",
+    source: "https://arxiv.org/abs/2608.09001",
+    sourceLabel: "ICMLA 2026",
+    pdf: "https://arxiv.org/pdf/2608.09001",
+    decision: "深入審閱",
+    kind: "學術論文",
+    topics: ["DSPM / DLP", "Data Lineage", "Threat Modeling"],
+    summary:
+      "提出 active-path audit：先從原始碼確認隱私防禦真正介入 retrieval、retrieved content 或 generation 的哪一段，再把指標對應到實際外洩通道，避免把黑箱分數誤當端到端 DLP 證據。",
+    findings: [
+      "作者重作的 DP-style defenses 只修改 retrieval scores；generation hooks 是 TODO stub，回傳內容未改變。",
+      "因此這些實作雖影響 membership inference，生成文字的 named-entity leakage 卻與 No-Defense 相近。",
+      "端到端 LPRAG 路徑以 email canary 驗證：No-Defense 找回 53/150，LPRAG 為 0/150。",
+    ],
+    relevance:
+      "製造業 RAG 會處理 BOM、圖面、配方、客戶規格與人員資料；採購隱私或 DLP 控制時，必須知道產品實際攔在哪一層，以及是否涵蓋生成輸出與工具外送。",
+    action:
+      "要求供應商提供 active hook、資料流圖與可重現 canary 測試；分別量測 retrieval membership、retrieved context、生成內容與 tool/API egress，不以單一 privacy score 驗收。",
+    caveat:
+      "已獲 ICMLA 2026 接受，但只有 6 頁；作者明確限定結論只適用其重作版本與測試 stack，不能推論原始 defense family 全部失效。",
+    crossCheck:
+      "與 RAGuard 的執行期文件影響分析互補：RAGuard 聚焦污染完整性，Mind the Hook 聚焦隱私控制是否真的接上資料外洩路徑。",
+    metric: "Email canary 53/150 → 0/150",
+  },
+  {
+    id: 31,
+    rank: 5,
+    week: "2026.08.14",
+    batch: "本週新發",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
+    title: "Once Poisoned, Arbitrarily Controlled",
+    subtitle: "A Programmable Backdoor in Vision-Language Models",
+    date: "2026.08.11",
+    dateValue: "2026-08-11",
+    authors: "Tao Lin、Gaojie Jin、Zongxin Liu、Peng Wu、Lijia Yu",
+    source: "https://arxiv.org/abs/2608.10959",
+    sourceLabel: "arXiv:2608.10959",
+    pdf: "https://arxiv.org/pdf/2608.10959",
+    decision: "深入審閱",
+    kind: "學術論文",
+    topics: ["Data Lineage", "Agent Security", "Threat Modeling"],
+    summary:
+      "把 VLM 後門從預先綁定的固定 trigger–target，擴展成一次污染、推論時才決定任意目標語意的 programmable backdoor；攻擊者可為未在污染階段出現的 caption 動態產生觸發。",
+    findings: [
+      "未見過的 trigger–target pairs 中，vanilla 與 L∞ triggers 的 ASR 分別為 92.00% 與 86.00%；固定 mapping baselines 在相同條件為 0%。",
+      "模擬 200 個任意 captions、每個搭配 20 張良性影像時，patch trigger 的 normal ASR 為 89.15%，trigger-level ASR 為 86.50%。",
+      "在作者測試的 Shrinkpad、Flip、Scale-up 防禦下，vanilla trigger 仍維持 98.67%–100% ASR。",
+    ],
+    relevance:
+      "AOI、視覺品質檢測、倉儲辨識與圖面助理若採第三方 VLM 或 fine-tune，後門目標可在部署後才選定；固定觸發清單與乾淨資料準確率驗收不足。",
+    action:
+      "把訓練資料、權重、adapter、架構與推論前處理納入 AIBOM；對任意語意目標做 trigger search、跨影像行為差異、可信重建與隔離環境驗收。",
+    caveat:
+      "Preprint；主要實驗基於作者指定 VLM、Flickr8k、句向量門檻與合成 trigger，ASR 不能直接外推至工廠 AOI 分布或封閉模型。",
+    crossCheck:
+      "與 Architectural Backdoors 及 ToxScreen 共同顯示：模型 hash、乾淨效能與傳統單一 trigger 掃描都不能證明 VLM 供應鏈安全。",
+    metric: "未見目標 ASR 92%｜Trigger-level 86.5%",
+  },
+  {
+    id: 32,
+    rank: 6,
+    week: "2026.08.14",
+    batch: "本週新發",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
+    title: "Backdoor Decontamination Dynamics in LLM Agents",
+    subtitle: "未知觸發下的防禦性污染與去污染實驗",
+    date: "2026.08.11",
+    dateValue: "2026-08-11",
+    authors: "Gabriel Huang、Abhay Puri、Léo Boisvert、Alexandre Drouin、Perouz Taslakian、Spandana Gella、Christopher Pal",
+    source: "https://arxiv.org/abs/2608.11295",
+    sourceLabel: "arXiv:2608.11295",
+    pdf: "https://arxiv.org/pdf/2608.11295",
+    decision: "深入審閱",
+    kind: "學術論文",
+    topics: ["Agent Security", "Data Lineage", "Threat Modeling"],
+    summary:
+      "研究防守方不知道既有 trigger 時，能否先植入已知防禦性後門、再 unlearn 該後門，連帶清除未知惡意行為；並把 trigger、response、teacher 與 fine-tuning 方法分離測試。",
+    findings: [
+      "115 組 AgentDyn 實驗中，只做 defensive poisoning 約清除 56% 原始後門；後續 decontamination 幾乎清除剩餘行為。",
+      "同時植入最多 4 個後門時，單靠 defensive poisoning 的清除率降至約 36%。",
+      "對一個已知共存後門去污染，連帶清除 52/60（87%）其他後門；但中間層仍可看到原始 trigger awareness 痕跡。",
+    ],
+    relevance:
+      "企業接收外部 fine-tune、adapter 或開源 Agent 模型時，通常不知道潛在 trigger；研究提供供應鏈修復測試方向，也提醒輸出恢復正常不代表模型內部已完全清除。",
+    action:
+      "第三方模型驗收保留原始 artifact、decontamination 版本與完整測試 lineage；把行為測試、trigger 探索、內部表示分析與可信重建結合，避免把單次 unlearning 視為安全證明。",
+    caveat:
+      "Preprint；結果依 AgentDyn、後門類型與 fine-tuning 設定，且 defensive poisoning 本身會修改模型，尚不適合作為未經獨立驗證的生產修復程序。",
+    crossCheck:
+      "補充 ToxScreen 的偵測困境與本週 programmable VLM backdoor：未知 trigger 下即使外部行為恢復，仍需保留 provenance、版本差異與重新驗收。",
+    metric: "115 實驗｜56% 初步清除｜87% 共存清除",
+  },
+  {
+    id: 33,
+    rank: 7,
+    week: "2026.08.14",
+    batch: "本週新發",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 2, actionability: 2 },
+    title: "ToolHazard",
+    subtitle: "Scaling Adversarial Environments for Security Evaluation and Alignment of LLM Agents",
+    date: "2026.08.12",
+    dateValue: "2026-08-12",
+    authors: "Yutao Mou、Pengfei Yang、Zhe Yin、Zhangchi Xue、Xiaotian Luan、Dingyao Yu、Tong Zhang、Shikun Zhang、Wei Ye",
+    source: "https://arxiv.org/abs/2608.11878",
+    sourceLabel: "arXiv:2608.11878",
+    pdf: "https://arxiv.org/pdf/2608.11878",
+    decision: "選讀",
+    kind: "學術論文",
+    topics: ["Agent Security", "DDR", "Threat Modeling"],
+    summary:
+      "以 LLM 自動合成可執行、具狀態的 adversarial environments，讓攻擊 Agent 尋找可寫入且會被任務讀取的狀態，產生 environment-specific prompt injection，再以程式化 final-state checks 驗證。",
+    findings: [
+      "ToolHazard-Bench 包含 28 個 stateful environments、512 個 tools、87 個長流程任務，平均 15.56 steps。",
+      "7 個模型在不同攻擊策略下 ASR 差異很大；重要模板、multi-turn、decision hijacking 與 tool selection 在部分模型達 70% 以上。",
+      "攻擊指令越早被 Agent 遇到、越靠近 observation 尾端，效果越強；alignment data 能降低 ToolHazard-Bench 與 AgentDojo 風險並保留良性 utility。",
+    ],
+    relevance:
+      "工廠 Agent 讀取郵件、資料庫備註、工單與工具輸出，風險常藏在有狀態環境而非 prompt 本身；此方法可作 ERP／PLM／OT digital twin 安全測試的設計參考。",
+    action:
+      "用企業實際 schema 建立隔離 adversarial twin；自動找出可寫入→可讀取的資料路徑，測試不同 injection timing、位置與工具組合，並以最終系統狀態而非 LLM judge 判定。",
+    caveat:
+      "作者標示 Work in Progress；環境由 LLM 合成且受 ToolACE／API-Bank 領域覆蓋限制，尚未證明能代表製造業 ERP、PLM 或 OT 的真實狀態與限制，因此判定選讀。",
+    crossCheck:
+      "與 Breadcrumbing 及 ColluSkill 共同指出，真正攻擊面是跨步驟資料流與狀態轉移；單一 prompt 或單一 tool 的安全測試不足。",
+    metric: "28 環境｜512 工具｜87 任務｜15.56 steps",
+  },
+  {
+    id: 34,
+    rank: 8,
+    week: "2026.08.14",
+    batch: "本週新發",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 2, actionability: 2 },
+    title: "Convergent Detour Hijacking",
+    subtitle: "Task-Preserving Resource Amplification in Skill-Based LLM Agents",
+    date: "2026.08.12",
+    dateValue: "2026-08-12",
+    authors: "Junliang Liu、Ruoyu Li、Wenxin Tang、Jingyu Xiao、Zhenyu Liu、Jingheng Xu、Laizhong Cui",
+    source: "https://arxiv.org/abs/2608.12273",
+    sourceLabel: "arXiv:2608.12273",
+    pdf: "https://arxiv.org/pdf/2608.12273",
+    decision: "選讀",
+    kind: "學術論文",
+    topics: ["Agent Security", "DDR", "Threat Modeling"],
+    summary:
+      "提出文字型、與 runtime 無關的 Skill 攻擊：惡意 description 先在選擇階段取得相關性，body 再捏造合理依賴，讓 Agent 走一段耗費資源的繞路後回到原任務並正常完成。",
+    findings: [
+      "跨多個 LLM backends 與 491 個 held-out tasks，在單次與多輪條件測試。",
+      "DeepSeek-V4-Pro 中惡意 coordinator 被選中的比例為 80.02%。",
+      "在 coordinator 命中且完成任務的執行中，token 增加 66.91%、端到端時間增加 92.45%，但總體完成率仍相近。",
+    ],
+    relevance:
+      "製造業 Agent 可能在雲端 GPU、工程資料查詢、模擬與工具鏈上產生高成本；只看任務是否完成，會漏掉惡意 Skill 造成的延遲、成本、配額耗盡與異常工具使用。",
+    action:
+      "在 Skill threat model 加入 trajectory integrity、tool-call budget、token／時間上限與非必要 dependency 偵測；成功任務仍要比對預期路徑與資源基線。",
+    caveat:
+      "Preprint；最醒目的資源增幅數字來自指定 DeepSeek-V4-Pro 與 coordinator-hit 子集，未證明所有模型與企業工作流程都有相同成本風險，因此判定選讀。",
+    crossCheck:
+      "補足 runtime contract 的 evidential face：結果正確不代表路徑可信。與 ColluSkill 相比，這篇主要影響資源與軌跡完整性，而非直接資料外洩。",
+    metric: "491 任務｜Token +66.91%｜時間 +92.45%",
+  },
+  {
   {
     id: 20,
     rank: 1,
@@ -1061,6 +1341,16 @@ const NOT_RETAINED =
  * 每週的入選漏斗與略過清單各自保存，新增週次不會覆寫既有紀錄。
  */
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
+  "2026.08.14": {
+    scanned: 188,
+    shortlisted: 14,
+    note: "本期檢視 arXiv cs.CR 近期提交共 188 筆，依製造業關聯、證據透明度與可落地性初篩 14 筆，最終入選 8 筆；本週未找到方法透明且可獨立核實的新 DSPM 專題研究，因此未以產品行銷內容補數。",
+    skipped: [
+      { title: "From Prompt Injection to Web Exploitation", source: "https://arxiv.org/abs/2608.10281", reason: "攻擊分類值得追蹤，但公開摘要僅揭露 5 個情境與 7 個模型，缺少可比較的整體結果，暫不列核心證據。" },
+      { title: "When Agents Talk", source: "https://arxiv.org/abs/2608.11436", reason: "屬單一作者理論型 preprint，且部分論證依賴尚未有完整官方事故報告的事件敘事，待更多原始證據。" },
+      { title: "2026 AI Adoption & Risk Report — Manufacturing", source: "https://www.cyberhaven.com/resources/report/2026-ai-adoption-risk-report-manufacturing", reason: "公開頁面未揭露完整方法、樣本與製造業分層，且完整內容需留下資料下載；不以廠商行銷頁替代可查核研究。" },
+    ],
+  },
   "2026.07.17": { scanned: null, shortlisted: null, note: NOT_RETAINED, skipped: [] },
   "2026.07.24": { scanned: null, shortlisted: null, note: NOT_RETAINED, skipped: [] },
   "2026.07.31": { scanned: null, shortlisted: null, note: NOT_RETAINED, skipped: [] },
