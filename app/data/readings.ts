@@ -1233,6 +1233,180 @@ export const readings: Reading[] = [
       "風險方向與 Orca、Cyberhaven 遙測大致一致，但母體與定義不同，百分比不能直接相加或比較。",
     metric: "高風險 Prompt 2% → 4%",
   },
+  {
+    id: 35,
+    rank: 9,
+    week: "2026.08.14",
+    batch: "補遺",
+    evidenceLevel: "政策報告",
+    scores: { evidence: 3, relevance: 3, actionability: 3 },
+    title: "MITRE ATLAS Secure AI v2",
+    subtitle: "把 Agentic AI 與 LLM 攻擊技術納入可維護的威脅知識庫",
+    date: "2026.05.06",
+    dateValue: "2026-05-06",
+    authors: "Mike Cunningham、Marissa Dotter／MITRE CTID",
+    source: "https://ctid.mitre.org/blog/2026/05/06/secure-ai-v2-release/",
+    sourceLabel: "MITRE CTID",
+    decision: "深入審閱",
+    kind: "政策研究",
+    topics: ["Threat Modeling", "Agent Security", "DDR", "Data Lineage"],
+    summary:
+      "MITRE 更新 Secure AI 與 ATLAS，擴充 Agentic AI／LLM 攻擊技術、緩解措施與案例，並加入 technique maturity，讓企業能把公開威脅情資轉成可追蹤的 AI System Threat Model。",
+    findings: [
+      "Secure AI v2 公開 45 項以上 techniques／sub-techniques、10 項以上 mitigations 與 20 項以上 case studies。",
+      "以 technique maturity 區分概念、研究與實際觀察成熟度，避免把所有技術當成同等急迫。",
+      "MITRE 表示將採每月更新節奏，以涵蓋快速演變的 Agentic AI 與 LLM 攻擊面。",
+    ],
+    relevance:
+      "跨國製造業可把 ATLAS 技術映射到 PLM、ERP、研發 Git、工廠 edge AI 與 OT Agent，補足傳統 ATT&CK 對 AI 資料、模型、記憶與工具鏈描述不足的部分。",
+    action:
+      "以 ATLAS technique ID 擴充 AI threat model、紅隊案例與 SOC 偵測對照表；依成熟度、資產曝險與製程影響排序，而非一次性照單全收。",
+    caveat:
+      "屬 MITRE 官方框架更新而非控制效果研究；技術與緩解項目提供共同語言，但仍需依企業架構驗證可偵測性與控制成效。",
+    crossCheck:
+      "與本週 Runtime Contract、MCP 身分閘道及既有 Agent Skill／Memory 研究互補，可把個別攻擊證據收斂到一致的威脅建模語彙。",
+    metric: "45+ 技術｜10+ 緩解｜20+ 案例",
+  },
+  {
+    id: 36,
+    rank: 10,
+    week: "2026.08.14",
+    batch: "補遺",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 },
+    title: "STRIDE-AI",
+    subtitle: "Extending STRIDE for the AI Lifecycle",
+    date: "2026.05.16",
+    dateValue: "2026-05-16",
+    authors: "Tsafac Nkombong Regine Cyrille、Franziska Schwarz",
+    source: "https://arxiv.org/abs/2605.17163",
+    sourceLabel: "arXiv:2605.17163",
+    pdf: "https://arxiv.org/pdf/2605.17163",
+    decision: "深入審閱",
+    kind: "學術論文",
+    topics: ["Threat Modeling", "Agent Security", "Data Lineage", "DSPM / DLP"],
+    summary:
+      "把傳統 STRIDE 延伸到六階段 AI 生命週期，將資料、模型、推論、RAG、Agent 工具與部署風險納入同一套威脅分析流程。",
+    findings: [
+      "提出由需求與資料取得到部署監控的六階段方法，逐階段識別 AI 特有資產、信任邊界與濫用路徑。",
+      "在一個 sandbox RAG chatbot 案例中，作者報告攻擊成功率由 80% 降至 15%。",
+      "框架可把 prompt injection、資料污染、模型竄改與機密外洩對應回 Spoofing、Tampering、Repudiation、Information Disclosure、Denial of Service 與 Elevation of Privilege。",
+    ],
+    relevance:
+      "製造業常已有 STRIDE／DFD 審查流程；此研究提供較低摩擦的延伸方式，把模型、RAG、Agent 與資料 lineage 納入既有產品安全與 OT 架構審查。",
+    action:
+      "選一個 PLM／品質知識庫 Agent 建立六階段 DFD，標示資料敏感度、模型與工具信任邊界，再用實際攻擊案例驗證每項 mitigation。",
+    caveat:
+      "Preprint；80% 降至 15% 來自單一模型與單一 RAG sandbox 案例，不能視為框架在不同企業、語言與 OT 情境的普遍防禦率。",
+    crossCheck:
+      "可與 MITRE ATLAS 的威脅技術及 Runtime Contract 的執行期證據結合：STRIDE-AI 負責架構層分類，ATLAS 與 runtime telemetry 負責具體技術與驗證。",
+    metric: "6 階段｜ASR 80% → 15%",
+  },
+  {
+    id: 37,
+    rank: 11,
+    week: "2026.08.14",
+    batch: "補遺",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 2 },
+    title: "SafeGPT",
+    subtitle: "A Unified Framework for Privacy-Preserving and Secure LLM Inference",
+    date: "2026.05.22",
+    dateValue: "2026-05-22",
+    authors: "Pratyush Desai、Luoxi Tang、Yuqiao Meng、Zhaohan Xi",
+    source: "https://arxiv.org/abs/2601.06366",
+    sourceLabel: "arXiv:2601.06366 v3",
+    pdf: "https://arxiv.org/pdf/2601.06366",
+    decision: "選讀",
+    kind: "學術論文",
+    topics: ["DSPM / DLP", "Threat Modeling", "Agent Security"],
+    summary:
+      "整合敏感資料辨識、遮蔽與安全推論控制；但最新版資料集分項結果顯示企業情境的誤判率很高，不能以報告中的整體摘要數字代替部署驗收。",
+    findings: [
+      "v3 表格中，PIIBench 的 precision／recall／FPR 為 100%／70%／0%，ToxicChat 為 100%／100%／0%。",
+      "EnterpriseScenarios 只有 40.5% precision、68.2% recall，false-positive rate 高達 78.6%。",
+      "不同資料集差異巨大，說明單一彙總數字無法代表原始碼、BOM、圖面、客戶規格與多語資料的真實 DLP 表現。",
+    ],
+    relevance:
+      "製造企業若以通用 PII benchmark 驗收 GenAI DLP，可能在工程語料上大量誤擋或漏報，直接影響研發工作與資料外洩風險。",
+    action:
+      "用企業自有原始碼、BOM、圖面、配方、客戶規格與中英日多語 prompt 建立資料集，分情境量測 precision、recall、FPR、延遲與人工覆核成本。",
+    caveat:
+      "原始稿提交於 2026-01-10，本期依 2026-05-22 的 v3 補遺；報告所述約 92% precision、87% recall、低於 12% FPR 並非各資料集普遍結果，故只列選讀。",
+    crossCheck:
+      "已回查 v3 的資料集分項表；網站以分項數字取代不可驗證的廣泛彙總敘述，並明示 EnterpriseScenarios 的 78.6% FPR。",
+    metric: "Enterprise FPR 78.6%",
+  },
+  {
+    id: 38,
+    rank: 12,
+    week: "2026.08.14",
+    batch: "補遺",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 2 },
+    title: "AuditWeave",
+    subtitle: "Cryptographically Verifiable Data Lineage for AI Pipelines",
+    date: "2026.06.14",
+    dateValue: "2026-06-14",
+    authors: "Vimal Nakrani",
+    source: "https://arxiv.org/abs/2607.09682",
+    sourceLabel: "arXiv:2607.09682",
+    pdf: "https://arxiv.org/pdf/2607.09682",
+    decision: "選讀",
+    kind: "學術論文",
+    topics: ["Data Lineage", "DDR", "Threat Modeling"],
+    summary:
+      "以六種事件型別與 append-only hash chain 記錄 AI pipeline 的來源、檢索、轉換、推論、決策與證明，讓稽核方可驗證事件序列是否遭竄改。",
+    findings: [
+      "定義 Source、Retrieval、Transformation、Inference、Decision、Attestation 六類 lineage events。",
+      "2,000 次事件 mutation trials 全數被偵測；單核心平均約 22.42 微秒／事件，約 44,600 events／秒。",
+      "Hash chain 能揭露變更，但不能阻止竄改、證明輸入內容為真，或在沒有外部錨點時抵抗完整儲存區被重算。",
+    ],
+    relevance:
+      "適合跨廠區模型、品質資料、RAG 文件、推論與人工核准的可驗證 lineage；也能支援事故後重建與法規稽核。",
+    action:
+      "在 PoC 中把重要事件鏈定期錨定到獨立 WORM／簽章服務，並測試時鐘、身分、刪除、復原與完整儲存區失陷情境。",
+    caveat:
+      "單一作者 preprint；2,000 次變更全數偵測只證明指定 mutation 與 hash chain 完整性，不代表能防止攻擊或保證資料語意真實。",
+    crossCheck:
+      "與 AIBOM、Agent Memory lineage 與 Runtime Contract 的 evidence chain 一致，但補上『可偵測竄改不等於可阻止竄改，也不等於內容為真』的重要邊界。",
+    metric: "2,000/2,000 變更偵測｜44.6K events/s",
+  },
+  {
+    id: 39,
+    rank: 13,
+    week: "2026.08.14",
+    batch: "補遺",
+    evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 2, actionability: 2 },
+    title: "Tracing the Data Trail",
+    subtitle: "A Systematic Review of Data Provenance for AI",
+    date: "2026.01.19",
+    dateValue: "2026-01-19",
+    authors: "Richard Hohensinner、Belgin Mutlu、Inti Gabriel Mendoza Estrada、Matej Vukovic、Simone Kopeinik、Roman Kern",
+    source: "https://arxiv.org/abs/2601.14311",
+    sourceLabel: "arXiv:2601.14311",
+    pdf: "https://arxiv.org/pdf/2601.14311",
+    decision: "選讀",
+    kind: "學術論文",
+    topics: ["Data Lineage", "Threat Modeling", "DSPM / DLP"],
+    summary:
+      "系統性整理 AI 資料 provenance、transparency、traceability 與 lineage 的研究語彙與方法，提供建立企業共同資料治理語言的背景基線。",
+    findings: [
+      "回顧 95 篇出版品，整理 provenance、透明度、可追溯性與 accountability 等概念的重疊與差異。",
+      "指出 AI 系統需同時描述資料來源、轉換、責任角色、技術 artifact 與可查核證據，而非只保存 dataset 名稱。",
+      "分類可協助治理、法遵與工程團隊對 lineage 的目的、粒度與生命週期達成一致。",
+    ],
+    relevance:
+      "跨國製造業的資料會流經供應商、工廠、資料湖、模型訓練與客戶交付；缺乏共同語彙時，AIBOM、DSPM 與稽核證據難以對齊。",
+    action:
+      "先定義企業 provenance minimum elements：來源、擁有者、法域、授權、轉換、版本、敏感標籤、模型用途、刪除與證據錨點，再映射到現有 catalog／DSPM。",
+    caveat:
+      "屬較早期的背景型 preprint，且為文獻分類而非控制實驗；適合建立治理語彙，不宜當作單一產品或架構的效果證據。",
+    crossCheck:
+      "可作為 MITRE ATLAS、AIBOM 與 AuditWeave 的概念底座，但具體欄位與技術選型仍需依企業系統與法規情境補充。",
+    metric: "95 篇出版品",
+  },
 ];
 
 export const TOPIC_FILTERS = [
@@ -1344,11 +1518,13 @@ export const weeklyEditorials: Record<string, WeeklyEditorial> = {
   "2026.08.14": {
     scanned: 188,
     shortlisted: 14,
-    note: "本期檢視 arXiv cs.CR 近期提交共 188 筆，依製造業關聯、證據透明度與可落地性初篩 14 筆，最終入選 8 筆；本週未找到方法透明且可獨立核實的新 DSPM 專題研究，因此未以產品行銷內容補數。",
+    note: "公開來源掃描 188 項、14 項進入全文初篩並入選 8 項本週新發；再讀取 Google Drive 的 2026W33 最新週報，從 7 項候選中納入 5 項高價值補遺，合計 13 項。補遺不重複計入本週新發布數。",
     skipped: [
       { title: "From Prompt Injection to Web Exploitation", source: "https://arxiv.org/abs/2608.10281", reason: "攻擊分類值得追蹤，但公開摘要僅揭露 5 個情境與 7 個模型，缺少可比較的整體結果，暫不列核心證據。" },
       { title: "When Agents Talk", source: "https://arxiv.org/abs/2608.11436", reason: "屬單一作者理論型 preprint，且部分論證依賴尚未有完整官方事故報告的事件敘事，待更多原始證據。" },
       { title: "2026 AI Adoption & Risk Report — Manufacturing", source: "https://www.cyberhaven.com/resources/report/2026-ai-adoption-risk-report-manufacturing", reason: "公開頁面未揭露完整方法、樣本與製造業分層，且完整內容需留下資料下載；不以廠商行銷頁替代可查核研究。" },
+      { title: "ASTRIDE", source: "https://arxiv.org/abs/2512.04785", reason: "屬 2025 年 12 月的既有框架，公開資料缺少可比較的量化驗證；本期只保留追蹤，不列核心補遺。" },
+      { title: "NIST AI Agent Security RFI", source: "https://www.federalregister.gov/documents/2026/01/08/2026-00206/request-for-information-regarding-security-considerations-for-artificial-intelligence-agents", reason: "屬意見徵詢而非正式控制框架，且 2026-03-09 截止日已過；不作本期實務控制證據。" },
     ],
   },
   "2026.07.17": { scanned: null, shortlisted: null, note: NOT_RETAINED, skipped: [] },
@@ -1374,6 +1550,24 @@ export function editorialFor(week: string) {
 }
 
 export const currentEditorial = editorialFor(CURRENT_WEEK);
+
+export const weeklyReportIntegration = {
+  title: "GSMD-WATCH-2026-0816-01 製造業AI Security週報 2026W33",
+  modifiedAt: "2026.08.16 08:54（臺北時間）",
+  url: "https://docs.google.com/document/d/16_uLHinjjewqIwsZxdRBN_q8BZD0mPkHa1jeUBTayNs/edit?usp=drivesdk",
+  candidates: 7,
+  selected: 5,
+  adopted: [
+    "MITRE Secure AI v2：採用官方 ATLAS 技術、成熟度與緩解更新。",
+    "STRIDE-AI：採用六階段生命週期 threat modeling，保留單一案例限制。",
+    "SafeGPT：改用 v3 資料集分項結果，揭露 EnterpriseScenarios 78.6% FPR。",
+    "AuditWeave 與 Tracing the Data Trail：補強可驗證 lineage 與治理語彙。",
+  ],
+  corrections: [
+    "SafeGPT 的 92% precision／87% recall／低於 12% FPR 不是各資料集通用結果，網站不沿用該廣泛摘要。",
+    "NIST 文件是已截止的 RFI，不是已完成的 Agent 安全控制標準。",
+  ],
+} as const;
 
 export function readingSearchText(reading: Reading) {
   return [reading.title, reading.subtitle, reading.authors, reading.summary, reading.relevance, reading.action, reading.metric ?? "", ...reading.findings, ...reading.topics].join(" ").toLowerCase();
