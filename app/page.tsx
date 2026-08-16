@@ -15,6 +15,7 @@ import {
   isRetracted,
   priorityReading,
   readingSearchText,
+  weeklyReportIntegration,
   type Reading,
 } from "./data/readings";
 function Mark({ children }: { children: React.ReactNode }) {
@@ -375,6 +376,36 @@ export default function Home() {
         )}
       </section>
 
+      <section className="report-integration" id="report-integration">
+        <div className="report-heading">
+          <div>
+            <p className="eyebrow">GOOGLE DRIVE · VERIFIED REPORT INPUT</p>
+            <h2>Weekly AI Report 整合</h2>
+          </div>
+          <a href={weeklyReportIntegration.url} target="_blank" rel="noreferrer">開啟原始週報 ↗</a>
+        </div>
+        <div className="report-grid">
+          <article className="report-source-card">
+            <Mark>最新檔案</Mark>
+            <h3>{weeklyReportIntegration.title}</h3>
+            <p>最後修改：{weeklyReportIntegration.modifiedAt}</p>
+            <div className="report-counts">
+              <span><b>{weeklyReportIntegration.candidates}</b> 報告候選</span>
+              <span><b>{weeklyReportIntegration.selected}</b> 納入補遺</span>
+              <span><b>{currentStats.total}</b> 合併清單</span>
+            </div>
+          </article>
+          <article>
+            <Mark>採用內容</Mark>
+            <ul>{weeklyReportIntegration.adopted.map((item) => <li key={item}>{item}</li>)}</ul>
+          </article>
+          <article>
+            <Mark>查核修正</Mark>
+            <ul>{weeklyReportIntegration.corrections.map((item) => <li key={item}>{item}</li>)}</ul>
+          </article>
+        </div>
+      </section>
+
       <section className="progress-section" id="progress">
         <div>
           <p className="eyebrow">READING OPERATIONS</p>
@@ -417,7 +448,7 @@ export default function Home() {
         <div className="verification-grid">
           <article><Mark>VERIFIED SOURCES 定義</Mark><h3>五項查核清單</h3><ul>{editorialMethod.verifiedChecklist.map((item) => <li key={item}>{item}</li>)}</ul></article>
           <article><Mark>候選來源範圍</Mark><h3>固定掃描範圍</h3><ul>{editorialMethod.sourceScope.map((item) => <li key={item}>{item}</li>)}</ul></article>
-          <article><Mark>本週入選漏斗</Mark><h3><span>{currentEditorial.scanned ?? "未留存"}</span> 掃描 → <span>{currentEditorial.shortlisted ?? "未留存"}</span> 初篩 → <span>{currentEditorial.selected}</span> 入選</h3><p>{currentEditorial.note}</p></article>
+          <article><Mark>本週入選漏斗</Mark><h3><span>{currentEditorial.scanned ?? "未留存"}</span> 掃描 → <span>{currentEditorial.shortlisted ?? "未留存"}</span> 初篩 → <span>{currentStats.new}</span> 新發 + <span>{currentStats.catchUp}</span> 補遺</h3><p>{currentEditorial.note}</p></article>
         </div>
         <div className="correction-log" id="corrections">
           <div className="correction-head"><Mark>更正紀錄</Mark><h3>已發佈項目的修訂軌跡</h3></div>
