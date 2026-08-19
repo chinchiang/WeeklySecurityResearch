@@ -145,7 +145,6 @@ export default function ArchivePage() {
           <Link href="/">最新一期</Link>
           <a href="#archive-index">歷史索引</a>
           <a href="#archive-progress">閱讀進度</a>
-          <a href="/social-content/index.html">社群內容</a>
         </nav>
         <div className="live-state"><i /> ARCHIVE VERIFIED</div>
       </header>
