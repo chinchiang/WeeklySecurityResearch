@@ -24,7 +24,7 @@ test("social content has synchronized source and deployment mirrors with complet
   }
 });
 
-test("latest social edition is derived instead of hard-coded in the homepage", () => {
+test("social content is retained as data but has no homepage or archive entry point", () => {
   const datedFiles = readdirSync(dataDir)
     .filter((name) => /^\d{4}-\d{2}-\d{2}\.json$/.test(name))
     .sort();
@@ -33,7 +33,10 @@ test("latest social edition is derived instead of hard-coded in the homepage", (
   const homepage = readFileSync(path.join(root, "app", "page.tsx"), "utf8");
 
   assert.equal(manifest.latest.week, latestWeek);
-  assert.match(homepage, /latestSocialEdition\.readyCount/);
+  const archive = readFileSync(path.join(root, "app", "archive", "page.tsx"), "utf8");
+
+  assert.doesNotMatch(homepage, /latestSocialEdition|social-content-cta|每週社群內容創意|\\/social-content\\//);
+  assert.doesNotMatch(archive, /\\/social-content\\//);
   assert.doesNotMatch(homepage, /social-content\/data\/\d{4}-\d{2}-\d{2}\.json/);
 });
 
