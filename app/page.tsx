@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { latestSocialEdition } from "./data/social-latest.generated";
-
 import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
 import {
   CURRENT_WEEK,
@@ -141,7 +139,6 @@ export default function Home() {
     topic: item,
     count: currentReadings.filter((reading) => reading.topics.includes(item)).length,
   })).filter((item) => item.count > 0).sort((a, b) => b.count - a.count);
-  const socialReadyCount = latestSocialEdition.readyCount;
 
   return (
     <main>
@@ -159,7 +156,6 @@ export default function Home() {
           <a href="#index">主題索引</a>
           <a href="#progress">閱讀進度</a>
           <a href="/archive">歷史資料</a>
-          <a href="/social-content/index.html">社群內容</a>
         </nav>
         <a className="live-state" href="#verification"><i /> VERIFIED SOURCES · 定義</a>
       </header>
@@ -194,13 +190,7 @@ export default function Home() {
             <div className="kpi"><b>{String(currentStats.total).padStart(2, "0")}</b><span>本週入選</span><i>{currentStats.new} NEW · {currentStats.catchUp} CATCH-UP</i></div>
             <div className="kpi purple"><b>{String(currentStats.deep).padStart(2, "0")}</b><span>深入審閱</span><i>HIGH PRIORITY</i></div>
             <div className="kpi blue"><b>{String(currentStats.selective).padStart(2, "0")}</b><span>選讀</span><i>SELECTIVE</i></div>
-          </div>
-          <a className="social-content-cta" href="/social-content/index.html">
-            <span><b>每週社群內容創意</b><small>AI Governance · AI Security · Electronic Manufacturing</small></span>
-            <i>{socialReadyCount} READY POSTS</i>
-            <strong>→</strong>
-          </a>
-        </div>
+          </div>        </div>
 
         <figure className="hero-character desktop-sindy" aria-label="AI 資安分析師 Sindy">
           <img
