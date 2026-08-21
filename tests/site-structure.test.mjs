@@ -45,7 +45,7 @@ test("canonical metadata is route-specific", () => {
   const archiveLayout = readFileSync(path.join(root, "app", "archive", "layout.tsx"), "utf8");
   const weekLayout = readFileSync(path.join(root, "app", "week", "[week]", "layout.tsx"), "utf8");
 
-  assert.doesNotMatch(rootLayout, /canonical:\s*["']\/["']/);
+  assert.match(rootLayout, /canonical:\s*["']\/["']/);
   assert.match(archiveLayout, /canonical:\s*["']\/archive["']/);
   assert.match(weekLayout, /canonical:\s*`\/week\/\$\{canonicalWeek\}`/);
 });
