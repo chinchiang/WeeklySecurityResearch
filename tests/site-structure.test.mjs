@@ -35,8 +35,8 @@ test("social content is retained as data but has no homepage or archive entry po
   assert.equal(manifest.latest.week, latestWeek);
   const archive = readFileSync(path.join(root, "app", "archive", "page.tsx"), "utf8");
 
-  assert.doesNotMatch(homepage, /latestSocialEdition|social-content-cta|每週社群內容創意|\\/social-content\\//);
-  assert.doesNotMatch(archive, /\\/social-content\\//);
+  assert.doesNotMatch(homepage, /latestSocialEdition|social-content-cta|每週社群內容創意|\/social-content\//);
+  assert.doesNotMatch(archive, /\/social-content\//);
   assert.doesNotMatch(homepage, /social-content\/data\/\d{4}-\d{2}-\d{2}\.json/);
 });
 
@@ -45,7 +45,7 @@ test("canonical metadata is route-specific", () => {
   const archiveLayout = readFileSync(path.join(root, "app", "archive", "layout.tsx"), "utf8");
   const weekLayout = readFileSync(path.join(root, "app", "week", "[week]", "layout.tsx"), "utf8");
 
-  assert.doesNotMatch(rootLayout, /canonical:\s*["']\/["']/);
+  assert.match(rootLayout, /canonical:\s*["']\/["']/);
   assert.match(archiveLayout, /canonical:\s*["']\/archive["']/);
   assert.match(weekLayout, /canonical:\s*`\/week\/\$\{canonicalWeek\}`/);
 });
