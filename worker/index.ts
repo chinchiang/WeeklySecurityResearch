@@ -28,12 +28,17 @@ interface ExecutionContext {
 // Baseline security headers applied to every response. `script-src` is
 // deliberately absent: the React Server Components payload ships as inline
 // scripts, so restricting it would need per-request nonces. The directives
-// below are the ones that add protection without that machinery.
+// below add robust baseline protection.
 const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "object-src 'none'",
   "form-action 'self'",
+  "img-src 'self' data: https:",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "style-src 'self' 'unsafe-inline'",
+  "connect-src 'self'",
 ].join("; ");
 
 function withSecurityHeaders(response: Response, isSecure: boolean): Response {

@@ -39,3 +39,9 @@ jobs:
 
       - name: Build and run tests
         run: npm test
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Security Audit
+        run: npm run audit
