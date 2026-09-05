@@ -1,0 +1,19 @@
+{
+  "$comment": "Advisories the audit gate tolerates. Each entry must say why the risk does not apply here and what would remove it. An entry that stops matching a real advisory fails the gate, so this file cannot silently rot.",
+  "allow": [
+    {
+      "advisory": "GHSA-w3rx-r6r6-pgpr",
+      "package": "image-size",
+      "reason": "DoS needs the parser to read an attacker-supplied ICNS file. The only caller is handleImageOptimization in worker/index.ts, whose fetchAsset resolves through env.ASSETS against the request origin, so it parses first-party build assets exclusively. public/ ships png, svg and webp only.",
+      "blockedOn": "vinext 1.x. Every non-vulnerable vinext (>= 1.0.0-beta.6) breaks notFound(): NEXT_NOT_FOUND escapes asynchronously and unknown week slugs answer 200 instead of 404, failing tests/rendered-html.test.mjs. Needs a migration, not a version bump.",
+      "reviewBy": "2026-12-01"
+    },
+    {
+      "advisory": "GHSA-5p2g-fcmc-qvqq",
+      "package": "image-size",
+      "reason": "Same parser, same caller: the JXL and HEIF loops need an attacker-supplied image, and the optimizer only ever reads this build's own assets. No JXL or HEIF file exists in the repository.",
+      "blockedOn": "vinext 1.x. See GHSA-w3rx-r6r6-pgpr.",
+      "reviewBy": "2026-12-01"
+    }
+  ]
+}
