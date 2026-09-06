@@ -40,8 +40,8 @@ npm run lint
 
 ## 安全基準
 
-- `worker/index.ts` 對所有回應加上 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy`、`Permissions-Policy`、HSTS 與一組 CSP（`frame-ancestors`／`base-uri`／`object-src`／`form-action`）。因 RSC payload 以 inline script 傳遞，CSP 未限制 `script-src`；要加上需改用 per-request nonce。
+- `worker/index.ts` 對所有回應加上 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy`、`Permissions-Policy`、HSTS 與一組 CSP（`frame-ancestors`／`base-uri`／`object-src`／`form-action`／`img-src`／`font-src`／`style-src`／`connect-src`）。因 RSC payload 與 client bootstrap 以 inline script 傳遞，CSP 刻意不設 `script-src` 與 `default-src`（後者是前者的後備，設了同樣會擋 hydration）；`tests/rendered-html.test.mjs` 有回歸測試守護。要收緊需改用 per-request nonce。
 - `/week/<週次>` 只接受 `app/data/readings.ts` 既有的週次，其餘一律 404，避免任意字串以自我 canonical 被搜尋引擎收錄。
-- 依賴漏洞目前未全數修復；`npm audit fix` 會連帶升級 esbuild／miniflare 等建置鏈套件，需另行評估後再處理。
+- 依賴漏洞以 `npm run audit`（`scripts/audit-gate.mjs`）把關：high／critical 一律擋下，除非列在 `scripts/audit-allowlist.json` 並附理由與 `reviewBy` 到期日（目前 2 筆 image-size 公告，到期 2026-12-01，解法是升級 vinext 1.x）。
 
 閱讀進度只儲存在使用者瀏覽器的 Local Storage，不會傳送至外部服務。

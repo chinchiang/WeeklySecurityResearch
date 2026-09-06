@@ -16,6 +16,7 @@
     "audit": "node scripts/audit-gate.mjs",
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
+    "typecheck": "tsc --noEmit",
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.54.4",
+    "@cloudflare/workers-types": "^5.20260906.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
@@ -43,5 +45,5 @@
     "wrangler": "4.129.0"
   },
   "type": "module",
-  "displayName": "AI Security \u5fc5\u8b80\u6e05\u55ae"
+  "displayName": "AI Security 必讀清單"
 }

@@ -43,5 +43,8 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Type check
+        run: npm run typecheck
+
       - name: Run Security Audit
         run: npm run audit

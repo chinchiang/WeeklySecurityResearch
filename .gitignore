@@ -41,3 +41,6 @@ next-env.d.ts
 /outputs/
 /work/
 /.vinext/
+
+# tsc --incremental output
+tsconfig.tsbuildinfo

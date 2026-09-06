@@ -25,12 +25,14 @@ interface ExecutionContext {
 // dangerouslyAllowSVG: true in next.config.js and uncomment below:
 // const imageConfig: ImageConfig = { dangerouslyAllowSVG: true };
 
-// Baseline security headers applied to every response. `script-src` is
-// deliberately absent: the React Server Components payload ships as inline
-// scripts, so restricting it would need per-request nonces. The directives
-// below add robust baseline protection.
+// Baseline security headers applied to every response. `script-src` AND
+// `default-src` are deliberately absent: the React Server Components payload
+// and the client bootstrap (`import("/assets/...")`) ship as inline scripts,
+// and `default-src` is the fallback for `script-src`, so either directive
+// without a nonce blocks hydration entirely. Moving to a nonce-based policy
+// is tracked in README「安全基準」. The directives below add baseline
+// protection without touching script execution.
 const CONTENT_SECURITY_POLICY = [
-  "default-src 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "object-src 'none'",
