@@ -55,6 +55,509 @@ export type Reading = {
 };
 
 export const readings: Reading[] = [
+{
+  "id": 49,
+  "rank": 1,
+  "week": "2026.08.28",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "TrustShiftProbe",
+  "subtitle": "MCP Server 階段式信任攻擊",
+  "date": "2026.08.24",
+  "dateValue": "2026-08-24",
+  "authors": "Mehrdad Rostamzadeh、Sidhant Narula、Mohammad Ghasemigol、Daniel Takabi",
+  "source": "https://arxiv.org/abs/2608.23763",
+  "sourceLabel": "arXiv 2608.23763",
+  "pdf": "https://arxiv.org/pdf/2608.23763",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Agent Security",
+    "Threat Modeling",
+    "DDR"
+  ],
+  "summary": "惡意 MCP Server 可先經歷 benign conditioning，再於信任臨界點切換成 schema-valid 操控、資料外洩或服務破壞。9 種攻擊變體的平均攻擊成功率為 69.5%；SHIELD runtime 防禦將其降至 42.7%，仍留下顯著殘餘風險。",
+  "findings": [
+    "惡意 MCP Server 可先經歷 benign conditioning，再於信任臨界點切換成 schema-valid 操控、資料外洩或服務破壞。9 種攻擊變體的平均攻擊成功率為 69.5%；SHIELD runtime 防禦將其降至 42.7%，仍留下顯著殘餘風險。"
+  ],
+  "relevance": "適用於串接 PLM、ERP、原始碼儲存庫、採購、工單與 OT 資料的 AI Agent。供應商通過上線前檢查，不代表後續 MCP 行為可信。",
+  "action": "將 MCP Server 納入持續行為監控，重測信任建立後的資料外洩與破壞情境。",
+  "caveat": "本次報告截點後新發布，直接改變 Agent/MCP 威脅模型；但仍是未經同儕審查的受控實驗。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 50,
+  "rank": 2,
+  "week": "2026.08.28",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "ICS Cybersecurity Datasets",
+  "subtitle": "ICS 資料集結構性缺口",
+  "date": "2026.08.25",
+  "dateValue": "2026-08-25",
+  "authors": "Konstantinos E. Kampourakis 等 7 人",
+  "source": "https://arxiv.org/abs/2608.24757",
+  "sourceLabel": "arXiv 2608.24757",
+  "pdf": "https://arxiv.org/pdf/2608.24757",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Threat Modeling"
+  ],
+  "summary": "PRISMA-guided meta-review 彙整 18 項研究、83 個 ICS 資料集；85.5% 聚焦末期 OT disruption、只有 8.4% 涵蓋跨階段 IT/OT 攻擊、實際營運來源僅 15.7%，Purdue Level 0 證據幾乎缺席；沒有研究採 streaming evaluation，僅 2 項符合其重現性條件。",
+  "findings": [
+    "PRISMA-guided meta-review 彙整 18 項研究、83 個 ICS 資料集；85.5% 聚焦末期 OT disruption、只有 8.4% 涵蓋跨階段 IT/OT 攻擊、實際營運來源僅 15.7%，Purdue Level 0 證據幾乎缺席；沒有研究採 streaming evaluation，僅 2 項符合其重現性條件。"
+  ],
+  "relevance": "不能因 AI/ML IDS 在 SWaT、Edge-IIoT 等資料集取得高 F1-score，就推定能偵測真實產線橫向移動或 field-device 攻擊。",
+  "action": "OT AI PoC 加入跨 IT／OT 階段、Purdue Level 0、時間切分與 streaming evaluation。",
+  "caveat": "是本週製造／OT 關聯度最高的新研究，可直接用來強化 SIEM/XDR/OT AI PoC 驗收條件。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 51,
+  "rank": 3,
+  "week": "2026.08.28",
+  "batch": "補遺",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "REDAgentBench",
+  "subtitle": "可執行的 AI Agent 紅隊量測",
+  "date": "2026.08.11",
+  "dateValue": "2026-08-11",
+  "authors": "Zixing Chen 等",
+  "source": "https://arxiv.org/abs/2608.10669",
+  "sourceLabel": "arXiv 2608.10669",
+  "pdf": "https://arxiv.org/pdf/2608.10669",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Agent Security",
+    "Threat Modeling"
+  ],
+  "summary": "1,661 個案例、5 種服務面、6 個模型及 3 種 agent harness，巨集平均攻擊成功率 65.69%；近五分之一已確認違規發生於 Agent 已辨識風險之後。Training-free policy reminder 在 matched replay 中降低超過 70 個百分點。",
+  "findings": [
+    "1,661 個案例、5 種服務面、6 個模型及 3 種 agent harness，巨集平均攻擊成功率 65.69%；近五分之一已確認違規發生於 Agent 已辨識風險之後。Training-free policy reminder 在 matched replay 中降低超過 70 個百分點。"
+  ],
+  "relevance": "AI 驗收應以沙箱中的實際狀態變更、service receipt、檔案差異與 API 副作用為證據，不能只檢查模型文字回答。",
+  "action": "以沙箱狀態變更、service receipt 與 API 副作用驗收 Agent 紅隊結果。",
+  "caveat": "適合改寫為企業 AI Agent 上線前紅隊與驗收 SOP；數字僅代表基準環境，不是生產事故率。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 52,
+  "rank": 4,
+  "week": "2026.08.28",
+  "batch": "補遺",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "Foundation-Model-Powered Embodied Agents Security Survey",
+  "subtitle": "依五層信任邊界盤點具身 Agent，保護長期記憶、世界狀態與實體動作路徑。",
+  "date": "2026.08.17",
+  "dateValue": "2026-08-17",
+  "authors": "Jiawei Liu 等",
+  "source": "https://arxiv.org/abs/2608.16843",
+  "sourceLabel": "arXiv 2608.16843",
+  "pdf": "https://arxiv.org/pdf/2608.16843",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Agent Security",
+    "Threat Modeling"
+  ],
+  "summary": "以 first-compromised-trust-boundary 方法劃分 5 層、12 個攻擊面，彙整 58 筆攻擊與61 筆防禦紀錄。長期記憶、world-state integrity、middleware/networking 與 multi-agent trust 仍屬明顯研究缺口。",
+  "findings": [
+    "以 first-compromised-trust-boundary 方法劃分 5 層、12 個攻擊面，彙整 58 筆攻擊與61 筆防禦紀錄。長期記憶、world-state integrity、middleware/networking 與 multi-agent trust 仍屬明顯研究缺口。"
+  ],
+  "relevance": "可用於 AGV／AMR、機器手臂、AI 視覺檢測、Digital Twin 與 AI 控制決策的 OT×AI 威脅建模。",
+  "action": "依五層信任邊界盤點具身 Agent，保護長期記憶、世界狀態與實體動作路徑。",
+  "caveat": "能補強 IEC 62443 架構中「AI 決策如何傳導成實體動作」的分析空白；屬綜述而非新攻擊實驗。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 53,
+  "rank": 5,
+  "week": "2026.08.28",
+  "batch": "補遺",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 2
+  },
+  "title": "Bounded Agents",
+  "subtitle": "多代理委派安全",
+  "date": "2026.08.16",
+  "dateValue": "2026-08-16",
+  "authors": "Xabier Muruaga",
+  "source": "https://arxiv.org/abs/2608.15888",
+  "sourceLabel": "arXiv 2608.15888",
+  "pdf": "https://arxiv.org/pdf/2608.15888",
+  "decision": "選讀",
+  "kind": "學術論文",
+  "topics": [
+    "Agent Security",
+    "DDR"
+  ],
+  "summary": "Agentic Principal Chain 將權限範圍、預算與先前動作納入六項授權檢查。3,154 個評估案例中，AgentDojo 資料外洩由 75–100% 降至 0%，並攔下 544 個 InjecAgent 外洩案例；但部分設定使任務效用下降 8.6～13.9 個百分點。",
+  "findings": [
+    "Agentic Principal Chain 將權限範圍、預算與先前動作納入六項授權檢查。3,154 個評估案例中，AgentDojo 資料外洩由 75–100% 降至 0%，並攔下 544 個 InjecAgent 外洩案例；但部分設定使任務效用下降 8.6～13.9 個百分點。"
+  ],
+  "relevance": "適用於多代理採購、供應商審查、程式修補與跨系統工單；應在模型外部強制執行 capability budget、scope attenuation 與組合動作限制。",
+  "action": "在模型外強制委派 scope、budget 與組合動作限制，並量測任務效用損失。",
+  "caveat": "量化完整且有公開實作，但仍是單一作者預印本，需在企業流程中重測效用損失。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 54,
+  "rank": 6,
+  "week": "2026.08.28",
+  "batch": "補遺",
+  "evidenceLevel": "政策報告",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 2
+  },
+  "title": "OWASP Top 10 for LLM Applications 2026＋事件資料分析",
+  "subtitle": "以 OWASP 清單對照 DLP、Agent 權限、供應鏈與隱藏 context 控制，不以排名推估事故率。",
+  "date": "2026.08.03",
+  "dateValue": "2026-08-03",
+  "authors": "OWASP GenAI Security Project",
+  "source": "https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/",
+  "sourceLabel": "OWASP 官方頁",
+  "decision": "選讀",
+  "kind": "政策研究",
+  "topics": [
+    "DSPM / DLP",
+    "Threat Modeling"
+  ],
+  "summary": "最終排序為 Prompt Injection、Sensitive Information Disclosure、Excessive Agency、Supply Chain、Data and Model Poisoning、Unbounded Consumption、Misinformation、Hidden Context Exposure、Vector and Embedding Weaknesses、Improper Output Handling。排序採 75% 專家意見＋25% 事件資料；事件分析使用 7,714 筆快照、6,639 筆分類資料，但專家與事件排序的 Cohen’s κ 約 0.20，區間跨越零。",
+  "findings": [
+    "最終排序為 Prompt Injection、Sensitive Information Disclosure、Excessive Agency、Supply Chain、Data and Model Poisoning、Unbounded Consumption、Misinformation、Hidden Context Exposure、Vector and Embedding Weaknesses、Improper Output Handling。排序採 75% 專家意見＋25% 事件資料；事件分析使用 7,714 筆快照、6,639 筆分類資料，但專家與事件排序的 Cohen’s κ 約 0.20，區間跨越零。"
+  ],
+  "relevance": "應將 LLM02、LLM03、LLM04、LLM08 分別對應 DLP、Agent 權限控制、AI 供應鏈與 RAG／隱藏政策資訊保護。",
+  "action": "以 OWASP 清單對照 DLP、Agent 權限、供應鏈與隱藏 context 控制，不以排名推估事故率。",
+  "caveat": "適合作為控制完整性清單，不宜把排序直接解讀成企業事故發生率。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 55,
+  "rank": 7,
+  "week": "2026.08.28",
+  "batch": "本週新發",
+  "evidenceLevel": "政策報告",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 2
+  },
+  "title": "NIST IR 8611",
+  "subtitle": "m-NGAC 資料庫細粒度存取控制",
+  "date": "2026.08.27",
+  "dateValue": "2026-08-27",
+  "authors": "NIST",
+  "source": "https://csrc.nist.gov/pubs/ir/8611/final",
+  "sourceLabel": "NIST IR 8611",
+  "decision": "選讀",
+  "kind": "政策研究",
+  "topics": [
+    "DSPM / DLP",
+    "Data Lineage"
+  ],
+  "summary": "把 ANSI/INCITS NGAC 直接嵌入資料庫，在 individual-column data 層強制執行集中式細粒度政策，不依賴查詢工具自身是否正確套用控制。",
+  "findings": [
+    "把 ANSI/INCITS NGAC 直接嵌入資料庫，在 individual-column data 層強制執行集中式細粒度政策，不依賴查詢工具自身是否正確套用控制。"
+  ],
+  "relevance": "可作為 RAG、AI data lake、PLM BOM、客戶設計資料與訓練資料的後端 enforcement 參考；能補足僅靠前端 DLP 或 Agent prompt policy 的不足。",
+  "action": "評估在 RAG／PLM 資料庫層執行細粒度政策，避免只依賴前端工具。",
+  "caveat": "本週新發布的 NIST Final，但並非 AI 專屬，也未提供企業規模量化成效。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 56,
+  "rank": 8,
+  "week": "2026.08.28",
+  "batch": "補遺",
+  "evidenceLevel": "政策報告",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 2
+  },
+  "title": "NIST IR 8613",
+  "subtitle": "Multi-Cloud Security and Compliance",
+  "date": "2026.08.21",
+  "dateValue": "2026-08-21",
+  "authors": "NIST",
+  "source": "https://csrc.nist.gov/pubs/ir/8613/ipd",
+  "sourceLabel": "NIST IR 8613 IPD",
+  "decision": "選讀",
+  "kind": "政策研究",
+  "topics": [
+    "DSPM / DLP",
+    "Data Lineage"
+  ],
+  "summary": "整理 23 個多雲架構挑戰，最集中於 IAM、telemetry/logging、configuration/change management、data protection 與 compliance/authorization。意見徵集至 2026-10-05。",
+  "findings": [
+    "整理 23 個多雲架構挑戰，最集中於 IAM、telemetry/logging、configuration/change management、data protection 與 compliance/authorization。意見徵集至 2026-10-05。"
+  ],
+  "relevance": "適合用來檢查臺灣、美國、墨西哥、捷克與中國隔離環境的 AI/DSPM 可視性、資料邊界及控制一致性。",
+  "action": "檢查跨區多雲 IAM、日誌、設定變更與資料保護的一致性。",
+  "caveat": "官方且具多雲資料保護價值，但不是 AI Security 專屬文件。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 57,
+  "rank": 9,
+  "week": "2026.08.28",
+  "batch": "補遺",
+  "evidenceLevel": "政策報告",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 2
+  },
+  "title": "NIST SP 1353",
+  "subtitle": "使用 AI 協助 CSF 2.0 分析與報告",
+  "date": "2026.08.19",
+  "dateValue": "2026-08-19",
+  "authors": "NIST",
+  "source": "https://csrc.nist.gov/pubs/sp/1353/ipd",
+  "sourceLabel": "NIST SP 1353 IPD",
+  "decision": "選讀",
+  "kind": "政策研究",
+  "topics": [
+    "Threat Modeling"
+  ],
+  "summary": "提供 Governance Review、Current State Profile、Target State Profile 三種示範情境及結構化 prompts；意見徵集至 2026-10-15。",
+  "findings": [
+    "提供 Governance Review、Current State Profile、Target State Profile 三種示範情境及結構化 prompts；意見徵集至 2026-10-15。"
+  ],
+  "relevance": "可支援 AI 輔助稽核證據整理與 CSF 差距分析，但內部政策、訪談與證據輸入前仍須分類、去識別化及限制保留。",
+  "action": "稽核資料送入 AI 前先分類與最小化；對生成的 CSF 分析逐項核對原始證據。",
+  "caveat": "NIST 明確表示它不是 AI 安全最佳實務，也不是保證性稽核方法，不能把生成結果直接視為稽核證據。",
+  "crossCheck": "依 2026-08-28 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 58,
+  "rank": 1,
+  "week": "2026.09.04",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "Agent Memory Is a Surface for Endogenous Authorization Laundering",
+  "subtitle": "將記憶中的授權連回不可變核准事件，逐次驗證撤銷、期限與條件。",
+  "date": "2026.09.01",
+  "dateValue": "2026-09-01",
+  "authors": "Tommaso Cerruti、Mika Okamoto、Ansel Kaplan Erol",
+  "source": "https://arxiv.org/abs/2609.01836",
+  "sourceLabel": "arXiv 2609.01836",
+  "pdf": "https://arxiv.org/pdf/2609.01836",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Agent Security",
+    "Threat Modeling"
+  ],
+  "summary": "EAL-Bench 涵蓋採購、資安與金融情境。增量式記憶更新使模型對未授權要求產生最高 50.2% 的虛假權限；一旦錯誤權限進入記憶，執行模型在 98.6% 的測試中依此採取行動。",
+  "findings": [
+    "EAL-Bench 涵蓋採購、資安與金融情境。增量式記憶更新使模型對未授權要求產生最高 50.2% 的虛假權限；一旦錯誤權限進入記憶，執行模型在 98.6% 的測試中依此採取行動。"
+  ],
+  "relevance": "採購代理、供應商資格審查、PLM 變更、弱點修補及工單代理都可能把已撤銷、限時或條件式核准錯記成永久權限。",
+  "action": "將記憶中的授權連回不可變核准事件，逐次驗證撤銷、期限與條件。",
+  "caveat": "直接改變 AI System Threat Modeling：Agent memory 應視為授權政策的一部分，不只是聊天紀錄。限制是工具與業務流程仍為模擬環境，不能推估實際企業事故率。",
+  "crossCheck": "依 2026-09-04 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 59,
+  "rank": 2,
+  "week": "2026.09.04",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "Context Inference Attacks Without Jailbreaks",
+  "subtitle": "AI DLP 測試加入推論式外洩，限制檢索範圍並偵測重複候選探測。",
+  "date": "2026.08.31",
+  "dateValue": "2026-08-31",
+  "authors": "Prince Jha、Samuele Poppi、Nils Lukas",
+  "source": "https://arxiv.org/abs/2609.01663",
+  "sourceLabel": "arXiv 2609.01663",
+  "pdf": "https://arxiv.org/pdf/2609.01663",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "DSPM / DLP",
+    "Data Lineage"
+  ],
+  "summary": "攻擊者不必誘導模型直接吐出機密，也能從正常回答推斷隱藏 context。研究在小型候選集達 100% ASR、1,024 個候選時為 63%；Agent 自行檢索資料的情境仍達 81.8 AUROC。作者測試的禁止揭露指示、logit suppression 與 context dilution 都未消除洩漏。",
+  "findings": [
+    "攻擊者不必誘導模型直接吐出機密，也能從正常回答推斷隱藏 context。研究在小型候選集達 100% ASR、1,024 個候選時為 63%；Agent 自行檢索資料的情境仍達 81.8 AUROC。作者測試的禁止揭露指示、logit suppression 與 context dilution 都未消除洩漏。"
+  ],
+  "relevance": "即使 RAG／Agent 沒有逐字輸出 BOM、報價、客戶設計或設備資料，外部使用者仍可能藉重複查詢推斷某筆資料是否存在。",
+  "action": "AI DLP 測試加入推論式外洩，限制檢索範圍並偵測重複候選探測。",
+  "caveat": "這是傳統 DLP 容易漏掉的「推論式外洩」；但實驗使用受控候選集合與合成憑證，跨模型 transfer 也不是必然成功。",
+  "crossCheck": "依 2026-09-04 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 60,
+  "rank": 3,
+  "week": "2026.09.04",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "Explainable Artificial Intelligence for Industrial Cybersecurity",
+  "subtitle": "OT AI PoC 同時量測解釋穩定性、操作員判讀時間及誤動作成本。",
+  "date": "2026.08.31",
+  "dateValue": "2026-08-31",
+  "authors": "Amr S. Mohamed、Charlotte Fritz、Ahmad Mohammad Saber 等 8 人",
+  "source": "https://arxiv.org/abs/2609.00171",
+  "sourceLabel": "arXiv 2609.00171",
+  "pdf": "https://arxiv.org/pdf/2609.00171",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Threat Modeling"
+  ],
+  "summary": "系統性整理工業 SOC 中的特徵歸因、代理模型、規則與視覺化方法。研究指出現有 AI／XAI 驗證仍高度依賴公開 IT、IoT 或網路流量資料，對跨 Purdue 層級攻擊、產線時間限制與真實操作員決策支援的證據不足；局部解釋也不應直接轉成全域偵測規則。",
+  "findings": [
+    "系統性整理工業 SOC 中的特徵歸因、代理模型、規則與視覺化方法。研究指出現有 AI／XAI 驗證仍高度依賴公開 IT、IoT 或網路流量資料，對跨 Purdue 層級攻擊、產線時間限制與真實操作員決策支援的證據不足；局部解釋也不應直接轉成全域偵測規則。"
+  ],
+  "relevance": "有助於重新設計 OT AI PoC，不只比較 F1-score，也檢驗解釋穩定性、操作員判讀時間、誤動作成本及跨 IT／OT 攻擊鏈。",
+  "action": "OT AI PoC 同時量測解釋穩定性、操作員判讀時間及誤動作成本。",
+  "caveat": "製造業直接性高，適合 OT SOC 與模型風險團隊共同閱讀；屬綜述，沒有提供新的實廠部署成效。",
+  "crossCheck": "依 2026-09-04 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 61,
+  "rank": 4,
+  "week": "2026.09.04",
+  "batch": "補遺",
+  "evidenceLevel": "同儕審查",
+  "scores": {
+    "evidence": 3,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "Zero Trust Architecture for Industry 5.0 and Industrial IoT",
+  "subtitle": "Enterprise Security Architecture Spotlight",
+  "date": "2026.08.27",
+  "dateValue": "2026-08-27",
+  "authors": "Ali Akhmetkaliyev、Mohammed Alaa Ala’anzy、Mahmoud Khalid Almsafir、Saleh Musleh；Computer Networks",
+  "source": "https://doi.org/10.1016/j.comnet.2026.112695",
+  "sourceLabel": "DOI 10.1016/j.comnet.2026.112695",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Threat Modeling",
+    "Data Lineage"
+  ],
+  "summary": "PRISMA 2020 流程由 492 篇篩選出 45 篇同儕審查研究，建立五類 ZTA 架構：身分與存取、異常偵測、區塊鏈信任、聯邦／分割式學習、後量子與硬體安全。作者主張 brownfield 工廠較可行的方向，是以符合 IEC 62443 的 gateway／proxy 承接持續驗證，而不是直接改造所有舊 PLC。",
+  "findings": [
+    "PRISMA 2020 流程由 492 篇篩選出 45 篇同儕審查研究，建立五類 ZTA 架構：身分與存取、異常偵測、區塊鏈信任、聯邦／分割式學習、後量子與硬體安全。作者主張 brownfield 工廠較可行的方向，是以符合 IEC 62443 的 gateway／proxy 承接持續驗證，而不是直接改造所有舊 PLC。"
+  ],
+  "relevance": "適用於 brownfield 製造業 ERP／PLM／MES 與 OT 之間的信任邊界設計。",
+  "action": "盤點 ERP／PLM／MES 至 OT 的資料與控制路徑；在 gateway 實作短效身分、逐次授權及稽核，量測 p95／p99 延遲並保留人工接管。",
+  "caveat": "在最近 30 天內發布，方法透明且最貼近 brownfield 製造架構；須避免把區塊鏈或論文平均效能當成既定採購要求。 只搜尋 Scopus 與英文文獻；延遲、準確率等數字主要來自各論文自行回報，沒有統一測試床，因此只能做描述性比較。沒有直接評估 SAP、S/4HANA、ERP 或 PLM。",
+  "crossCheck": "依 2026-09-04 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 62,
+  "rank": 5,
+  "week": "2026.09.04",
+  "batch": "補遺",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 2
+  },
+  "title": "Stealing Reasoning Traces from Proprietary LLM APIs",
+  "subtitle": "清查 Git、工單與評測資料中的 raw API transcript 和 reasoning blocks；確認外流後評估撤除及憑證輪替。",
+  "date": "2026.08.10",
+  "dateValue": "2026-08-10",
+  "authors": "Alexander Panfilov、David Schmotz、Ilia Shumailov 等 8 人",
+  "source": "https://arxiv.org/abs/2608.09867",
+  "sourceLabel": "arXiv 2608.09867",
+  "pdf": "https://arxiv.org/pdf/2608.09867",
+  "decision": "選讀",
+  "kind": "學術論文",
+  "topics": [
+    "DSPM / DLP",
+    "Agent Security"
+  ],
+  "summary": "研究者利用同一供應商內跨 session、使用者及模型可重放的加密 reasoning block，讓較弱模型充當解碼器。對 315,320 個公開 reasoning blocks 的掃描找到 367 筆 PII 與 182 筆憑證。",
+  "findings": [
+    "研究者利用同一供應商內跨 session、使用者及模型可重放的加密 reasoning block，讓較弱模型充當解碼器。對 315,320 個公開 reasoning blocks 的掃描找到 367 筆 PII 與 182 筆憑證。"
+  ],
+  "relevance": "Agent trajectory、除錯紀錄、API response dump 即使看似加密，仍不應提交到 Git、工單或供應商支援平台；若曾分享，應評估撤除、憑證輪替及資料外洩通報。",
+  "action": "清查 Git、工單與評測資料中的 raw API transcript 和 reasoning blocks；確認外流後評估撤除及憑證輪替。",
+  "caveat": "W36 報告的重要補錄且原始數字已核實，但不是本週發布，攻擊現況亦已改變。 作者表示研究測試發生於 2026 年 7 月初；揭露後各供應商均確認收件，研究者之後已無法用相同方式發動攻擊。因此這是已證實的架構缺陷與資料衛生教訓，不能宣稱目前 API 仍可被同法利用。",
+  "crossCheck": "依 2026-09-04 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
+{
+  "id": 63,
+  "rank": 6,
+  "week": "2026.09.04",
+  "batch": "本週新發",
+  "evidenceLevel": "已接受",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 2
+  },
+  "title": "Agent Flight Recorder",
+  "subtitle": "先於一條 PLM／ERP 至 OT 流程試行結構化授權 provenance 與異地 hash-chain log，驗證紀錄完整性。",
+  "date": "2026.09.01",
+  "dateValue": "2026-09-01",
+  "authors": "Laurent Bindschaedler、Quentin Botha、Christoph Siebenbrunner",
+  "source": "https://arxiv.org/abs/2609.01931",
+  "sourceLabel": "arXiv 2609.01931",
+  "pdf": "https://arxiv.org/pdf/2609.01931",
+  "decision": "選讀",
+  "kind": "學術論文",
+  "topics": [
+    "Data Lineage",
+    "DDR"
+  ],
+  "summary": "以八個語意欄位記錄 Agent 意圖、授權、執行及 provenance，再用 hash chain、Merkle batch 與鏈上 anchor 提供防竄改驗證。合成工作負載中，每事件增加約 48 微秒與 512 bytes，四類竄改偵測率為 100%。",
+  "findings": [
+    "以八個語意欄位記錄 Agent 意圖、授權、執行及 provenance，再用 hash chain、Merkle batch 與鏈上 anchor 提供防竄改驗證。合成工作負載中，每事件增加約 48 微秒與 512 bytes，四類竄改偵測率為 100%。"
+  ],
+  "relevance": "可用於追查 Agent 對 ERP、PLM、程式庫、工單與 OT gateway 的委派鏈和實際副作用，是 AI Data Lineage 與不可否認稽核的具體設計候選。",
+  "action": "先於一條 PLM／ERP 至 OT 流程試行結構化授權 provenance 與異地 hash-chain log，驗證紀錄完整性。",
+  "caveat": "已獲 BCCA 2026 接受且設計具可實作性；不過主要證據來自合成負載，若攻擊繞過被監控 gateway 或主機已遭控制，紀錄仍可能不完整。企業可先試行結構化、異地保存的 hash-chain log，不必直接採用區塊鏈。",
+  "crossCheck": "依 2026-09-04 原期已完成的閱讀清單補登，保留當期研究結論與判讀限制；本次未重新執行文獻掃描。"
+},
   {
     id: 40,
     rank: 1,
@@ -1792,6 +2295,8 @@ const NOT_RETAINED =
  * 每週的入選漏斗與略過清單各自保存，新增週次不會覆寫既有紀錄。
  */
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
+  "2026.09.04": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：6 項，深入審閱 4 項、選讀 2 項；整合 2026W36 週報。原稿未保留完整掃描與初篩數，不以推估補填。Architecture Spotlight 與早期研究列為補遺。", skipped: [] },
+  "2026.08.28": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：9 項，深入審閱 4 項、選讀 5 項；整合 2026W35 週報。原稿未保留完整掃描與初篩數，不以推估補填。舊研究依原發布日期標示補遺。", skipped: [{ title: "PolicyGuard", source: "https://arxiv.org/abs/2608.02687", reason: "原期查核記錄指出作者撤稿，未納入。" }, { title: "NIST SP 1347", source: "https://csrc.nist.gov/pubs/sp/1347/final", reason: "原期判定 AI Security 關聯不足。" }] },
   "2026.08.21": {
     scanned: 215,
     shortlisted: 18,
