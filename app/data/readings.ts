@@ -50,6 +50,8 @@ export type Reading = {
   caveat: string;
   crossCheck?: string;
   metric?: string;
+  /** Optional stage diagram shown next to the featured reading on the home page. */
+  lifecycle?: { label: string; stages: string[]; caption: string };
 };
 
 export const readings: Reading[] = [
@@ -612,6 +614,11 @@ export const readings: Reading[] = [
     scores: { evidence: 2, relevance: 3, actionability: 3 },
     title: "Breadcrumbing Search Agents",
     subtitle: "以協調式證據鏈劫持搜尋代理的長流程判斷",
+    lifecycle: {
+      label: "搜尋代理證據鏈劫持生命週期",
+      stages: ["Query", "Rank", "Retrieve", "Corroborate", "Decide"],
+      caption: "COORDINATED EVIDENCE-CHAIN HIJACK",
+    },
     date: "2026.08.05",
     dateValue: "2026-08-05",
     authors: "Xuebin Li、Hanqing Zhao、Siyuan Liang、Kejiang Chen、Weiming Zhang、Dacheng Tao、Nenghai Yu",

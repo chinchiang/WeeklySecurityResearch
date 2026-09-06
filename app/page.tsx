@@ -256,23 +256,20 @@ export default function Home() {
               {priorityReading.pdf && <a className="text-link" href={priorityReading.pdf} target="_blank" rel="noreferrer">PDF ↓</a>}
             </div>
           </div>
-          <div className="lifecycle-map" aria-label="搜尋代理證據鏈劫持生命週期">
-            <div className="risk-core"><span>!</span><small>RISK</small></div>
-            <div className="stage-row">
-              {[
-                ["01", "Query"],
-                ["02", "Rank"],
-                ["03", "Retrieve"],
-                ["04", "Corroborate"],
-                ["05", "Decide"],
-              ].map(([num, label], index) => (
-                <div className="stage" key={label}>
-                  <span>{num}</span><small>{label}</small>{index < 4 && <i>→</i>}
-                </div>
-              ))}
+          {priorityReading.lifecycle && (
+            <div className="lifecycle-map" aria-label={priorityReading.lifecycle.label}>
+              <div className="risk-core"><span>!</span><small>RISK</small></div>
+              <div className="stage-row">
+                {priorityReading.lifecycle.stages.map((label, index, stages) => (
+                  <div className="stage" key={label}>
+                    <span>{String(index + 1).padStart(2, "0")}</span><small>{label}</small>
+                    {index < stages.length - 1 && <i>→</i>}
+                  </div>
+                ))}
+              </div>
+              <div className="map-caption">{priorityReading.lifecycle.caption}</div>
             </div>
-            <div className="map-caption">COORDINATED EVIDENCE-CHAIN HIJACK</div>
-          </div>
+          )}
         </article>
       </section>
 

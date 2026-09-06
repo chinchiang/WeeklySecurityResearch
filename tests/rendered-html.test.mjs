@@ -42,6 +42,36 @@ test("every response carries the baseline security headers", async () => {
   assert.match(response.headers.get("permissions-policy") ?? "", /geolocation=\(\)/);
 });
 
+test("the CSP never blocks the inline scripts the framework emits", async () => {
+  const response = await request("/");
+  const html = await response.text();
+  const csp = response.headers.get("content-security-policy") ?? "";
+  const directives = new Map(
+    csp.split(";").map((part) => part.trim()).filter(Boolean).map((part) => {
+      const [name, ...values] = part.split(/\s+/);
+      return [name, values];
+    }),
+  );
+
+  const inlineScripts = html.match(/<script(?![^>]*\bsrc=)[^>]*>/g) ?? [];
+  assert.ok(inlineScripts.length > 0, "expected the RSC payload to be inline");
+
+  // script-src falls back to default-src; whichever applies must allow the
+  // inline scripts, either wholesale or via a nonce carried by every tag.
+  const effective = directives.get("script-src") ?? directives.get("default-src");
+  if (effective) {
+    const nonce = effective.find((value) => value.startsWith("'nonce-"));
+    if (nonce) {
+      const token = nonce.slice("'nonce-".length, -1);
+      for (const tag of inlineScripts) {
+        assert.ok(tag.includes(`nonce="${token}"`), `inline script without nonce: ${tag}`);
+      }
+    } else {
+      assert.ok(effective.includes("'unsafe-inline'"), `CSP "${csp}" blocks inline scripts`);
+    }
+  }
+});
+
 test("each HTML route declares its own canonical URL", async () => {
   const routes = [
     ["/", "/"],
