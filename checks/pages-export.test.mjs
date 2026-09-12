@@ -33,4 +33,6 @@ test("export excludes source files and the private WORK document identifier", ()
     if (/\.(?:html|js|txt|json)$/.test(file)) assert.ok(!readFileSync(file, "utf8").includes("1r77GDSHTt-wk2dIcLDJLrR-mw0wK9uHBr8hFsYXqAPs"), file);
   }
   assert.ok(existsSync("out/.nojekyll"));
+  assert.ok(!existsSync("out/social-content"), "social content must not ship on the public Pages site");
+  for (const file of htmlFiles) assert.ok(!readFileSync(path.join("out", file), "utf8").includes("/social-content/"), `${file}: links to unpublished social content`);
 });
