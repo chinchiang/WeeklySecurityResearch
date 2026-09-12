@@ -1,10 +1,32 @@
-# EveryWeekAIRead
+# AI Security 與架構閱讀清單
+
+預定 GitHub Pages 網址：https://chinchiang.github.io/EveryWeekAIRead/
+
+網站改採淺色資訊介面，參考 DailySOCVitamin 的導覽與資訊密度，以及 CyberRegulationWatch 的淺色／紫色視覺語彙。保留搜尋、篩選、閱讀進度、歷史週次、Atom feed 與更正紀錄。
+
+## GitHub Pages 發布
+
+1. Repository Settings → Pages → Build and deployment → Source 選擇 **GitHub Actions**。
+2. 此 repository 目前為 private。GitHub Pages 對 private repository 需要支援的付費方案；請保留原有可見性，不以改公開整個 repository 處理限制。
+3. main 的 CI 通過測試、lint、typecheck、安全稽核與靜態輸出檢查後，才會由 Publish GitHub Pages 發布 `out`。
+4. 首次設定尚未完成時，建置可成功但 Pages 部署會失敗。完成第 1 步後重跑該 workflow 的失敗工作即可。以實際 deployment 結果與公開網址驗證，不能把 commit 視為已發布。
+
+本機 `npm ci` 後使用 `npm run build:pages` 與 `npm run test:pages`。這是 GitHub Pages 靜態輸出，原本 Sites 的 Worker build 仍由 `npm run build` 保留。Pages 不執行 Worker，因此不能宣稱它具有 Worker 自訂的 HTTP 安全標頭。
+
+每期自足 HTML 位於 `public/reports/YYYY-MM-DD.html`，由 `npm run build:report` 產生，與網頁共用資料和 CSS。原始來源優先，私人 WORK 證據不放入公開報告。
+
+## 本次資料修訂
+
+`AISEC-ARCH-2026-W37-20260911` r2，查核日期 2026-09-12，共 7 篇（深入審閱 3、選讀 4），含 1 篇 Architecture Spotlight、2 篇 Product Security。安裝研究的陽性時序與 MemSentry signed delta 已明文更正。
+
+安全稽核發現 Miniflare 間接使用 sharp 0.35.2；本次以 override 統一至修補版 0.35.4，保留既有稽核門檻。來源：https://github.com/advisories/GHSA-rgj7-g3m4-5g8c 。
+
 
 製造業 AI Security 每週必讀清單網站，聚焦 DSPM／DLP、Data Lineage、DDR、AI System Threat Modeling、Agent／MCP／Memory Security。
 
-## 線上網站
+## 原 Sites 網站（本次未同步部署）
 
-- [最新一期](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/)
+- [原 Sites 首頁](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/)
 - [歷史資料庫](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/archive)
 - [Atom Feed](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/feed.xml)
 - [每週社群內容](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/social-content/index.html)

@@ -9,6 +9,10 @@ type WeekLayoutProps = {
 
 const weekSlugs = new Set(allWeeks.map((week) => week.replaceAll(".", "-")));
 
+export function generateStaticParams() {
+  return allWeeks.map((week) => ({ week: week.replaceAll(".", "-") }));
+}
+
 export async function generateMetadata({ params }: Omit<WeekLayoutProps, "children">): Promise<Metadata> {
   const { week } = await params;
   const decodedWeek = decodeURIComponent(week);

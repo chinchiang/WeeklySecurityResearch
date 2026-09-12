@@ -17,7 +17,10 @@
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
-    "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
+    "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate",
+    "build:pages": "node scripts/build-pages.mjs",
+    "test:pages": "node --experimental-strip-types --test checks/pages-export.test.mjs",
+    "build:report": "node --experimental-strip-types scripts/build-report.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
@@ -45,5 +48,8 @@
     "wrangler": "4.129.0"
   },
   "type": "module",
-  "displayName": "AI Security 必讀清單"
+  "displayName": "AI Security \u5fc5\u8b80\u6e05\u55ae",
+  "overrides": {
+    "sharp": "0.35.4"
+  }
 }

@@ -1,7 +1,10 @@
 "use client";
 
+import { sitePath } from "../site-config";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { ArchitectureReview } from "../components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "../components/reading-meta";
 import {
   TOPIC_FILTERS,
@@ -187,7 +190,7 @@ export default function ArchivePage() {
         <div className="week-selector" role="group" aria-label="選擇歷史週次">
           <button className={week === "全部週次" ? "active" : ""} onClick={() => setWeek("全部週次")} aria-pressed={week === "全部週次"}>全部週次</button>
           {archiveWeeks.map((archiveWeek) => (
-            <span className="week-choice" key={archiveWeek}><button className={week === archiveWeek ? "active" : ""} onClick={() => setWeek(archiveWeek)} aria-pressed={week === archiveWeek}>{archiveWeek}</button><a href={`/week/${archiveWeek.replaceAll(".", "-")}`} aria-label={`開啟 ${archiveWeek} 固定網址`}>↗</a></span>
+            <span className="week-choice" key={archiveWeek}><button className={week === archiveWeek ? "active" : ""} onClick={() => setWeek(archiveWeek)} aria-pressed={week === archiveWeek}>{archiveWeek}</button><a href={sitePath(`/week/${archiveWeek.replaceAll(".", "-")}/`)} aria-label={`開啟 ${archiveWeek} 固定網址`}>↗</a></span>
           ))}
         </div>
 
@@ -435,7 +438,7 @@ export default function ArchivePage() {
             <div className="caveat">
               <b>查核注意事項</b><p>{selected.caveat}</p>
             </div>
-            <div className="modal-actions">
+            <ArchitectureReview reading={selected} /><div className="modal-actions">
               <a
                 className="primary-button"
                 href={selected.source}

@@ -1,6 +1,7 @@
 import { allWeeks, feedWeeks, readings, type Reading } from "../data/readings";
 
-const SITE = "https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site";
+import { SITE_URL as SITE } from "../site-config";
+export const dynamic = "force-static";
 
 const xml = (value: string) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const slug = (week: string) => week.replaceAll(".", "-");
