@@ -1,6 +1,6 @@
 # AI Security 與架構閱讀清單
 
-預定 GitHub Pages 網址：https://chinchiang.github.io/EveryWeekAIRead/
+正式網址（GitHub Pages）：https://chinchiang.github.io/EveryWeekAIRead/
 
 網站改採淺色資訊介面，參考 DailySOCVitamin 的導覽與資訊密度，以及 CyberRegulationWatch 的淺色／紫色視覺語彙。保留搜尋、篩選、閱讀進度、歷史週次、Atom feed 與更正紀錄。
 
@@ -27,12 +27,9 @@ vinext 已升級至 1.0.0-beta.9，image-size 的兩筆 high 公告（GHSA-w3rx-
 
 製造業 AI Security 每週必讀清單網站，聚焦 DSPM／DLP、Data Lineage、DDR、AI System Threat Modeling、Agent／MCP／Memory Security。
 
-## 原 Sites 網站（本次未同步部署）
+## 原 Sites 部署（已停止同步）
 
-- [原 Sites 首頁](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/)
-- [歷史資料庫](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/archive)
-- [Atom Feed](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/feed.xml)
-- [每週社群內容](https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/social-content/index.html)
+GitHub Pages 是唯一持續更新的正式站。原本部署在 ChatGPT Sites 的 Worker 版本（`https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/`）不再同步內容；`npm run build` 仍保留 Worker 建置供本機測試與安全標頭驗證，其 canonical、Atom feed 與 sitemap 已改為指向 GitHub Pages 網址（`app/site-config.ts` 的 `SITE_URL` 預設值），避免兩個網址在搜尋引擎與訂閱端互相競爭。
 
 ## 每週更新
 
@@ -59,7 +56,7 @@ npm run lint
 ```
 
 - `npm run test:data`：ID、排名、必填欄位、HTTPS URL、合法枚舉及 KPI 一致性。
-- `npm run check:links`：檢查原始來源與 PDF 是否仍可達。
+- `npm run check:links`：檢查原始來源與 PDF 是否仍可達。`.github/workflows/check-links.yml` 每週一 09:00（台北）自動執行並把結果寫入 job summary；失效連結只以 warning 標示，不會讓 workflow 轉紅，也可用 workflow_dispatch 手動觸發。
 - `npm run audit`：依賴漏洞稽核（`.npmrc` 關閉了安裝時的自動稽核，因此需要明確執行）。
 - `npm test`：正式建置與全部測試，包含以實際 HTTP 回應驗證安全標頭、各路由 canonical 與未知週次回 404。
 - `npm run typecheck`：先執行 `next typegen` 重新產生 `.next/types`，再跑 `tsc --noEmit`。vinext 建置也會寫入 `.next/types/routes.d.ts`，先重新產生可避免兩者交錯後型別不一致。

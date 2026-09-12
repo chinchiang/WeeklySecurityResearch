@@ -7,6 +7,7 @@ const developmentPreviewMeta =
 const workerUrl = new URL("../dist/server/index.js", import.meta.url);
 workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
 const { default: worker } = await import(workerUrl.href);
+const { SITE_URL } = await import("../app/site-config.ts");
 
 const env = {
   ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
@@ -85,7 +86,10 @@ test("each HTML route declares its own canonical URL", async () => {
 
     const canonical = canonicalOf(await response.text());
     assert.ok(canonical, `${pathname} 缺少 canonical`);
-    assert.equal(new URL(canonical).pathname.replace(/\/$/, "") || "/", expectedSuffix, pathname);
+    // Canonicals point at the GitHub Pages site (SITE_URL carries its base
+    // path), whatever host the Worker itself is served from.
+    const expected = `${SITE_URL}${expectedSuffix === "/" ? "" : expectedSuffix}`;
+    assert.equal(canonical.replace(/\/$/, ""), expected, pathname);
   }
 });
 
