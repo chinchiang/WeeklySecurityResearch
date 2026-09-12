@@ -10,7 +10,7 @@ thursday.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
 const isoYear = thursday.getUTCFullYear();
 const isoWeek = Math.ceil((((thursday - new Date(Date.UTC(isoYear, 0, 1))) / 86400000) + 1) / 7);
 const reportId = `AISEC-ARCH-${isoYear}-W${String(isoWeek).padStart(2, "0")}-${slug.replaceAll("-", "")}`;
-const revision = slug === "2026-09-11" ? 3 : 1;
+const revision = slug === "2026-09-11" ? 4 : 1;
 const verifiedAt = slug === "2026-09-11" ? "2026-09-12" : slug;
 const css = readFileSync("app/globals.css", "utf8").replace('@import "tailwindcss";', "");
 const list = (items) => `<ul>${items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>`;

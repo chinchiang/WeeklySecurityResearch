@@ -57,6 +57,43 @@ export type Reading = {
 
 export const readings: Reading[] = [
 {
+  "action": "READ NOW，優先讀第 3、4、6 節，約 30 分鐘；電力模型細節由廠務專業人員複核。先選一個自有廠區，以既有資產、網路規則及維運契約核對能源 gateway、對外管理介面與廠商帳號；要求核准的存取路徑、停用帳號證據及復原演練紀錄。只在授權測試環境確認拒絕非核准來源，不掃描第三方或切換生產電力。",
+  "authors": "Anna Raymaker、Samuel Talkington 等 11 人｜Georgia Institute of Technology",
+  "batch": "本週新發",
+  "caveat": "已接受狀態依 arXiv 稿件／作者資訊；ACM DOI 本次無法完整取得。公開全文有方法，但主機資料與搜尋管線未公開，電力分析網站本次不可讀，未獨立重現。IP 定位、分類錯誤及穩態假設限制外推；保護電驛與動態協調未完整建模。研究揭露 DOE／NSF 支持，不屬廠商產品效能證明。",
+  "crossCheck": "Published at 2026-09-07；v2 更新 2026-09-09；Last verified at 2026-09-12。Confidence：Medium。Verification Status：論文數字／方法已核對，作者實驗尚未獨立重現；工廠適用性屬推論。另查核 Texas A&M 資料提供者，Hawaii40 明示為合成電網而非實際 Oahu 網路：https://electricgrids.engr.tamu.edu/ 。深入審閱理由：能轉成能源設備採購、整合商交付與遠端維運驗收條件；不把最壞情境模型當成事故率。",
+  "date": "2026.09.07",
+  "dateValue": "2026-09-07",
+  "decision": "深入審閱",
+  "evidenceLevel": "已接受",
+  "findings": [
+    "作者識別 66,379 個公開可達 DER hosts，11,826 個依揭露版本匹配潛在 CVE；這不是已成功入侵的數量，host 也不能直接等同實體逆變器。",
+    "Oahu 情境將 571 個觀測對象映射為 41.1 MW，於合成 37-bus 模型分別求各元件最壞情境。18 個 bus、6 條線路的結果不是一次攻擊同時達成，也不是當地真實電網的停電預測。",
+    "Snapshot 2 僅抽查 100 個預測陽性及 100 個預測陰性。後者 98/100 為正確排除，不能直接當成母體 recall；本期不採用表 2 將其列為 98% recall 的說法。"
+  ],
+  "id": 73,
+  "kind": "學術論文",
+  "pdf": "https://arxiv.org/pdf/2609.07783v2",
+  "rank": 10,
+  "relevance": "Inferred relevance：若跨國工廠有屋頂光電、能源管理或第三方遠端維運，應納入 OT 資產盤點、遠端存取、廠務變更與營運持續治理。本研究沒有證明任何特定 ODM/OEM 已暴露或受影響。",
+  "scores": {
+    "actionability": 3,
+    "evidence": 2,
+    "relevance": 3
+  },
+  "source": "https://arxiv.org/abs/2609.07783",
+  "sourceLabel": "arXiv 2609.07783v2｜CCS 2026",
+  "subtitle": "廠務能源設備的遠端管理介面，也應納入 OT 邊界與維運責任。",
+  "summary": "研究從兩次相隔約四個月的 Internet 掃描資料識別太陽能 DER，再以合成電網量化潛在影響。值得採用的是部署者與整合商也須負責暴露面治理；設備原廠安全設定不能取代安裝後驗收。",
+  "title": "Grid Trouble in Paradise",
+  "topics": [
+    "OT/ICS",
+    "Remote Access",
+    "供應鏈治理"
+  ],
+  "week": "2026.09.11"
+},
+{
   "id": 71,
   "rank": 8,
   "week": "2026.09.11",
@@ -2683,7 +2720,7 @@ const NOT_RETAINED =
  * 每週的入選漏斗與略過清單各自保存，新增週次不會覆寫既有紀錄。
  */
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
-  "2026.09.11": {"scanned": null, "shortlisted": null, "note": "W37 修訂版 r3｜2026-09-12 AI Read 增補 2 篇，保留原有 7 篇與更正紀錄。全期 9 篇（4 深入審閱、5 選讀）；本次新增重點為 AP2 決策授權與可驗證 RAG 檢索。本期無合格的新 DSPM／DDR 專題實證研究。", "skipped": [{"title": "From Intent to Execution Grant", "source": "https://arxiv.org/abs/2609.11596", "reason": "2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。"}, {"title": "Industry 5.0 Zero Trust 回顧", "source": "https://doi.org/10.1016/j.comnet.2026.112695", "reason": "9/4 已推薦，沒有本次實質更新，不重複計數。"}]},
+  "2026.09.11": {"scanned": null, "shortlisted": null, "note": "W37 修訂版 r4｜2026-09-12 分別完成 AI Read 與企業資安綜合閱讀增補。新增 2 篇 AI 研究、1 篇 OT 研究，保留原有 7 篇與更正；全期 10 篇（5 深入審閱、5 選讀）。架構 1 篇、產品安全 2 篇沿用本期已入選內容，不重複推薦。本期無合格的新 DSPM／DDR 專題實證研究。", "skipped": [{"title": "From Intent to Execution Grant", "source": "https://arxiv.org/abs/2609.11596", "reason": "2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。"}, {"title": "Industry 5.0 Zero Trust 回顧", "source": "https://doi.org/10.1016/j.comnet.2026.112695", "reason": "9/4 已推薦，沒有本次實質更新，不重複計數。"}]},
   "2026.09.04": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：6 項，深入審閱 4 項、選讀 2 項；整合 2026W36 週報。原稿未保留完整掃描與初篩數，不以推估補填。Architecture Spotlight 與早期研究列為補遺。", skipped: [] },
   "2026.08.28": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：9 項，深入審閱 4 項、選讀 5 項；整合 2026W35 週報。原稿未保留完整掃描與初篩數，不以推估補填。舊研究依原發布日期標示補遺。", skipped: [{ title: "PolicyGuard", source: "https://arxiv.org/abs/2608.02687", reason: "原期查核記錄指出作者撤稿，未納入。" }, { title: "NIST SP 1347", source: "https://csrc.nist.gov/pubs/sp/1347/final", reason: "原期判定 AI Security 關聯不足。" }] },
   "2026.08.21": {
