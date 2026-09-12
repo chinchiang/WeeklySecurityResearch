@@ -16,7 +16,7 @@
     "audit": "node scripts/audit-gate.mjs",
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "NEXT_TELEMETRY_DISABLED=1 next typegen && tsc --noEmit",
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate",
     "build:pages": "node scripts/build-pages.mjs",
     "test:pages": "node --experimental-strip-types --test checks/pages-export.test.mjs",
@@ -43,7 +43,7 @@
     "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3",
-    "vinext": "0.0.50",
+    "vinext": "1.0.0-beta.9",
     "vite": "8.2.2",
     "wrangler": "4.129.0"
   },
