@@ -1,21 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Noto_Sans_TC } from "next/font/google";
+import { SITE_URL, sitePath } from "./site-config";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const notoSansTC = Noto_Sans_TC({
-  variable: "--font-noto-sans-tc",
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-  preload: false,
-});
-
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site"),
+  metadataBase: new URL(SITE_URL + "/"),
   title: "Manufacturing AI Security 必讀清單",
   description: "製造業 AI Security 每週精選與歷史閱讀資料庫。",
   // Route segments that need their own canonical (/archive, /week/[week])
@@ -42,8 +30,8 @@ export const metadata: Metadata = {
     "codex-preview": "development",
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: sitePath("/favicon.svg"),
+    shortcut: sitePath("/favicon.svg"),
   },
 };
 
@@ -55,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="zh-Hant">
       <body
-        className={`${geistSans.variable} ${notoSansTC.variable} antialiased`}
+        className="antialiased"
       >
         {children}
       </body>

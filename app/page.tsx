@@ -1,6 +1,9 @@
 "use client";
 
+import { sitePath } from "./site-config";
+
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ArchitectureReview } from "./components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
 import {
   CURRENT_WEEK,
@@ -133,12 +136,6 @@ export default function Home() {
     currentReadings.some((reading) => reading.id === id),
   );
   const progress = currentReadings.length ? Math.round((currentCompleted.length / currentReadings.length) * 100) : 0;
-  const deepRate = currentStats.total ? Math.round((currentStats.deep / currentStats.total) * 100) : 0;
-  const evidenceCount = new Set(currentReadings.map((reading) => reading.evidenceLevel)).size;
-  const topicCounts = TOPIC_FILTERS.slice(1).map((item) => ({
-    topic: item,
-    count: currentReadings.filter((reading) => reading.topics.includes(item)).length,
-  })).filter((item) => item.count > 0).sort((a, b) => b.count - a.count);
 
   return (
     <main>
@@ -150,12 +147,12 @@ export default function Home() {
             <small>READING INTELLIGENCE HUB</small>
           </span>
         </a>
-        <a className="mobile-history-link" href="/archive">過去必讀</a>
+        <a className="mobile-history-link" href={sitePath("/archive")} >過去必讀</a>
         <nav aria-label="主要導覽">
           <a href="#weekly">本週精選</a>
           <a href="#index">主題索引</a>
           <a href="#progress">閱讀進度</a>
-          <a href="/archive">歷史資料</a>
+          <a href={sitePath("/archive")} >歷史資料</a>
         </nav>
         <a className="live-state" href="#verification"><i /> VERIFIED SOURCES · 定義</a>
       </header>
@@ -163,84 +160,38 @@ export default function Home() {
       <nav className="mobile-dock" aria-label="手機快捷導覽">
         <a href="#top"><span>⌂</span>首頁</a>
         <a href="#weekly"><span>◆</span>本週必讀</a>
-        <a href="/archive"><span>▤</span>歷史清單</a>
+        <a href={sitePath("/archive")} ><span>▤</span>歷史清單</a>
       </nav>
 
+      <aside className="side-nav" aria-label="閱讀導覽">
+        <p>研究閱讀室</p><a href="#top">本期總覽</a><a href="#index">精選閱讀</a><a href="#spotlight">架構長文</a><a href={sitePath("/archive")} >歷史清單</a><a href="#progress">閱讀進度</a><a href="#verification">查核方法</a>
+        <div className="sister-sites"><p>相關情報站</p><a href="https://chinchiang.github.io/DailySOCVitamin/">Daily SOC Vitamin ↗</a><a href="https://chinchiang.github.io/CyberRegulationWatch/">Cyber Regulation Watch ↗</a></div>
+      </aside>
       <section className="hero" id="top">
-        <div className="grid-noise" aria-hidden="true" />
         <div className="hero-copy">
-          <p className="eyebrow">WEEKLY INTELLIGENCE · {CURRENT_WEEK}</p>
-          <h1>AI Security <span>必讀清單</span></h1>
-          <p className="hero-subtitle">
-            聚焦製造業 AI Security、DSPM、DLP、Data Lineage、DDR
-            與 AI System Threat Modeling
-          </p>
-          <figure className="hero-character mobile-sindy" aria-label="AI 資安分析師 Sindy">
-            <img
-              src="/assets/sindy-analyst-v2.png"
-              alt="Sindy，成年漫畫風 AI 資安分析師，身穿紅橘披風與黑金科技服裝，坐在全息平台上"
-              fetchPriority="high"
-            />
-            <figcaption>
-              <i />
-              <span><b>Sindy</b><small>AI Security Analyst</small></span>
-            </figcaption>
-          </figure>
+          <p className="eyebrow">WEEKLY RESEARCH · {CURRENT_WEEK}</p>
+          <h1>AI Security <span>與架構閱讀清單</span></h1>
+          <p className="hero-subtitle">製造業 AI、企業資料保護與產品安全。從研究證據，走到可驗證的控制。</p>
           <div className="kpi-row" aria-label="本週清單統計">
-            <div className="kpi"><b>{String(currentStats.total).padStart(2, "0")}</b><span>本週入選</span><i>{currentStats.new} NEW · {currentStats.catchUp} CATCH-UP</i></div>
-            <div className="kpi purple"><b>{String(currentStats.deep).padStart(2, "0")}</b><span>深入審閱</span><i>HIGH PRIORITY</i></div>
-            <div className="kpi blue"><b>{String(currentStats.selective).padStart(2, "0")}</b><span>選讀</span><i>SELECTIVE</i></div>
-          </div>        </div>
-
-        <figure className="hero-character desktop-sindy" aria-label="AI 資安分析師 Sindy">
-          <img
-            src="/assets/sindy-analyst-v2.png"
-            alt="Sindy，成年漫畫風 AI 資安分析師，身穿紅橘披風與黑金科技服裝，坐在全息平台上"
-            fetchPriority="high"
-          />
-          <figcaption>
-            <i />
-            <span><b>Sindy</b><small>AI Security Analyst</small></span>
-          </figcaption>
-        </figure>
-
-        <div className="hero-intel" aria-label="由本週資料計算的統計摘要">
-          <div className="intel-head"><span>DATA-DERIVED SNAPSHOT</span><i /></div>
-          <div className="posture-row">
-            <div className="donut" style={{ "--deep-rate": `${deepRate}%` } as React.CSSProperties}><span>{deepRate}%</span><small>深入審閱</small></div>
-            <div className="posture-stats">
-              <p><span>本週入選</span><b>{currentStats.total}</b></p>
-              <p><span>證據類型</span><b>{evidenceCount}</b></p>
-              <p><span>涵蓋主題</span><b>{topicCounts.length}</b></p>
-            </div>
+            <div className="kpi"><b>{currentStats.total}</b><span>本期入選</span></div>
+            <div className="kpi purple"><b>{currentStats.deep}</b><span>深入審閱</span></div>
+            <div className="kpi blue"><b>{currentStats.selective}</b><span>選讀</span></div>
           </div>
-          <div className="trend-head"><span>TOPIC DISTRIBUTION</span><b>{currentStats.total} READINGS</b></div>
-          <div className="topic-signal">
-            {topicCounts.slice(0, 4).map((item) => <p key={item.topic}><span>{item.topic}</span><i><b style={{ width: `${Math.round(item.count / currentStats.total * 100)}%` }} /></i><strong>{item.count}</strong></p>)}
-          </div>
-        </div>
-
-        <div className="threat-route" aria-hidden="true">
-          <span className="route-node n1" />
-          <span className="route-node n2" />
-          <span className="route-node n3" />
-          <span className="route-node n4" />
-          <i className="route-line l1" />
-          <i className="route-line l2" />
-          <i className="route-line l3" />
+          <p className="edition-note">{currentEditorial.note}</p>
+          <a className="text-link" href={sitePath(`/reports/${CURRENT_WEEK.replaceAll(".", "-")}.html`)}>本期完整報告／下載保存 ↗</a>
         </div>
       </section>
 
       <section className="featured" id="weekly">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">PRIORITY TARGET · #01</p>
+            <p className="eyebrow">START HERE · #01</p>
             <h2>本週最高優先閱讀</h2>
           </div>
           <span className="verified-badge">✓ 原始來源已確認</span>
         </div>
         <article className="featured-card">
-          <div className="rank-panel"><b>#01</b><small>CRITICAL READ</small></div>
+          <div className="rank-panel"><b>#01</b><small>FIRST READ</small></div>
           <div className="featured-copy">
             <div className="meta-line"><span>{priorityReading.evidenceLevel}</span><i />{priorityReading.date}<i />{priorityReading.sourceLabel}</div>
             <h3>{priorityReading.title}</h3>
@@ -279,7 +230,7 @@ export default function Home() {
             <p className="eyebrow">CURATED RESEARCH LIBRARY</p>
             <h2>完整必讀名單</h2>
           </div>
-          <p className="result-count">顯示 <b>{visibleReadings.length}</b> / {currentReadings.length} 項 · <a href="/archive">查看歷史資料 →</a></p>
+          <p className="result-count">顯示 <b>{visibleReadings.length}</b> / {currentReadings.length} 項 · <a href={sitePath("/archive")} >查看歷史資料 →</a></p>
         </div>
 
         <div className="control-panel">
@@ -362,6 +313,8 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      <section id="spotlight" className="spotlight-section"><div className="section-heading"><div><p className="eyebrow">ENTERPRISE SECURITY ARCHITECTURE</p><h2>架構長文</h2></div></div><p>架構研究與 AI、產品安全共用同一份清單；入選時可透過「Architecture」分類閱讀完整評述。</p><button className="secondary-button" onClick={() => { setTopic("Architecture"); document.getElementById("index")?.scrollIntoView(); }}>閱讀架構評述 →</button></section>
 
       <section className="report-integration" id="report-integration">
         <div className="report-heading">
@@ -460,7 +413,7 @@ export default function Home() {
       <footer>
         <div className="brand footer-brand"><span className="brand-mark">AI</span><span><strong>Manufacturing AI Security</strong><small>SECURE · RELIABLE · RESPONSIBLE AI</small></span></div>
         <p>本週更新：{CURRENT_WEEK} · 正體中文／臺灣慣用語</p>
-        <a href="/archive">歷史資料庫 →</a>
+        <a href={sitePath("/archive")} >歷史資料庫 →</a>
       </footer>
 
       {selected && (
@@ -495,7 +448,7 @@ export default function Home() {
             </div>
             {selected.crossCheck && <div className="cross-check"><b>交叉核實</b><p>{selected.crossCheck}</p></div>}
             <div className="caveat"><b>查核注意事項</b><p>{selected.caveat}</p></div>
-            <div className="modal-actions">
+            <ArchitectureReview reading={selected} /><div className="modal-actions">
               <a className="primary-button" href={selected.source} target="_blank" rel="noreferrer">開啟原始來源 ↗</a>
               {selected.pdf && <a className="secondary-button" href={selected.pdf} target="_blank" rel="noreferrer">下載／開啟 PDF ↓</a>}
               <button className={`reading-button ${completed.includes(selected.id) ? "done" : ""}`} onClick={() => toggleComplete(selected.id)}>

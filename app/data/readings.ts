@@ -51,10 +51,320 @@ export type Reading = {
   crossCheck?: string;
   metric?: string;
   /** Optional stage diagram shown next to the featured reading on the home page. */
+  spotlight?: { heading: string; text: string }[];
   lifecycle?: { label: string; stages: string[]; caption: string };
 };
 
 export const readings: Reading[] = [
+{
+  "id": 64,
+  "rank": 1,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "VEX-Bench",
+  "subtitle": "AI 能判斷是否受影響，卻未必能提出正確理由。",
+  "date": "2026.09.07",
+  "dateValue": "2026-09-07",
+  "authors": "Jiahao Shi、Edward Tsien、Yifeng Di 等 13 人；Purdue University／Red Hat",
+  "source": "https://arxiv.org/abs/2609.08040",
+  "sourceLabel": "arXiv 2609.08040",
+  "pdf": "https://arxiv.org/pdf/2609.08040",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Agent Security",
+    "Product Security",
+    "Threat Modeling"
+  ],
+  "summary": "75 個真實案例顯示，模型判斷 affected／not_affected 的能力高於辨識細部理由的能力。VEX 不應僅憑 AI 二元結論關案。",
+  "findings": [
+    "75 案涵蓋 67 個 CVE、35 個 Python／Java／Go 專案，並比較九個模型與三種 harness。",
+    "Claude Opus 4.6、GPT-5.5 的 status F1 為 81.6%、79.9%；只有 GPT-5.5 的理由 macro-F1 超過 70%。",
+    "70.7% 案例為 not_affected；資料不平衡與分類粒度會影響分數解讀。"
+  ],
+  "relevance": "適合 ODM/OEM 的產品軟體與供應商元件 triage；沒有 C/C++ 與韌體專屬驗證，因此 BMC／BIOS 的適用性須另測。",
+  "action": "抽取 10 個既有 PSIRT 案件盲測；每案保存版本、call path、設定與引用證據，由人工核准 VEX 發布。",
+  "caveat": "規模小，repository 證據無法涵蓋客戶部署與執行期輸入。作者包含 Red Hat 人員，具有供應鏈安全研究與產品利益；EMNLP 接受狀態依作者登錄，未另核對會議名單。",
+  "crossCheck": "2026-09-12 重新取得 arXiv v1 全文並核對方法、結果與限制。研究數值屬作者回報，本次未重跑實驗。",
+  "metric": "75 案 · status F1 最高 81.6%"
+},
+{
+  "id": 65,
+  "rank": 2,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "Learning Intrusion Response Strategies for OT Systems",
+  "subtitle": "先衡量回應風險，再討論自動隔離。",
+  "date": "2026.09.09",
+  "dateValue": "2026-09-09",
+  "authors": "Duc Huy Le、Rolf Stadler；KTH",
+  "source": "https://arxiv.org/abs/2609.10298",
+  "sourceLabel": "arXiv 2609.10298",
+  "pdf": "https://arxiv.org/pdf/2609.10298",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "OT / ICS",
+    "Threat Modeling",
+    "Agent Security"
+  ],
+  "summary": "以 POMDP 與 BF-PPO 處理有限網路觀測下的 OT 回應決策；作者明確承認尚未纳入 operational safety。",
+  "findings": [
+    "以 Purdue 網路情境與三類攻擊者策略評估學習式回應，BF-PPO 接近完全可觀察基準。",
+    "動作被簡化為離散、同步且立即生效；尚未檢驗跨組態與攻擊類型的一般化。",
+    "作者將 operational safety 列為後續工作，不能把實驗策略直接交給生產網路执行。"
+  ],
+  "relevance": "企業網路到 supervisory／control／physical subnet 的橫向移動，需要同時計入製程可用性與安全後果。",
+  "action": "在既有 OT PoC 使用 shadow mode；保存建議動作、safety invariant、人工否決理由與錯誤隔離成本。",
+  "caveat": "研究環境與產線仍有距離。本文不是 IEC 62443 符合性證明，也沒有證明自動封鎖 PLC 安全。",
+  "crossCheck": "2026-09-12 重新取得 arXiv v1 全文並核對方法、結果與限制。研究數值屬作者回報，本次未重跑實驗。"
+},
+{
+  "id": 66,
+  "rank": 3,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "Do AI Coding Assistants Check Before They Install?",
+  "subtitle": "供應鏈證明必須由執行環境強制驗證。",
+  "date": "2026.09.07",
+  "dateValue": "2026-09-07",
+  "authors": "Pengyin Shan",
+  "source": "https://arxiv.org/abs/2609.07754",
+  "sourceLabel": "arXiv 2609.07754",
+  "pdf": "https://arxiv.org/pdf/2609.07754",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Product Security",
+    "Agent Security",
+    "Data Lineage"
+  ],
+  "summary": "安裝前很少讀取 SBOM、簽章或 attestation；研究中沒有觀察到真正執行驗證命令。提供證明不等於消費端有使用。",
+  "findings": [
+    "主實驗 1,920 次中有 9 次符合作者的複合陽性規則；Table 6 顯示 6 次在安裝前讀取，另 3 次讀取後未完成安裝。",
+    "含補充模型共 2,114 次；讀取信號與執行驗證命令是不同事件，後者回報為零。",
+    "六個研究軟體專案、離線容器及全部由腳本核准的 gated 模式，限制了企業流程外推。"
+  ],
+  "relevance": "ODM/OEM 即使已要求交付 SBOM 或 provenance，coding agent 仍可能直接安裝。CI、套件代理與 agent harness 應負責執行政策。",
+  "action": "在測試容器放入有效與錯誤 issuer 的簽章及 attestation；驗證失敗須阻止安裝，並保存命令結果與制止證據。",
+  "caveat": "預印本摘要把九次都描述為 before installing，與表 6 的時序分類不完全一致；本次採表格細分。合成信號及無套件索引環境，不代表一般開發者使用率。",
+  "crossCheck": "2026-09-12 重新取得 arXiv v1 全文並核對方法、結果與限制。研究數值屬作者回報，本次未重跑實驗。",
+  "metric": "6 次安裝前讀取＋3 次未完成安裝；0 次驗證命令",
+  "corrections": [
+    {
+      "date": "2026.09.12",
+      "type": "更正",
+      "note": "修正 9/11 對話版：9 次為複合陽性，不全是安裝前讀取；以 Table 6 的 6＋3 分解呈現。",
+      "source": "https://arxiv.org/abs/2609.07754"
+    }
+  ]
+},
+{
+  "id": 70,
+  "rank": 4,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 2,
+    "actionability": 3
+  },
+  "title": "A2ABreak: Systematic Security Analysis of the A2A Protocol",
+  "subtitle": "Architecture Spotlight｜跨 Agent 委派仍需企業自己的授權邊界。",
+  "date": "2026.09.09",
+  "dateValue": "2026-09-09",
+  "authors": "Alireza Lotfi、Mirza Masfiqur Rahman、Imtiaz Karim、Elisa Bertino；Purdue University／UT Dallas",
+  "source": "https://arxiv.org/abs/2609.10871",
+  "sourceLabel": "arXiv 2609.10871",
+  "pdf": "https://arxiv.org/pdf/2609.10871",
+  "decision": "選讀",
+  "kind": "學術論文",
+  "topics": [
+    "Architecture",
+    "Agent Security",
+    "Threat Modeling",
+    "DSPM / DLP"
+  ],
+  "summary": "以規格抽取狀態機，再以對抗檢查與人工審閱分析 A2A。本文適合用來檢查跨系統委派，但「所有合規部署都有弱點」並未獲本次核實。",
+  "findings": [
+    "作者由 929 條敘述產生 37 個狀態、76 個轉移；專家確認 11 項候選發現。",
+    "核心情境是 context 所有權、跨跳身分與自述技能可信度；它們都是 ERP／PLM Agent 整合時應明確決策的事項。",
+    "本次對照官方規格：§7.5 把授權政策交給實作；§7.6.3 已建議憑證綁定及保密；§7.6.4 明示 auth-required 不是操作授權。"
+  ],
+  "relevance": "最有價值的是把協定相容性和業務授權分開驗收。跨客戶 BOM、報價與 PLM 變更，不應只依賴 AgentCard 或共享 contextId 決定資料可見性。",
+  "action": "選一條 ERP／PLM → Agent → 供應商路徑，驗證跨租戶 context 隔離、逐跳 audience／scope、撤銷後串流停止與實際副作用。",
+  "caveat": "預印本未驗證 SAP／S/4HANA 或實廠部署。官方規格為動態頁，不能假設與作者使用快照相同；未重跑作者形式模型。作者稱沒有開源參考實作，但官方 Python SDK 已可取得，此理由不採納。",
+  "crossCheck": "2026-09-12 完整取得並讀取 arXiv v1（正文、限制與附錄）；另對照 A2A 官方規格及官方 Python SDK。作者 artifact repository 已公開，聲稱 ACSAC 2026 接受；本次未核對會議官方名單，故仍以 Preprint 標示。",
+  "spotlight": [
+    {
+      "heading": "為什麼選這篇",
+      "text": "這篇把 Agent 通訊規格轉為可逐項反駁的安全假設，適合技術背景主管帶領架構評審。最近八週內的新研究，沒有回溯舊文；判定為選讀，因部署層主張仍超過現有證據。"
+    },
+    {
+      "heading": "核心論點與證據品質",
+      "text": "作者以規格抽取、狀態機與對抗式檢查串起論證，再由專家審閱候選。73.3% precision 是候選經人工判定的結果，不是產品攻擊成功率。模型化方法具可追溯性，但不等於完整形式證明，也不是企業部署安全驗證。"
+    },
+    {
+      "heading": "已查證／作者主張／本次推論",
+      "text": "已查證：原文有上述方法與數值，artifact repository 可讀，官方規格保留實作層授權责任。作者主張：11 項是完全合規下可利用的協定弱點。本次未獨立證實所有攻擊鏈；尤其憑證保護須與官方 §7.6.3 一起讀。本次推論：A2A 相容性驗收須另加企業授權與資料政策測試。"
+    },
+    {
+      "heading": "對跨國 ODM／EMS 的實務意涵",
+      "text": "以跨臺灣、中國、美國、墨西哥與捷克的部署為分析情境：每個區域應記錄資料擁有者、租戶、代理身分、用途及可用的下游服務。China zone 的資料與管理平面隔離屬待確認的公司架構要求；本文不證明 CSL／DSL／PIPL 的具體法律適用性，也不能由某次登入推定所有區域均可存取。"
+    },
+    {
+      "heading": "標準與架構決策",
+      "text": "以 NIST SP 800-207 的資源導向授權作概念對照；把 ERP／PLM 的業務權限保留在權威系統，Agent 僅持有限委派。IEC 62443 zones/conduits 可協助安排 OT 跨區執行點，卻不能取代對操作內容的授權。未取得 ISO 27001／IEC 62443 標準全文，本次不宣稱條號映射或符合性。"
+    },
+    {
+      "heading": "四項最小驗證行動",
+      "text": "① 以兩個測試客戶嘗試重用同一 contextId，保存拒絕與資料隔離證據。② 以三跳委派驗證原始主體、audience、scope 和期限都能追溯。③ 撤銷權限後測試既有串流與後續訊息，確認不再產生副作用。④ 用偽造技能描述測試 Agent 發現流程，要求資料提供前通過允許清單、用途限制與 DLP。這些是建議測試，未宣稱公司已執行。"
+    },
+    {
+      "heading": "閱讀路線、盲點與利益衝突",
+      "text": "建議架構、IAM、AI 平台、SAP／PLM 與 OT Security 人員閱讀，約 35–45 分鐘。細讀 III、VI、VIII 與官方規格 §7.5–7.6；熟悉 FSM 者可略讀 IV 的管線細節，採用率與成本敘事非必要。盲點包括實際 SDK 行為、SAP 授權物件、操作安全、跨境日誌與復原流程。研究由 NSF／學研資助等支持，未見產品銷售訴求；未找到完整獨立利益衝突審查。"
+    },
+    {
+      "heading": "交叉查核來源",
+      "text": "A2A 官方規格：https://a2a-protocol.org/latest/specification/ ；官方 Python SDK：https://github.com/a2aproject/a2a-python ；作者 artifact：https://github.com/arlotfi79/A2ABreak ；NIST SP 800-207：https://csrc.nist.gov/pubs/sp/800/207/final 。版本查核日期均為 2026-09-12；外部 Cowork 歷史全文不可讀，跨平台去重仍有缺口。"
+    }
+  ]
+},
+{
+  "id": 67,
+  "rank": 5,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 2,
+    "actionability": 3
+  },
+  "title": "MemSentry",
+  "subtitle": "長期記憶寫入前的風險審查，仍須防範可信內部來源。",
+  "date": "2026.09.08",
+  "dateValue": "2026-09-08",
+  "authors": "Ayan Roy、Kaustuvi Basu；Christopher Newport University／Independent Researcher",
+  "source": "https://arxiv.org/abs/2609.08747",
+  "sourceLabel": "arXiv 2609.08747",
+  "pdf": "https://arxiv.org/pdf/2609.08747",
+  "decision": "選讀",
+  "kind": "學術論文",
+  "topics": [
+    "Agent Security",
+    "Threat Modeling"
+  ],
+  "summary": "把來源信任、語意風險、依賴圖、存取風險與安全狀態變化，組合為 Accept／Review／Quarantine 的寫入前判定。",
+  "findings": [
+    "1,000 個 GPT-4 合成情境中，SBERT＋LR 回報 91.7% accuracy、0.908 macro-F1。",
+    "signed security-state delta 表示正負變化：負值為弱化、正值為強化，不是數位簽章。",
+    "細微語意對照中 SBERT、SetFit 的 pair accuracy 均為 0/10；可信內部來源還存在無法進入 quarantine 的結構限制。"
+  ],
+  "relevance": "採購、維修與 PLM Agent 的記憶可能把臨時核准寫成永久權限；記憶寫入應視為政策影響事件。",
+  "action": "對已驗證／已授權、臨時／永久等成對情境測試 pre-commit gate；正式授權仍連回權威事件。",
+  "caveat": "合成資料與靜態隨機資產圖；不能以整體 accuracy 當成企業防護率。來源已驗證不代表行為已授權。",
+  "crossCheck": "2026-09-12 重新取得 arXiv v1 全文並核對方法、結果與限制。研究數值屬作者回報，本次未重跑實驗。",
+  "corrections": [
+    {
+      "date": "2026.09.12",
+      "type": "更正",
+      "note": "修正 9/11 對話版：signed delta 為正負數值，不是「簽署後的」安全狀態。",
+      "source": "https://arxiv.org/abs/2609.08747"
+    }
+  ]
+},
+{
+  "id": 68,
+  "rank": 6,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 2,
+    "actionability": 3
+  },
+  "title": "Benchmark Scores Are Pipeline-Dependent",
+  "subtitle": "資安模型分數同時量到模型與評測管線。",
+  "date": "2026.09.08",
+  "dateValue": "2026-09-08",
+  "authors": "Aymene Berriche、Cathrine Shalby、Mohannad Alhanahnah、Yazan Boshmaf",
+  "source": "https://arxiv.org/abs/2609.08765",
+  "sourceLabel": "arXiv 2609.08765",
+  "pdf": "https://arxiv.org/pdf/2609.08765",
+  "decision": "選讀",
+  "kind": "學術論文",
+  "topics": [
+    "AI Governance",
+    "Threat Modeling"
+  ],
+  "summary": "八個資安 benchmark、23 個任務與十個模型的稽核，揭露輸出截斷、抽取及評分慣例會大幅改變結果。",
+  "findings": [
+    "作者辨識 15 類管線問題，個別選擇可造成逾 80 個百分點分數差異。",
+    "統一部分設定後，十個模型中九個在至少一項 benchmark 移動三個以上名次。",
+    "結果檢驗 measurement reliability；不是對實際資安能力的完整 construct validity 驗證。"
+  ],
+  "relevance": "SOC、AppSec 與 VEX Agent 的採購應保存模型及整條評測管線組態，避免拿不同 harness 的分數直接排行。",
+  "action": "讓 PoC 保存 evaluation manifest：模型版本、prompt、token budget、judge、抽取規則、分母及重跑結果。",
+  "caveat": "研究限資安 benchmark，部分標準化選擇及 LLM judge 仍有爭議；不可推論任何指定模型一定較安全。",
+  "crossCheck": "2026-09-12 重新取得 arXiv v1 全文並核對方法、結果與限制。研究數值屬作者回報，本次未重跑實驗。"
+},
+{
+  "id": 69,
+  "rank": 7,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 2,
+    "actionability": 3
+  },
+  "title": "Attestream",
+  "subtitle": "資料交付、用途回報與衍生物，應有連續的 provenance。",
+  "date": "2026.09.07",
+  "dateValue": "2026-09-07",
+  "authors": "Kentaro Oda",
+  "source": "https://arxiv.org/abs/2609.07641",
+  "sourceLabel": "arXiv 2609.07641",
+  "pdf": "https://arxiv.org/pdf/2609.07641",
+  "decision": "選讀",
+  "kind": "學術論文",
+  "topics": [
+    "Data Lineage",
+    "DSPM / DLP"
+  ],
+  "summary": "以雙方簽署交付、使用回報及衍生紀錄連結資料生命週期，再以資料指紋輔助追查外洩。",
+  "findings": [
+    "資料本體在鏈外交換；帳本保存交付、身分、時間、連結與簽章。",
+    "使用回報可控制後续供應，但模型 hash 不能證明資料真的用於訓練。",
+    "作者揭露自己為相關日本專利 JP 7894573 B2 發明人之一，屬重要利益關係。"
+  ],
+  "relevance": "品質影像、設備遙測、客戶設計與聯合訓練資料的交付，宜一起記錄收受方、用途、衍生物及再散布。",
+  "action": "先用一份合成資料驗證雙方簽收、用途與版本的可追溯性，再評估指紋或帳本是否帶來額外價值。",
+  "caveat": "單一作者原型，假設帳本可信；改寫、裁切、多方共謀與公開帳本活動模式仍有限制。不能當作 DSPM／DLP 產品效能證明。",
+  "crossCheck": "2026-09-12 重新取得 arXiv v1 全文並核對方法、結果與限制。研究數值屬作者回報，本次未重跑實驗。"
+},
 {
   "id": 49,
   "rank": 1,
@@ -2191,6 +2501,10 @@ export const readings: Reading[] = [
 
 export const TOPIC_FILTERS = [
   "全部",
+  "Architecture",
+  "Product Security",
+  "OT / ICS",
+  "AI Governance",
   "Agent Security",
   "DSPM / DLP",
   "Data Lineage",
@@ -2295,6 +2609,7 @@ const NOT_RETAINED =
  * 每週的入選漏斗與略過清單各自保存，新增週次不會覆寫既有紀錄。
  */
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
+  "2026.09.11": {"scanned": null, "shortlisted": null, "note": "W37 修訂版 r2｜2026-09-12 重新查核。7 篇入選（3 深入審閱、4 選讀）；新增 1 篇 Architecture Spotlight，修正 2 處原期文字。本期無合格的新 DSPM／DDR 專題實證研究。", "skipped": [{"title": "From Intent to Execution Grant", "source": "https://arxiv.org/abs/2609.11596", "reason": "2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。"}, {"title": "Industry 5.0 Zero Trust 回顧", "source": "https://doi.org/10.1016/j.comnet.2026.112695", "reason": "9/4 已推薦，沒有本次實質更新，不重複計數。"}]},
   "2026.09.04": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：6 項，深入審閱 4 項、選讀 2 項；整合 2026W36 週報。原稿未保留完整掃描與初篩數，不以推估補填。Architecture Spotlight 與早期研究列為補遺。", skipped: [] },
   "2026.08.28": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：9 項，深入審閱 4 項、選讀 5 項；整合 2026W35 週報。原稿未保留完整掃描與初篩數，不以推估補填。舊研究依原發布日期標示補遺。", skipped: [{ title: "PolicyGuard", source: "https://arxiv.org/abs/2608.02687", reason: "原期查核記錄指出作者撤稿，未納入。" }, { title: "NIST SP 1347", source: "https://csrc.nist.gov/pubs/sp/1347/final", reason: "原期判定 AI Security 關聯不足。" }] },
   "2026.08.21": {
@@ -2346,20 +2661,20 @@ export function editorialFor(week: string) {
 export const currentEditorial = editorialFor(CURRENT_WEEK);
 
 export const weeklyReportIntegration = {
-  title: "GSMD-WATCH-2026-0818-01_製造業AI_Security週報_2026W34",
-  modifiedAt: "2026.08.19 13:11:37（臺北時間）",
-  url: "https://docs.google.com/document/d/1KbKpLiwkDvVcv8_t-da6HPTSufRP2I75ZnbUI1qNtz4/edit?usp=drivesdk",
-  candidates: 8,
-  selected: 1,
-  adopted: [
-    "Correct Is Not Governed：原始 arXiv 頁面與論文限制已核實，作為 provenance integrity 補遺。",
-    "NIST SP 800-239：官方初稿與 2026-09-25 意見截止資訊已核實，只作資料中心治理背景。",
-    "Multi-Agent Firewall：確認已在舊清單收錄，避免重複；其 DLP 結果僅用於交叉判讀。",
+  "title": "GSMD-WATCH-2026-0908-01_製造業AI_Security週報_2026W37",
+  "modifiedAt": "2026.09.08 15:38:50（臺北時間）",
+  "url": "https://docs.google.com/document/d/1pdNzXb3q2FEv2ZyGk_ziO8TIBUI39O6Uuo1tZoBilVM/edit?usp=drivesdk",
+  "candidates": 8,
+  "selected": 0,
+  "adopted": [
+    "2026-09-12 重新列出 5 份直接檔案、按 Drive modified_time 排序並讀取最新全文；未以檔名推定。",
+    "沿用 W37 的授權連續性、runtime 監控、資料 provenance 與 RAG 管線邊界作待核實背景；不把舊論文計為本期新發。"
   ],
-  corrections: [
-    "Nozomi 的 87.7%、7.9%、15.6%、35.1% 與 11.9% 等比例因公開方法與分母不足，未提升為可外推事實。",
-    "其餘 SARC-DQ、Digital Twin review、Agent Data Injection 與 Agentic LLM SLR 均早於本週，且無實質更新，不冒充本週新發布資料。",
-  ],
+  "corrections": [
+    "A2ABreak 與官方 A2A 規格交叉閱讀；協定缺少統一機制，不等於企業一定未實施授權。",
+    "安裝研究的 9 次陽性包含 3 次未完成安裝；MemSentry signed delta 不是數位簽章。",
+    "原期關於 OWASP 排序權重、事故數與特定攻擊最高成功率，本次不提升為普遍事實。"
+  ]
 } as const;
 
 export function readingSearchText(reading: Reading) {

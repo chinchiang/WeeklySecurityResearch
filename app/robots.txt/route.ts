@@ -1,4 +1,5 @@
-const SITE = "https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site";
+import { SITE_URL as SITE } from "../site-config";
+export const dynamic = "force-static";
 
 export async function GET() {
   return new Response(`User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`, { headers: { "content-type": "text/plain; charset=utf-8" } });
