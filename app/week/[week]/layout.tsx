@@ -16,10 +16,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Omit<WeekLayoutProps, "children">): Promise<Metadata> {
   const { week } = await params;
   const decodedWeek = decodeURIComponent(week);
-  // Unknown slugs must 404 instead of rendering reflected text under a
-  // self-referencing canonical, which would let arbitrary strings be indexed
-  // as pages of this site.
-  if (!weekSlugs.has(decodedWeek)) notFound();
+  // Unknown slugs are rejected by WeekLayout below. Metadata is streamed
+  // (vinext 1.x mirrors Next.js metadata streaming), so a notFound() thrown
+  // here would not become an HTTP 404; it only has to avoid reflecting the
+  // slug or declaring a canonical for a page that does not exist.
+  if (!weekSlugs.has(decodedWeek)) {
+    return { title: "找不到週次", robots: { index: false, follow: false }, alternates: { canonical: null } };
+  }
   const canonicalWeek = encodeURIComponent(decodedWeek);
   const displayWeek = decodedWeek.replaceAll("-", ".");
   const title = `${displayWeek} 必讀清單｜Manufacturing AI Security`;
@@ -37,6 +40,12 @@ export async function generateMetadata({ params }: Omit<WeekLayoutProps, "childr
   };
 }
 
-export default function WeekLayout({ children }: WeekLayoutProps) {
+export default async function WeekLayout({ children, params }: WeekLayoutProps) {
+  const { week } = await params;
+  // Unknown slugs must 404 instead of rendering reflected text under a
+  // self-referencing canonical, which would let arbitrary strings be indexed
+  // as pages of this site. Throwing from the layout (a server component)
+  // is what yields the HTTP 404 status; see generateMetadata above.
+  if (!weekSlugs.has(decodeURIComponent(week))) notFound();
   return children;
 }
