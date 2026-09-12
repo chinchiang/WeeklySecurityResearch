@@ -1,0 +1,33 @@
+{
+  "report_id": "AISEC-ARCH-2026-W37-20260911",
+  "revision": 4,
+  "workflow": "企業資安綜合閱讀清單",
+  "execution_mode": "manual_execution_of_saved_instructions",
+  "checked_at": "2026-09-12T13:17:36.465Z",
+  "base_commit": "bfa52f28a87eadcb951e6d70d4f6c5e14387c43e",
+  "added_reading_ids": [
+    73
+  ],
+  "preserved_reading_ids": [
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72
+  ],
+  "issue_total": 10,
+  "research_status": "completed",
+  "scheduled_trigger_verified": false,
+  "drive_integration": "Latest report reread in full, unchanged since the previous W37 revision; used as background, not new evidence.",
+  "category_status": {
+    "architecture": "Retain one existing Spotlight; no second recommendation.",
+    "product_security": "Retain two existing selections; no duplicate or third item.",
+    "ot_ics": "One qualified new original study.",
+    "dspm_ddr": "No qualified new dedicated empirical study."
+  },
+  "publication_evidence": "GitHub PR, main CI and live page are verified separately; this record is a research input receipt."
+}
