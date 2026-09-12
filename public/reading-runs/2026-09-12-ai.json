@@ -1,0 +1,25 @@
+{
+  "report_id": "AISEC-ARCH-2026-W37-20260911",
+  "revision": 3,
+  "workflow": "AI Security 技術研究簡報",
+  "execution_mode": "manual_execution_of_saved_instructions",
+  "checked_at": "2026-09-12T13:13:21.895Z",
+  "added_reading_ids": [
+    71,
+    72
+  ],
+  "preserved_reading_ids": [
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70
+  ],
+  "issue_total": 9,
+  "research_status": "completed",
+  "scheduled_trigger_verified": false,
+  "publication_evidence": "GitHub PR, main CI and live page are verified separately; this record is a research input receipt.",
+  "excluded": "No new independently supported DSPM/DDR study; unchanged prior recommendations are preserved, not counted as additions."
+}

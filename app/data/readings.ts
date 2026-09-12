@@ -57,6 +57,80 @@ export type Reading = {
 
 export const readings: Reading[] = [
 {
+  "id": 71,
+  "rank": 8,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 3,
+    "actionability": 3
+  },
+  "title": "Signing the Transaction but Not the Decision",
+  "subtitle": "AP2 Whisper：交易簽章有效，仍可能簽下被商家文字帶偏的決策。",
+  "date": "2026.09.10",
+  "dateValue": "2026-09-10",
+  "authors": "Yedidel Louck、Amit Dvir、Ariel Stulman｜Ariel University／Jerusalem College of Technology",
+  "source": "https://arxiv.org/abs/2609.11757",
+  "sourceLabel": "arXiv 2609.11757v1",
+  "pdf": "https://arxiv.org/pdf/2609.11757v1",
+  "decision": "深入審閱",
+  "kind": "學術論文",
+  "topics": [
+    "Agent Security",
+    "AI System Threat Modeling",
+    "Identity"
+  ],
+  "summary": "研究將商家控制的商品描述分成三種攻擊：跨帳戶憑證別名查詢、購物車內容竄改，以及以庫存／替代品說法誘導較昂貴的選擇。最後一種可讓購物車與展示資料完全一致，結構驗證仍會放行。",
+  "findings": [
+    "在 AP2 v0.2.0 human-present 參考部署，Vault／Branded 最後措辭輪分別為 45/50、28/50；Selection 在不同的 GA 模型為 66/90。三列分母與模型不同，不能當成共同基準排名。",
+    "A-VIP 將憑證查詢綁定 session、購物車綁定展示快照與收款者；Selection 只能提示額外支出供使用者確認，不能宣稱已消除。",
+    "AP2-WhisperBench 有 1,544 情境，但屬公開開發／回歸集，非 held-out 泛化測試；論文提供程式、TLA+ 規格與回應紀錄。"
+  ],
+  "relevance": "情境推論：採購 Agent 串接 ERP、供應商型錄與付款時，既有登入與有效簽章不足以證明替代料、收款者及額外支出符合原核准。公司是否採用 AP2 尚無部署證據。",
+  "action": "優先讀第 4–7 節及第 11 節。以合成型錄及虛構帳戶比較 prompt-only 與外部 policy gate：跨帳戶查詢、未展示料號、未核准收款者必須拒絕；超出明確預算須阻擋或取得有效核准。保留 session、授權範圍、展示快照與實際工具結果；本次僅提出測試，未執行攻擊。",
+  "caveat": "未經獨立重現的預印本；消費產品部分組別只有 8–13 次，部分跨模型觀察僅一次。主實驗不是 human-not-present 全流程驗證；作者所稱供應商接受弱點尚無可公開案號佐證。不能推定所有 AP2 部署目前均受影響。",
+  "crossCheck": "2026-09-12 查核 v1 全文方法、表 3 及限制；另核對 AP2 v0.2 官方規格與公開 A-VIP repository。官方區分人員直接核准及自主模式，並明定自主模式的 constraint 驗證；因此本篇判定限於特定參考實作與商家輸入的決策風險。協定原文：https://ap2-protocol.org/ap2/specification/ 。實作：https://github.com/yedidel/avip_defense 。深入審閱理由：可轉成模型外的授權驗收條件。"
+},
+{
+  "id": 72,
+  "rank": 9,
+  "week": "2026.09.11",
+  "batch": "本週新發",
+  "evidenceLevel": "Preprint",
+  "scores": {
+    "evidence": 2,
+    "relevance": 2,
+    "actionability": 3
+  },
+  "title": "Atlas: Efficient Verifiable Semantic Search",
+  "subtitle": "讓 RAG 檢索對承諾的索引與演算法提出證明；資料本身的可信度仍須另管。",
+  "date": "2026.09.10",
+  "dateValue": "2026-09-10",
+  "authors": "Nikolay Avramov、Hidde Lycklama、Alexander Viand、Anwar Hithnawi｜University of Toronto／Belfort Labs",
+  "source": "https://arxiv.org/abs/2609.11841",
+  "sourceLabel": "arXiv 2609.11841v1",
+  "pdf": "https://arxiv.org/pdf/2609.11841v1",
+  "decision": "選讀",
+  "kind": "學術論文",
+  "topics": [
+    "RAG",
+    "Data Lineage",
+    "AI Data Protection"
+  ],
+  "summary": "Atlas 以零知識證明驗證 HNSW 查詢是否依約定程序操作已承諾的索引，將資料庫相關成本移到離線前處理。這能處理服務端偷減搜尋或換索引的風險，但不等於證明文件正確、最新或具合法存取權。",
+  "findings": [
+    "表 1 的 SIFT1M 證明時間為 0.80 秒、100M 向量為 1.98 秒；960 維 GIST1M 則為 36.66 秒。測試主機具 96 核 CPU、768 GB RAM，前處理使用 H100，不能把約 2 秒當成一般 RAG SLA。",
+    "保證相對於承諾索引及固定搜尋預算；8-bit 量化在 GIST1M 某組態損失 5.2 個 recall@1 百分點。完整 RAG 評測的 proving time 另有 13.3 秒組態。",
+    "查詢明文送至服務端；索引構造的正確性不在此證明範圍。沒有主張同時提供 query confidentiality、DLP 或來源真實性。"
+  ],
+  "relevance": "情境推論：跨公司託管的製造知識庫、設計 IP 檢索可將「服務確實查了指定索引」獨立驗收，並與資料版本、租戶 ACL、保留期限及來源證據結合。",
+  "action": "優先讀第 4 節威脅模型與第 6 節效能／量化取捨。使用公開文件建立兩個索引版本及合成權限群組，比較普通 HNSW 與可驗證檢索；竄改 commitment 或回傳集合須驗證失敗，另量測召回與 p95 成本。查詢保密及 ACL 另列獨立測試；本次未重現實驗。",
+  "caveat": "預印本、作者原型；Belfort Labs 有商業機構關聯，未取得更完整利益揭露。本次取得全文並檢視構造、威脅模型與評測，未驗證整套密碼學證明，也未定位可獨立執行的 Atlas 完整程式包。",
+  "crossCheck": "2026-09-12 核對 v1 第 4–6 節與表 1。低維整數向量、量化後高維檢索及完整 RAG 的數字分別保留，不混成單一效能結論。選讀理由：可定義檢索完整性驗收，但成熟度與成本尚不足以形成採購建議。"
+},
+{
   "id": 64,
   "rank": 1,
   "week": "2026.09.11",
@@ -2609,7 +2683,7 @@ const NOT_RETAINED =
  * 每週的入選漏斗與略過清單各自保存，新增週次不會覆寫既有紀錄。
  */
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
-  "2026.09.11": {"scanned": null, "shortlisted": null, "note": "W37 修訂版 r2｜2026-09-12 重新查核。7 篇入選（3 深入審閱、4 選讀）；新增 1 篇 Architecture Spotlight，修正 2 處原期文字。本期無合格的新 DSPM／DDR 專題實證研究。", "skipped": [{"title": "From Intent to Execution Grant", "source": "https://arxiv.org/abs/2609.11596", "reason": "2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。"}, {"title": "Industry 5.0 Zero Trust 回顧", "source": "https://doi.org/10.1016/j.comnet.2026.112695", "reason": "9/4 已推薦，沒有本次實質更新，不重複計數。"}]},
+  "2026.09.11": {"scanned": null, "shortlisted": null, "note": "W37 修訂版 r3｜2026-09-12 AI Read 增補 2 篇，保留原有 7 篇與更正紀錄。全期 9 篇（4 深入審閱、5 選讀）；本次新增重點為 AP2 決策授權與可驗證 RAG 檢索。本期無合格的新 DSPM／DDR 專題實證研究。", "skipped": [{"title": "From Intent to Execution Grant", "source": "https://arxiv.org/abs/2609.11596", "reason": "2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。"}, {"title": "Industry 5.0 Zero Trust 回顧", "source": "https://doi.org/10.1016/j.comnet.2026.112695", "reason": "9/4 已推薦，沒有本次實質更新，不重複計數。"}]},
   "2026.09.04": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：6 項，深入審閱 4 項、選讀 2 項；整合 2026W36 週報。原稿未保留完整掃描與初篩數，不以推估補填。Architecture Spotlight 與早期研究列為補遺。", skipped: [] },
   "2026.08.28": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：9 項，深入審閱 4 項、選讀 5 項；整合 2026W35 週報。原稿未保留完整掃描與初篩數，不以推估補填。舊研究依原發布日期標示補遺。", skipped: [{ title: "PolicyGuard", source: "https://arxiv.org/abs/2608.02687", reason: "原期查核記錄指出作者撤稿，未納入。" }, { title: "NIST SP 1347", source: "https://csrc.nist.gov/pubs/sp/1347/final", reason: "原期判定 AI Security 關聯不足。" }] },
   "2026.08.21": {
