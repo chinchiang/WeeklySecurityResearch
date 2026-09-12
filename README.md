@@ -56,7 +56,7 @@ npm run lint
 ```
 
 - `npm run test:data`：ID、排名、必填欄位、HTTPS URL、合法枚舉及 KPI 一致性。
-- `npm run check:links`：檢查原始來源與 PDF 是否仍可達。`.github/workflows/check-links.yml` 每週一 09:00（台北）自動執行並把結果寫入 job summary；失效連結只以 warning 標示，不會讓 workflow 轉紅，也可用 workflow_dispatch 手動觸發。
+- `npm run check:links`：檢查原始來源與 PDF 是否仍可達。`.github/workflows/check-links.yml` 每週一 09:00（台北）自動執行並把結果寫入 job summary；失效連結只以 warning 標示，不會讓 workflow 轉紅；但腳本本身無法執行時會轉紅，避免工具壞掉被誤判為連結全部正常。也可用 workflow_dispatch 手動觸發。
 - `npm run audit`：依賴漏洞稽核（`.npmrc` 關閉了安裝時的自動稽核，因此需要明確執行）。
 - `npm test`：正式建置與全部測試，包含以實際 HTTP 回應驗證安全標頭、各路由 canonical 與未知週次回 404。
 - `npm run typecheck`：先執行 `next typegen` 重新產生 `.next/types`，再跑 `tsc --noEmit`。vinext 建置也會寫入 `.next/types/routes.d.ts`，先重新產生可避免兩者交錯後型別不一致。

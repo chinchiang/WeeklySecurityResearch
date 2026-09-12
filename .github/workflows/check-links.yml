@@ -30,20 +30,35 @@ jobs:
         run: npm ci
 
       # Unreachable sources are reported, never fatal: a third-party outage
-      # must not block the repository, but it must be visible.
+      # must not block the repository, but it must be visible. A crash of the
+      # checker itself is a different thing and does fail the job, otherwise
+      # a broken script would look like "all links fine" forever.
       - name: Check source and PDF links
         id: links
         run: |
           set +e
-          node scripts/check-links.mjs > links.log 2>&1
-          echo "status=$?" >> "$GITHUB_OUTPUT"
+          npm run --silent check:links > links.log 2>&1
+          status=$?
+          set -e
+          if [ "$status" = "0" ]; then
+            echo "outcome=pass" >> "$GITHUB_OUTPUT"
+          elif node -e 'const j=JSON.parse(require("fs").readFileSync("links.log","utf8"));process.exit(Array.isArray(j)?0:1)' 2>/dev/null; then
+            echo "outcome=unreachable" >> "$GITHUB_OUTPUT"
+          else
+            echo "outcome=error" >> "$GITHUB_OUTPUT"
+          fi
           cat links.log
 
       - name: Publish result to the job summary
         run: |
-          if [ "${{ steps.links.outputs.status }}" = "0" ]; then
-            { echo "## 連結檢查通過"; echo; cat links.log; } >> "$GITHUB_STEP_SUMMARY"
-          else
-            { echo "## ⚠️ 有原始來源無法存取（僅提示，不阻擋 CI）"; echo; echo '```json'; cat links.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-            echo "::warning title=check:links::部分原始來源無法存取，請查看 job summary"
-          fi
+          case "${{ steps.links.outputs.outcome }}" in
+            pass)
+              { echo "## 連結檢查通過"; echo; cat links.log; } >> "$GITHUB_STEP_SUMMARY" ;;
+            unreachable)
+              { echo "## ⚠️ 有原始來源無法存取（僅提示，不阻擋 CI）"; echo; echo '```json'; cat links.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+              echo "::warning title=check:links::部分原始來源無法存取，請查看 job summary" ;;
+            *)
+              { echo "## ❌ 連結檢查工具本身執行失敗"; echo; echo '```'; cat links.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+              echo "::error title=check:links::scripts/check-links.mjs 未能執行，這不是連結失效，請修正腳本"
+              exit 1 ;;
+          esac
