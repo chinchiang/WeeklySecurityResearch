@@ -17,7 +17,6 @@ import { SOCIAL_PAGES, canonicalItems, embedItems, readEditions } from "./social
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const socialDir = path.join(projectRoot, "public", "social-content");
-const sourceSocialDir = path.join(projectRoot, "social-content");
 const dataDir = path.join(socialDir, "data");
 
 const editions = readEditions(dataDir);
@@ -35,7 +34,6 @@ const latestManifest =
   `${JSON.stringify({ generatedFrom: "public/social-content/data/YYYY-MM-DD.json", latest, editions: manifestEditions.toReversed() }, null, 2)}\n`;
 
 writeFileSync(path.join(dataDir, "latest.json"), latestManifest);
-writeFileSync(path.join(sourceSocialDir, "data", "latest.json"), latestManifest);
 
 writeFileSync(
   path.join(projectRoot, "app", "data", "social-latest.generated.ts"),
@@ -47,10 +45,7 @@ writeFileSync(
 for (const page of SOCIAL_PAGES) {
   const publicFile = path.join(socialDir, page);
   const rewritten = embedItems(readFileSync(publicFile, "utf8"), items, latestWeek);
-  for (const targetDir of [socialDir, sourceSocialDir]) {
-    const file = path.join(targetDir, page);
-    if (readFileSync(file, "utf8") !== rewritten) writeFileSync(file, rewritten);
-  }
+  if (readFileSync(publicFile, "utf8") !== rewritten) writeFileSync(publicFile, rewritten);
 }
 
 console.log(`Social content: ${editions.length} 期、${items.length} 則選題，最新 ${latest.week}（${latest.readyCount} ready）`);

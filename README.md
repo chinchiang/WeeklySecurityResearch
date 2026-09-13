@@ -18,7 +18,7 @@
 4. 首次設定尚未完成時，建置可成功但 Pages 部署會失敗。完成第 1 步後重跑該 workflow 的失敗工作即可。以實際 deployment 結果與公開網址驗證，不能把 commit 視為已發布。
 5. `public/social-content/` 只作為 Worker 建置的來源資料保留，`npm run build:pages` 會把它從 `out/` 移除，`npm run test:pages` 會確認它沒有出現在公開輸出中。
 
-本機 `npm ci` 後使用 `npm run build:pages` 與 `npm run test:pages`。這是 GitHub Pages 靜態輸出，原本 Sites 的 Worker build 仍由 `npm run build` 保留。Pages 不執行 Worker，因此不能宣稱它具有 Worker 自訂的 HTTP 安全標頭。
+Node 版本以 `.nvmrc` 為準（CI 兩個 workflow 都讀同一個檔）；本機版本不同時，CI 才會表現出的差異（例如 22.18 之前不會預設剝除 TypeScript 型別）會在本機測不出來。本機 `npm ci` 後使用 `npm run build:pages` 與 `npm run test:pages`。這是 GitHub Pages 靜態輸出，原本 Sites 的 Worker build 仍由 `npm run build` 保留。Pages 不執行 Worker，因此不能宣稱它具有 Worker 自訂的 HTTP 安全標頭。
 
 每期自足 HTML 位於 `public/reports/YYYY-MM-DD.html`，由 `npm run build:report` 產生，與網頁共用資料和 CSS。原始來源優先，私人 WORK 證據不放入公開報告。
 

@@ -6,8 +6,8 @@ import test from "node:test";
 const root = process.cwd();
 const dataDir = path.join(root, "public", "social-content", "data");
 
-test("social content has synchronized source and deployment mirrors with complete history", () => {
-  assert.equal(existsSync(path.join(root, "social-content")), true);
+test("social content keeps its complete history under public/", () => {
+  assert.equal(existsSync(path.join(root, "social-content")), false, "the root social-content mirror was removed; public/social-content is the only copy");
   assert.deepEqual(
     readdirSync(dataDir).filter((name) => /^\d{4}-\d{2}-\d{2}\.json$/.test(name)).sort(),
     ["2026-07-27.json", "2026-08-03.json", "2026-08-09.json", "2026-08-10.json", "2026-08-17.json"],
@@ -16,11 +16,7 @@ test("social content has synchronized source and deployment mirrors with complet
     assert.equal(existsSync(path.join(root, "public", "social-content", "posts", week)), true);
   }
   for (const relative of ["index.html", "archive.html", "data/hosts.json", "data/latest.json", "assets/neon-host.webp", "assets/ukami-host.webp", "assets/sindy-analyst.webp"]) {
-    assert.deepEqual(
-      readFileSync(path.join(root, "social-content", relative)),
-      readFileSync(path.join(root, "public", "social-content", relative)),
-      `${relative} drifted between mirrors`,
-    );
+    assert.equal(existsSync(path.join(root, "public", "social-content", relative)), true, `${relative} missing`);
   }
 });
 
