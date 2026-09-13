@@ -37,6 +37,7 @@ test("public pages expose provenance and the new brand without private Drive lin
     assert.ok(!html.includes("EveryWeekAIRead"),file);
   }
   const home = readFileSync("out/index.html","utf8");
+  assert.ok(readFileSync("out/archive/index.html","utf8").includes("產製來源篩選"));
   for (const text of ["三個內容來源", "週二 15:00", "週五 08:00", "週六 01:00", "產製來源篩選"]) assert.ok(home.includes(text),text);
   const feed = readFileSync("out/feed.xml","utf8");
   assert.ok(feed.includes("科技・資安・架構週讀"));

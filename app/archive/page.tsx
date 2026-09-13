@@ -224,6 +224,7 @@ export default function ArchivePage() {
               </button>
             ))}
           </div>
+          <SourceFilter value={origin} onChange={setOrigin} />
           <select
             value={decision}
             onChange={(event) => setDecision(event.target.value)}
