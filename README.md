@@ -24,14 +24,14 @@
 
 ## 本次資料修訂
 
-`AISEC-ARCH-2026-W37-20260911` r2，查核日期 2026-09-12，共 7 篇（深入審閱 3、選讀 4），含 1 篇 Architecture Spotlight、2 篇 Product Security。安裝研究的陽性時序與 MemSentry signed delta 已明文更正。
+`AISEC-ARCH-2026-W37-20260911` r5（2026-09-13 更名及來源標示版），沿用 2026-09-12 r4 的研究查核，共 10 篇（深入審閱 5、選讀 5），含 1 篇 Architecture Spotlight、2 篇 Product Security。安裝研究的陽性時序與 MemSentry signed delta 已明文更正。
 
 安全稽核發現 Miniflare 間接使用 sharp 0.35.2；本次以 override 統一至修補版 0.35.4，保留既有稽核門檻。來源：https://github.com/advisories/GHSA-rgj7-g3m4-5g8c 。
 
 vinext 已升級至 1.0.0-beta.9，image-size 的兩筆 high 公告（GHSA-w3rx-r6r6-pgpr、GHSA-5p2g-fcmc-qvqq）隨之消失，`scripts/audit-allowlist.json` 已清空。vinext 1.x 將 metadata 改為串流，`generateMetadata()` 內的 `notFound()` 不再產生 HTTP 404，因此未知週次的檢查改在 `app/week/[week]/layout.tsx` 的 layout 元件本體執行，並新增 `app/not-found.tsx` 讓 404 頁不再繼承首頁 canonical。
 
 
-製造業 AI Security 每週必讀清單網站，聚焦 DSPM／DLP、Data Lineage、DDR、AI System Threat Modeling、Agent／MCP／Memory Security。
+製造業科技、資安與架構閱讀網站，涵蓋 AI Security、企業架構、OT／ICS、產品安全、資料保護、AppSec 與供應鏈治理。
 
 ## 原 Sites 部署（已停止同步）
 

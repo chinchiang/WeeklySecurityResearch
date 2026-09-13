@@ -11,8 +11,9 @@ thursday.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
 const isoYear = thursday.getUTCFullYear();
 const isoWeek = Math.ceil((((thursday - new Date(Date.UTC(isoYear, 0, 1))) / 86400000) + 1) / 7);
 const reportId = `AISEC-ARCH-${isoYear}-W${String(isoWeek).padStart(2, "0")}-${slug.replaceAll("-", "")}`;
-const revision = slug === "2026-09-11" ? 4 : 1;
+const revision = slug === "2026-09-11" ? 5 : 1;
 const verifiedAt = slug === "2026-09-11" ? "2026-09-12" : slug;
+const presentationNote = slug === "2026-09-11" ? "2026-09-13 r5：網站更名、來源分工與來源標示；沿用 r4 的研究查核與 10 篇內容，未新增研究。" : "";
 const css = readFileSync("app/globals.css", "utf8").replace('@import "tailwindcss";', "");
 const list = (items) => `<ul>${items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>`;
 const cards = [...currentReadings].sort((a, b) => a.rank - b.rank).map((r) => `<article class="reading-card" id="reading-${r.id}">
@@ -31,7 +32,7 @@ const cards = [...currentReadings].sort((a, b) => a.rank - b.rank).map((r) => `<
 </article>`).join("");
 mkdirSync("public/reports", { recursive: true });
 writeFileSync(`public/reports/${slug}.html`, `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${slug} 科技・資安・架構週讀 · r${revision}</title><meta name="description" content="本期完整研究評述、查核限制與製造業行動建議"><style>${css}</style></head><body><main>
-<section class="hero"><p class="eyebrow">WEEKLY RESEARCH · REVISION ${revision}</p><h1>${slug}<br>科技・資安・架構週讀</h1><p class="hero-subtitle">${esc(currentEditorial.note)}</p><p class="edition-note">${reportId} · 查證與修訂日期 ${verifiedAt}</p><div class="kpi-row"><div class="kpi"><b>${currentStats.total}</b><span>入選</span></div><div class="kpi purple"><b>${currentStats.deep}</b><span>深入審閱</span></div><div class="kpi blue"><b>${currentStats.selective}</b><span>選讀</span></div></div></section>
+<section class="hero"><p class="eyebrow">WEEKLY RESEARCH · REVISION ${revision}</p><h1>${slug}<br>科技・資安・架構週讀</h1><p class="hero-subtitle">${esc(currentEditorial.note)}</p><p class="edition-note">${reportId} · 研究查核日期 ${verifiedAt}</p><p class="edition-note">${esc(presentationNote)}</p><div class="kpi-row"><div class="kpi"><b>${currentStats.total}</b><span>入選</span></div><div class="kpi purple"><b>${currentStats.deep}</b><span>深入審閱</span></div><div class="kpi blue"><b>${currentStats.selective}</b><span>選讀</span></div></div></section>
 <section class="about"><h2>三個內容來源・兩個網站更新流程</h2>${sourceWorkflows.map(f => `<h3>${esc(f.title)} · ${esc(f.schedule)}</h3><p>${esc(f.role)}</p><p>${esc(f.evidence)}</p>`).join("")}</section>
 <section><nav aria-label="本期目錄"><ol>${currentReadings.map(r => `<li><a href="#reading-${r.id}">${esc(r.title)}</a></li>`).join("")}</ol></nav></section>
 <section class="library"><div class="reading-grid week-reading-grid">${cards}</div></section>
