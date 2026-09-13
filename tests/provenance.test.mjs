@@ -37,7 +37,9 @@ test("new readings require attributable provenance; all supplied records are val
     for (const origin of p.origins) assert.ok(origin in sourceLabels && origin !== "legacy-unknown");
     assert.ok(["chatgpt-ai","chatgpt-enterprise"].includes(p.reviewedBy));
     assert.match(p.checkedAt,/^\d{4}-\d{2}-\d{2}$/);
-    assert.match(p.evidence,/^https:\/\/github.com\/chinchiang\/WeeklySecurityReaseach\//);
+    // Receipts written before the 2026-09-13 rename keep the misspelled
+    // repository name; GitHub redirects it, so both spellings are valid evidence.
+    assert.match(p.evidence,/^https:\/\/github.com\/chinchiang\/WeeklySecurity(?:Research|Reaseach)\//);
     if (p.origins.includes("claude-report")) assert.ok(p.inputReportId);
   }
 });
@@ -49,7 +51,7 @@ test("study identity collapses arXiv versions, PDFs and DOI case", () => {
   assert.equal(new Set(keys).size,keys.length,"one study per issue");
 });
 test("Pages paths follow repo rename and explicit local configuration", () => {
-  assert.deepEqual(pagesConfig({}),{base:"/WeeklySecurityReaseach",site:"https://chinchiang.github.io/WeeklySecurityReaseach"});
+  assert.deepEqual(pagesConfig({}),{base:"/WeeklySecurityResearch",site:"https://chinchiang.github.io/WeeklySecurityResearch"});
   assert.deepEqual(pagesConfig({GITHUB_REPOSITORY:"team/Renamed"}),{base:"/Renamed",site:"https://team.github.io/Renamed"});
   assert.equal(pagesConfig({GITHUB_REPOSITORY:"team/team.github.io"}).base,"");
   assert.deepEqual(pagesConfig({NEXT_PUBLIC_BASE_PATH:"/preview",NEXT_PUBLIC_SITE_URL:"https://example.com/preview/"}),{base:"/preview",site:"https://example.com/preview"});

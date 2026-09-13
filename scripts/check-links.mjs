@@ -2,7 +2,7 @@ import { readings } from "../app/data/readings.ts";
 
 const urls = [...new Set(readings.flatMap((reading) => [reading.source, reading.pdf]).filter(Boolean))];
 const failures = [];
-const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 (WeeklySecurityReaseach-LinkChecker/1.0)";
+const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 (WeeklySecurityResearch-LinkChecker/1.0)";
 
 const headers = {
   "User-Agent": USER_AGENT,

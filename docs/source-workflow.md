@@ -1,6 +1,6 @@
 # 科技・資安・架構週讀：供稿與發布契約
 
-正式 repo：`chinchiang/WeeklySecurityReaseach`（依使用者實際命名）。正式站：https://chinchiang.github.io/WeeklySecurityReaseach/
+正式 repo：`chinchiang/WeeklySecurityResearch`（2026-09-13 由拼字錯誤的 WeeklySecurityReaseach 更正）。正式站：https://chinchiang.github.io/WeeklySecurityResearch/ 。Pages base path 由 `GITHUB_REPOSITORY` 推導，程式中的 fallback 只供本機使用；歷史 provenance 證據連結仍可帶舊名，GitHub 會轉址。
 
 ## 三來源、兩個寫入者
 

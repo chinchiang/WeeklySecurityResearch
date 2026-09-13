@@ -6,7 +6,7 @@
 
 詳見 [供稿與發布契約](docs/source-workflow.md)。文章的原始研究連結與產製來源分開；歷史來源無證據者明示待確認。現有手動研究收據不代表到點自動觸發已驗證。公開版不包含私人 Drive 連結與內部 WORK 證據。
 
-正式網址（GitHub Pages）：https://chinchiang.github.io/WeeklySecurityReaseach/
+正式網址（GitHub Pages）：https://chinchiang.github.io/WeeklySecurityResearch/
 
 網站改採淺色資訊介面，參考 DailySOCVitamin 的導覽與資訊密度，以及 CyberRegulationWatch 的淺色／紫色視覺語彙。保留搜尋、篩選、閱讀進度、歷史週次、Atom feed 與更正紀錄。
 

@@ -42,7 +42,7 @@ test("public pages expose provenance and the new brand without private Drive lin
   const feed = readFileSync("out/feed.xml","utf8");
   assert.ok(feed.includes("科技・資安・架構週讀"));
   assert.ok(feed.includes("查核：ChatGPT"));
-  assert.ok(feed.includes("WeeklySecurityReaseach"));
+  assert.ok(feed.includes(site), "feed must reference the configured Pages site");
 });
 test("export excludes source files and the private WORK document identifier", () => {
   const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir,e.name)]);
