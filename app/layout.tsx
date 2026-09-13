@@ -26,9 +26,6 @@ export const metadata: Metadata = {
     description: "製造業科技、資安與架構每週精選、查核摘要與固定週次資料庫。",
   },
   robots: { index: true, follow: true },
-  other: {
-    "codex-preview": "development",
-  },
   icons: {
     icon: sitePath("/favicon.svg"),
     shortcut: sitePath("/favicon.svg"),

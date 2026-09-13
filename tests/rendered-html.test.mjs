@@ -1,8 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-const developmentPreviewMeta =
-  /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
 
 const workerUrl = new URL("../dist/server/index.js", import.meta.url);
 workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
@@ -23,12 +21,14 @@ const request = (pathname) =>
 
 const canonicalOf = (html) => html.match(/rel=["']canonical["'][^>]*href=["']([^"']*)["']/)?.[1] ?? null;
 
-test("renders development preview metadata", async () => {
+test("renders the homepage without development-preview metadata", async () => {
   const response = await request("/");
 
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-  assert.match(await response.text(), developmentPreviewMeta);
+  // The Codex preview marker was a leftover from the Sites template; the
+  // production site must not advertise a development build.
+  assert.doesNotMatch(await response.text(), /name=["']codex-preview["']/i);
 });
 
 test("every response carries the baseline security headers", async () => {
