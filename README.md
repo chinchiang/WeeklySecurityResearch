@@ -16,9 +16,9 @@
 2. 此 repository 目前為 private。GitHub Pages 對 private repository 需要支援的付費方案；請保留原有可見性，不以改公開整個 repository 處理限制。
 3. main 的 CI 通過測試、lint、typecheck、安全稽核與靜態輸出檢查後，才會由 Publish GitHub Pages 發布 `out`。
 4. 首次設定尚未完成時，建置可成功但 Pages 部署會失敗。完成第 1 步後重跑該 workflow 的失敗工作即可。以實際 deployment 結果與公開網址驗證，不能把 commit 視為已發布。
-5. `public/social-content/` 只作為 Worker 建置的來源資料保留，`npm run build:pages` 會把它從 `out/` 移除，`npm run test:pages` 會確認它沒有出現在公開輸出中。
+5. `public/social-content/` 只作為歷史資料保留，`npm run build:pages` 會把它從 `out/` 移除，`npm run test:pages` 會確認它沒有出現在公開輸出中。
 
-Node 版本以 `.nvmrc` 為準（CI 兩個 workflow 都讀同一個檔）；本機版本不同時，CI 才會表現出的差異（例如 22.18 之前不會預設剝除 TypeScript 型別）會在本機測不出來。本機 `npm ci` 後使用 `npm run build:pages` 與 `npm run test:pages`。這是 GitHub Pages 靜態輸出，原本 Sites 的 Worker build 仍由 `npm run build` 保留。Pages 不執行 Worker，因此不能宣稱它具有 Worker 自訂的 HTTP 安全標頭。
+Node 版本以 `.nvmrc` 為準（CI 兩個 workflow 都讀同一個檔）；本機版本不同時，CI 才會表現出的差異（例如 22.18 之前不會預設剝除 TypeScript 型別）會在本機測不出來。本機 `npm ci` 後使用 `npm run build:pages`（`npm run build` 是同一件事）與 `npm run test:pages`。網站是 Next.js 靜態匯出，GitHub Pages 不支援自訂 HTTP 回應標頭。
 
 每期自足 HTML 位於 `public/reports/YYYY-MM-DD.html`，由 `npm run build:report` 產生，與網頁共用資料和 CSS。原始來源優先，私人 WORK 證據不放入公開報告。
 
@@ -26,16 +26,16 @@ Node 版本以 `.nvmrc` 為準（CI 兩個 workflow 都讀同一個檔）；本�
 
 `AISEC-ARCH-2026-W37-20260911` r5（2026-09-13 更名及來源標示版），沿用 2026-09-12 r4 的研究查核，共 10 篇（深入審閱 5、選讀 5），含 1 篇 Architecture Spotlight、2 篇 Product Security。安裝研究的陽性時序與 MemSentry signed delta 已明文更正。
 
-安全稽核發現 Miniflare 間接使用 sharp 0.35.2；本次以 override 統一至修補版 0.35.4，保留既有稽核門檻。來源：https://github.com/advisories/GHSA-rgj7-g3m4-5g8c 。
+`package.json` 以 override 將 sharp（next 的選用依賴）固定在修補版 0.35.4，保留既有稽核門檻。來源：https://github.com/advisories/GHSA-rgj7-g3m4-5g8c 。
 
-vinext 已升級至 1.0.0-beta.9，image-size 的兩筆 high 公告（GHSA-w3rx-r6r6-pgpr、GHSA-5p2g-fcmc-qvqq）隨之消失，`scripts/audit-allowlist.json` 已清空。vinext 1.x 將 metadata 改為串流，`generateMetadata()` 內的 `notFound()` 不再產生 HTTP 404，因此未知週次的檢查改在 `app/week/[week]/layout.tsx` 的 layout 元件本體執行，並新增 `app/not-found.tsx` 讓 404 頁不再繼承首頁 canonical。
+2026-09-13 起移除 ChatGPT Sites 的 Worker 建置（vinext、wrangler、Cloudflare vite plugin，以及從未使用的 D1／drizzle 範本），網站只以 Next.js 靜態匯出發布到 GitHub Pages，`scripts/audit-allowlist.json` 維持清空。未知週次由 `app/week/[week]/layout.tsx` 擋下，`app/not-found.tsx` 產生 Pages 的 `404.html`。
 
 
 製造業科技、資安與架構閱讀網站，涵蓋 AI Security、企業架構、OT／ICS、產品安全、資料保護、AppSec 與供應鏈治理。
 
-## 原 Sites 部署（已停止同步）
+## 原 Sites 部署（已移除）
 
-GitHub Pages 是唯一持續更新的正式站。原本部署在 ChatGPT Sites 的 Worker 版本（`https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/`）不再同步內容；`npm run build` 仍保留 Worker 建置供本機測試與安全標頭驗證，其 canonical、Atom feed 與 sitemap 已改為指向 GitHub Pages 網址（`app/site-config.ts` 的 `SITE_URL` 預設值），避免兩個網址在搜尋引擎與訂閱端互相競爭。
+GitHub Pages 是唯一正式站。原本部署在 ChatGPT Sites 的 Worker 版本（`https://ai-security-reading-hub.c7126b9d-e01d-4117-8141-f9231c5a6686.chatgpt.site/`）已停止更新，其建置與工具鏈已於 2026-09-13 從 repo 移除。canonical、Atom feed 與 sitemap 一律指向 GitHub Pages 網址（`app/site-config.ts` 的 `SITE_URL`，CI 由 `GITHUB_REPOSITORY` 推導）。
 
 ## 每週更新
 
@@ -64,13 +64,13 @@ npm run lint
 - `npm run test:data`：ID、排名、必填欄位、HTTPS URL、合法枚舉及 KPI 一致性。
 - `npm run check:links`：檢查原始來源與 PDF 是否仍可達。`.github/workflows/check-links.yml` 每週一 09:00（台北）自動執行並把結果寫入 job summary；失效連結只以 warning 標示，不會讓 workflow 轉紅；但腳本本身無法執行時會轉紅，避免工具壞掉被誤判為連結全部正常。也可用 workflow_dispatch 手動觸發。
 - `npm run audit`：依賴漏洞稽核（`.npmrc` 關閉了安裝時的自動稽核，因此需要明確執行）。
-- `npm test`：正式建置與全部測試，包含以實際 HTTP 回應驗證安全標頭、各路由 canonical 與未知週次回 404。
-- `npm run typecheck`：先執行 `next typegen` 重新產生 `.next/types`，再跑 `tsc --noEmit`。vinext 建置也會寫入 `.next/types/routes.d.ts`，先重新產生可避免兩者交錯後型別不一致。
+- `npm test`：先靜態匯出，再對 `out/` 跑全部測試：資料完整性、來源與歷史保存、各路由 canonical 與 base path、feed 涵蓋週數與連結、404 頁不索引且無 canonical、robots 與 sitemap 指向正式站。
+- `npm run typecheck`：先執行 `next typegen` 重新產生 `.next/types`，再跑 `tsc --noEmit`。
 
 ## 安全基準
 
-- `worker/index.ts` 對所有回應加上 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy`、`Permissions-Policy`、HSTS 與一組 CSP（`frame-ancestors`／`base-uri`／`object-src`／`form-action`／`img-src`／`font-src`／`style-src`／`connect-src`）。因 RSC payload 與 client bootstrap 以 inline script 傳遞，CSP 刻意不設 `script-src` 與 `default-src`（後者是前者的後備，設了同樣會擋 hydration）；`tests/rendered-html.test.mjs` 有回歸測試守護。要收緊需改用 per-request nonce。
-- `/week/<週次>` 只接受 `app/data/readings.ts` 既有的週次，其餘一律 404，避免任意字串以自我 canonical 被搜尋引擎收錄。
+- 網站是 GitHub Pages 靜態輸出，無法設定自訂 HTTP 回應標頭（CSP、HSTS 等由 GitHub 決定）。安全性依賴內容本身：公開輸出不含私人 Drive 連結與 WORK 證據、不含原始碼與 source map（`checks/pages-export.test.mjs` 守護）。
+- 靜態匯出只產生 `app/data/readings.ts` 既有週次的頁面；其他路徑由 Pages 回 `404.html`，該頁 `noindex` 且不宣告 canonical（`tests/static-export.test.mjs` 守護），避免任意字串被搜尋引擎收錄。
 - 依賴漏洞以 `npm run audit`（`scripts/audit-gate.mjs`）把關：high／critical 一律擋下，除非列在 `scripts/audit-allowlist.json` 並附理由與 `reviewBy` 到期日（目前無例外）。
 
 閱讀進度只儲存在使用者瀏覽器的 Local Storage，不會傳送至外部服務。
