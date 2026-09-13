@@ -74,7 +74,7 @@ export const readings: Reading[] = [
     "Snapshot 2 僅抽查 100 個預測陽性及 100 個預測陰性。後者 98/100 為正確排除，不能直接當成母體 recall；本期不採用表 2 將其列為 98% recall 的說法。"
   ],
   "id": 73,
-  "provenance": {"origins":["chatgpt-enterprise"],"reviewedBy":"chatgpt-enterprise","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityReaseach/blob/main/public/reading-runs/2026-09-12-enterprise.json"},
+  "provenance": {"origins":["chatgpt-enterprise"],"reviewedBy":"chatgpt-enterprise","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-12-enterprise.json"},
   "kind": "學術論文",
   "pdf": "https://arxiv.org/pdf/2609.07783v2",
   "rank": 10,
@@ -98,7 +98,7 @@ export const readings: Reading[] = [
 },
 {
   "id": 71,
-  "provenance": {"origins":["chatgpt-ai"],"reviewedBy":"chatgpt-ai","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityReaseach/blob/main/public/reading-runs/2026-09-12-ai.json"},
+  "provenance": {"origins":["chatgpt-ai"],"reviewedBy":"chatgpt-ai","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-12-ai.json"},
   "rank": 8,
   "week": "2026.09.11",
   "batch": "本週新發",
@@ -136,7 +136,7 @@ export const readings: Reading[] = [
 },
 {
   "id": 72,
-  "provenance": {"origins":["chatgpt-ai"],"reviewedBy":"chatgpt-ai","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityReaseach/blob/main/public/reading-runs/2026-09-12-ai.json"},
+  "provenance": {"origins":["chatgpt-ai"],"reviewedBy":"chatgpt-ai","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-12-ai.json"},
   "rank": 9,
   "week": "2026.09.11",
   "batch": "本週新發",
