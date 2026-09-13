@@ -1,6 +1,12 @@
-# AI Security 與架構閱讀清單
+# 科技・資安・架構週讀
 
-正式網址（GitHub Pages）：https://chinchiang.github.io/EveryWeekAIRead/
+## 來源分工（2026-09-13）
+
+三個內容來源、兩個網站更新流程：Claude 週二 15:00 提供 AI Security 與企業資安架構／產品安全兩部分週報，Google Doc 存於 Weekly Security Reports；ChatGPT 週五 08:00 接手 AI 研究，週六 01:00 接手企業資安研究。時間均為臺北。每個 ChatGPT 任務查核上游原始來源、另搜新研究、去重後合併同一網站，不整期覆蓋。
+
+詳見 [供稿與發布契約](docs/source-workflow.md)。文章的原始研究連結與產製來源分開；歷史來源無證據者明示待確認。現有手動研究收據不代表到點自動觸發已驗證。公開版不包含私人 Drive 連結與內部 WORK 證據。
+
+正式網址（GitHub Pages）：https://chinchiang.github.io/WeeklySecurityReaseach/
 
 網站改採淺色資訊介面，參考 DailySOCVitamin 的導覽與資訊密度，以及 CyberRegulationWatch 的淺色／紫色視覺語彙。保留搜尋、篩選、閱讀進度、歷史週次、Atom feed 與更正紀錄。
 
@@ -18,14 +24,14 @@
 
 ## 本次資料修訂
 
-`AISEC-ARCH-2026-W37-20260911` r2，查核日期 2026-09-12，共 7 篇（深入審閱 3、選讀 4），含 1 篇 Architecture Spotlight、2 篇 Product Security。安裝研究的陽性時序與 MemSentry signed delta 已明文更正。
+`AISEC-ARCH-2026-W37-20260911` r5（2026-09-13 更名及來源標示版），沿用 2026-09-12 r4 的研究查核，共 10 篇（深入審閱 5、選讀 5），含 1 篇 Architecture Spotlight、2 篇 Product Security。安裝研究的陽性時序與 MemSentry signed delta 已明文更正。
 
 安全稽核發現 Miniflare 間接使用 sharp 0.35.2；本次以 override 統一至修補版 0.35.4，保留既有稽核門檻。來源：https://github.com/advisories/GHSA-rgj7-g3m4-5g8c 。
 
 vinext 已升級至 1.0.0-beta.9，image-size 的兩筆 high 公告（GHSA-w3rx-r6r6-pgpr、GHSA-5p2g-fcmc-qvqq）隨之消失，`scripts/audit-allowlist.json` 已清空。vinext 1.x 將 metadata 改為串流，`generateMetadata()` 內的 `notFound()` 不再產生 HTTP 404，因此未知週次的檢查改在 `app/week/[week]/layout.tsx` 的 layout 元件本體執行，並新增 `app/not-found.tsx` 讓 404 頁不再繼承首頁 canonical。
 
 
-製造業 AI Security 每週必讀清單網站，聚焦 DSPM／DLP、Data Lineage、DDR、AI System Threat Modeling、Agent／MCP／Memory Security。
+製造業科技、資安與架構閱讀網站，涵蓋 AI Security、企業架構、OT／ICS、產品安全、資料保護、AppSec 與供應鏈治理。
 
 ## 原 Sites 部署（已停止同步）
 

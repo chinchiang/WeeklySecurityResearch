@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: Omit<WeekLayoutProps, "childr
   }
   const canonicalWeek = encodeURIComponent(decodedWeek);
   const displayWeek = decodedWeek.replaceAll("-", ".");
-  const title = `${displayWeek} 必讀清單｜Manufacturing AI Security`;
-  const description = `${displayWeek} 製造業 AI Security 固定週次精選、查核摘要與原始來源。`;
+  const title = `${displayWeek} 必讀清單｜科技・資安・架構週讀`;
+  const description = `${displayWeek} 製造業科技、資安與架構固定週次精選、查核摘要與原始來源。`;
 
   return {
     title,

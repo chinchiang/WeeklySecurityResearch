@@ -48,7 +48,7 @@
     "wrangler": "4.130.0"
   },
   "type": "module",
-  "displayName": "AI Security 必讀清單",
+  "displayName": "科技・資安・架構週讀",
   "overrides": {
     "sharp": "0.35.4"
   }

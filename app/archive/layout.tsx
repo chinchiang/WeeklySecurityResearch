@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "歷史必讀清單｜Manufacturing AI Security",
-  description: "瀏覽與搜尋各週製造業 AI Security 精選內容。",
+  title: "歷史必讀清單｜科技・資安・架構週讀",
+  description: "瀏覽與搜尋各週製造業科技、資安與架構精選內容。",
   alternates: { canonical: "/archive" },
   openGraph: {
     url: "/archive",
-    title: "歷史必讀清單｜Manufacturing AI Security",
-    description: "瀏覽與搜尋各週製造業 AI Security 精選內容。",
+    title: "歷史必讀清單｜科技・資安・架構週讀",
+    description: "瀏覽與搜尋各週製造業科技、資安與架構精選內容。",
   },
 };
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 // A 404 must not inherit the homepage canonical from the root layout, or
 // arbitrary unknown URLs would all claim to be canonical pages of this site.
 export const metadata: Metadata = {
-  title: "找不到頁面｜Manufacturing AI Security",
+  title: "找不到頁面｜科技・資安・架構週讀",
   robots: { index: false, follow: false },
   alternates: { canonical: null },
 };

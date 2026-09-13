@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2026-09-11 AI Security 與架構閱讀清單 · r4</title><meta name="description" content="本期完整研究評述、查核限制與製造業行動建議"><style>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2026-09-11 科技・資安・架構週讀 · r5</title><meta name="description" content="本期完整研究評述、查核限制與製造業行動建議"><style>
 :root{color-scheme:light;--bg:#f7f8fc;--ink:#191d32;--muted:#606a80;--line:#e0e4ee;--accent:#6343cf;--soft:#f0edfc;--green:#197654}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 Inter,"Noto Sans TC",system-ui,-apple-system,"Microsoft JhengHei",sans-serif}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}button,input,select{font:inherit}button{cursor:pointer}button,a,input,select{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8765e9;outline-offset:4px}h1,h2,h3,h4,p,figure{margin:0}h1,h2,h3,h4{line-height:1.4;letter-spacing:-.025em}h1{font-size:clamp(28px,3vw,42px);font-weight:800}h2{font-size:25px;font-weight:750}h3{font-size:20px;font-weight:700}h4{font-size:17px;font-weight:700}p{overflow-wrap:anywhere}ul,ol{padding-left:22px}li+li{margin-top:10px}img{max-width:100%}main{max-width:1480px;margin:auto;padding:0 32px}main>section,main>footer{margin:30px 0 30px 222px}main:not(:has(.side-nav))>section,main:not(:has(.side-nav))>footer{margin-left:0}
 .topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:84px;background:#f7f8fcf5;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.brand{display:flex;align-items:center;gap:12px;color:var(--ink)}.brand:hover{text-decoration:none}.brand-mark{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(135deg,#6d4ed9,#4179d1);color:white;border-radius:12px;font-weight:800;font-size:18px}.brand strong{font-size:17px;display:block}.brand small{display:block;font-size:10px;letter-spacing:.15em;color:var(--muted)}.topbar nav{display:flex;gap:22px;font-size:14px}.topbar nav a{color:var(--muted)}.live-state{font-size:12px;color:var(--green);white-space:nowrap}.live-state i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px}.mobile-dock,.mobile-history-link{display:none}.side-nav{position:fixed;top:118px;width:186px;font-size:14px}.side-nav p{color:var(--muted);font-size:12px;letter-spacing:.09em;margin:0 12px 12px}.side-nav>a,.sister-sites>a{display:block;padding:9px 12px;margin-bottom:5px;border-radius:9px;color:#515a70}.side-nav>a:first-of-type{color:var(--accent);background:var(--soft);font-weight:700}.side-nav a:hover{background:#eeeff6;text-decoration:none}.sister-sites{margin-top:34px;padding-top:20px;border-top:1px solid var(--line)}.sister-sites a{font-size:12px}
@@ -16,13 +16,16 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
 .score-breakdown>div{display:flex;gap:5px;align-items:center;padding:3px 7px;background:#f6f7fa;border-radius:5px}.score-breakdown dt{font-size:11px}.score-breakdown dd{margin:0;font-weight:700}.score-breakdown small{font-weight:400;font-size:10px}.correction-notice span{margin:0 8px}
 .not-found{max-width:640px;margin:120px auto;padding:36px;border:1px solid var(--line);border-radius:16px;background:#fff;text-align:center}.not-found h1{margin-bottom:12px}.not-found p{color:var(--muted)}.not-found p+p{margin-top:16px}
 
+.source-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:22px}.source-grid article{padding:20px;border:1px solid var(--line);border-radius:12px;background:#fff}.source-grid h3{font-size:18px;margin:10px 0}.source-grid p,.source-grid small,.source-meta{font-size:13px;color:var(--muted);overflow-wrap:anywhere}.source-meta{padding:10px 12px;background:#f6f5fa;border-radius:8px;margin:10px 0}.source-meta p{margin:0}.source-meta a{font-size:12px}.source-grid small{display:block}@media(max-width:900px){.source-grid{grid-template-columns:1fr}}
 </style></head><body><main>
-<section class="hero"><p class="eyebrow">WEEKLY RESEARCH · REVISION 4</p><h1>2026-09-11<br>AI Security 與架構閱讀清單</h1><p class="hero-subtitle">W37 修訂版 r4｜2026-09-12 分別完成 AI Read 與企業資安綜合閱讀增補。新增 2 篇 AI 研究、1 篇 OT 研究，保留原有 7 篇與更正；全期 10 篇（5 深入審閱、5 選讀）。架構 1 篇、產品安全 2 篇沿用本期已入選內容，不重複推薦。本期無合格的新 DSPM／DDR 專題實證研究。</p><p class="edition-note">AISEC-ARCH-2026-W37-20260911 · 查證與修訂日期 2026-09-12</p><div class="kpi-row"><div class="kpi"><b>10</b><span>入選</span></div><div class="kpi purple"><b>5</b><span>深入審閱</span></div><div class="kpi blue"><b>5</b><span>選讀</span></div></div></section>
+<section class="hero"><p class="eyebrow">WEEKLY RESEARCH · REVISION 5</p><h1>2026-09-11<br>科技・資安・架構週讀</h1><p class="hero-subtitle">W37 修訂版 r4｜2026-09-12 分別完成 AI Read 與企業資安綜合閱讀增補。新增 2 篇 AI 研究、1 篇 OT 研究，保留原有 7 篇與更正；全期 10 篇（5 深入審閱、5 選讀）。架構 1 篇、產品安全 2 篇沿用本期已入選內容，不重複推薦。本期無合格的新 DSPM／DDR 專題實證研究。</p><p class="edition-note">AISEC-ARCH-2026-W37-20260911 · 研究查核日期 2026-09-12</p><p class="edition-note">2026-09-13 r5：網站更名、來源分工與來源標示；沿用 r4 的研究查核與 10 篇內容，未新增研究。</p><div class="kpi-row"><div class="kpi"><b>10</b><span>入選</span></div><div class="kpi purple"><b>5</b><span>深入審閱</span></div><div class="kpi blue"><b>5</b><span>選讀</span></div></div></section>
+<section class="about"><h2>三個內容來源・兩個網站更新流程</h2><h3>Claude｜製造業資安觀測週報 · 週二 15:00 · 臺北</h3><p>AI Security＋企業資安架構／產品安全兩部分各自選件、排序。Google Doc 歸檔於 Weekly Security Reports，PDF 在 Claude 對話交付。</p><p>2026-09-13 使用者提供的排程設定；新版兩部分交付尚待首次執行。</p><h3>ChatGPT｜AI Security 技術研究簡報 · 週五 08:00 · 臺北</h3><p>讀取 Claude 週報第一部分，查核原始研究並補充本週新證據；負責模型、Agent、AI 平台、AI 資料／IP 與評估方法。</p><p>2026-09-12 有手動研究紀錄；到點自動觸發與新版接手流程尚待執行證據。</p><h3>ChatGPT｜企業資安綜合閱讀清單 · 週六 01:00 · 臺北</h3><p>讀取 Claude 週報第二部分，查核並補充企業架構、OT／ICS、產品安全、非 AI 專屬資料保護、AppSec、供應鏈與治理。</p><p>2026-09-12 有手動研究紀錄；到點自動觸發與新版接手流程尚待執行證據。</p></section>
 <section><nav aria-label="本期目錄"><ol><li><a href="#reading-73">Grid Trouble in Paradise</a></li><li><a href="#reading-71">Signing the Transaction but Not the Decision</a></li><li><a href="#reading-72">Atlas: Efficient Verifiable Semantic Search</a></li><li><a href="#reading-64">VEX-Bench</a></li><li><a href="#reading-65">Learning Intrusion Response Strategies for OT Systems</a></li><li><a href="#reading-66">Do AI Coding Assistants Check Before They Install?</a></li><li><a href="#reading-70">A2ABreak: Systematic Security Analysis of the A2A Protocol</a></li><li><a href="#reading-67">MemSentry</a></li><li><a href="#reading-68">Benchmark Scores Are Pipeline-Dependent</a></li><li><a href="#reading-69">Attestream</a></li></ol></nav></section>
 <section class="library"><div class="reading-grid week-reading-grid"><article class="reading-card" id="reading-64">
   <div class="card-topline"><span class="card-rank">#1</span><span class="decision deep">深入審閱</span></div>
   <h3>VEX-Bench</h3><p class="card-subtitle">AI 能判斷是否受影響，卻未必能提出正確理由。</p>
   <p class="card-kind">2026-09-07 · Jiahao Shi、Edward Tsien、Yifeng Di 等 13 人；Purdue University／Red Hat · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
   <div class="topic-list"><span>Agent Security</span><span>Product Security</span><span>Threat Modeling</span></div>
   
   <div class="detail-section"><h4>核心發現</h4><p>75 個真實案例顯示，模型判斷 affected／not_affected 的能力高於辨識細部理由的能力。VEX 不應僅憑 AI 二元結論關案。</p><ul><li>75 案涵蓋 67 個 CVE、35 個 Python／Java／Go 專案，並比較九個模型與三種 harness。</li><li>Claude Opus 4.6、GPT-5.5 的 status F1 為 81.6%、79.9%；只有 GPT-5.5 的理由 macro-F1 超過 70%。</li><li>70.7% 案例為 not_affected；資料不平衡與分類粒度會影響分數解讀。</li></ul></div>
@@ -35,6 +38,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#2</span><span class="decision deep">深入審閱</span></div>
   <h3>Learning Intrusion Response Strategies for OT Systems</h3><p class="card-subtitle">先衡量回應風險，再討論自動隔離。</p>
   <p class="card-kind">2026-09-09 · Duc Huy Le、Rolf Stadler；KTH · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
   <div class="topic-list"><span>OT / ICS</span><span>Threat Modeling</span><span>Agent Security</span></div>
   
   <div class="detail-section"><h4>核心發現</h4><p>以 POMDP 與 BF-PPO 處理有限網路觀測下的 OT 回應決策；作者明確承認尚未纳入 operational safety。</p><ul><li>以 Purdue 網路情境與三類攻擊者策略評估學習式回應，BF-PPO 接近完全可觀察基準。</li><li>動作被簡化為離散、同步且立即生效；尚未檢驗跨組態與攻擊類型的一般化。</li><li>作者將 operational safety 列為後續工作，不能把實驗策略直接交給生產網路执行。</li></ul></div>
@@ -47,6 +51,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#3</span><span class="decision deep">深入審閱</span></div>
   <h3>Do AI Coding Assistants Check Before They Install?</h3><p class="card-subtitle">供應鏈證明必須由執行環境強制驗證。</p>
   <p class="card-kind">2026-09-07 · Pengyin Shan · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
   <div class="topic-list"><span>Product Security</span><span>Agent Security</span><span>Data Lineage</span></div>
   <p class="correction-notice"><b>2026.09.12 更正</b> 修正 9/11 對話版：9 次為複合陽性，不全是安裝前讀取；以 Table 6 的 6＋3 分解呈現。</p>
   <div class="detail-section"><h4>核心發現</h4><p>安裝前很少讀取 SBOM、簽章或 attestation；研究中沒有觀察到真正執行驗證命令。提供證明不等於消費端有使用。</p><ul><li>主實驗 1,920 次中有 9 次符合作者的複合陽性規則；Table 6 顯示 6 次在安裝前讀取，另 3 次讀取後未完成安裝。</li><li>含補充模型共 2,114 次；讀取信號與執行驗證命令是不同事件，後者回報為零。</li><li>六個研究軟體專案、離線容器及全部由腳本核准的 gated 模式，限制了企業流程外推。</li></ul></div>
@@ -59,6 +64,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#4</span><span class="decision select">選讀</span></div>
   <h3>A2ABreak: Systematic Security Analysis of the A2A Protocol</h3><p class="card-subtitle">Architecture Spotlight｜跨 Agent 委派仍需企業自己的授權邊界。</p>
   <p class="card-kind">2026-09-09 · Alireza Lotfi、Mirza Masfiqur Rahman、Imtiaz Karim、Elisa Bertino；Purdue University／UT Dallas · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
   <div class="topic-list"><span>Architecture</span><span>Agent Security</span><span>Threat Modeling</span><span>DSPM / DLP</span></div>
   
   <div class="detail-section"><h4>核心發現</h4><p>以規格抽取狀態機，再以對抗檢查與人工審閱分析 A2A。本文適合用來檢查跨系統委派，但「所有合規部署都有弱點」並未獲本次核實。</p><ul><li>作者由 929 條敘述產生 37 個狀態、76 個轉移；專家確認 11 項候選發現。</li><li>核心情境是 context 所有權、跨跳身分與自述技能可信度；它們都是 ERP／PLM Agent 整合時應明確決策的事項。</li><li>本次對照官方規格：§7.5 把授權政策交給實作；§7.6.3 已建議憑證綁定及保密；§7.6.4 明示 auth-required 不是操作授權。</li></ul></div>
@@ -71,6 +77,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#5</span><span class="decision select">選讀</span></div>
   <h3>MemSentry</h3><p class="card-subtitle">長期記憶寫入前的風險審查，仍須防範可信內部來源。</p>
   <p class="card-kind">2026-09-08 · Ayan Roy、Kaustuvi Basu；Christopher Newport University／Independent Researcher · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
   <div class="topic-list"><span>Agent Security</span><span>Threat Modeling</span></div>
   <p class="correction-notice"><b>2026.09.12 更正</b> 修正 9/11 對話版：signed delta 為正負數值，不是「簽署後的」安全狀態。</p>
   <div class="detail-section"><h4>核心發現</h4><p>把來源信任、語意風險、依賴圖、存取風險與安全狀態變化，組合為 Accept／Review／Quarantine 的寫入前判定。</p><ul><li>1,000 個 GPT-4 合成情境中，SBERT＋LR 回報 91.7% accuracy、0.908 macro-F1。</li><li>signed security-state delta 表示正負變化：負值為弱化、正值為強化，不是數位簽章。</li><li>細微語意對照中 SBERT、SetFit 的 pair accuracy 均為 0/10；可信內部來源還存在無法進入 quarantine 的結構限制。</li></ul></div>
@@ -83,6 +90,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#6</span><span class="decision select">選讀</span></div>
   <h3>Benchmark Scores Are Pipeline-Dependent</h3><p class="card-subtitle">資安模型分數同時量到模型與評測管線。</p>
   <p class="card-kind">2026-09-08 · Aymene Berriche、Cathrine Shalby、Mohannad Alhanahnah、Yazan Boshmaf · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
   <div class="topic-list"><span>AI Governance</span><span>Threat Modeling</span></div>
   
   <div class="detail-section"><h4>核心發現</h4><p>八個資安 benchmark、23 個任務與十個模型的稽核，揭露輸出截斷、抽取及評分慣例會大幅改變結果。</p><ul><li>作者辨識 15 類管線問題，個別選擇可造成逾 80 個百分點分數差異。</li><li>統一部分設定後，十個模型中九個在至少一項 benchmark 移動三個以上名次。</li><li>結果檢驗 measurement reliability；不是對實際資安能力的完整 construct validity 驗證。</li></ul></div>
@@ -95,6 +103,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#7</span><span class="decision select">選讀</span></div>
   <h3>Attestream</h3><p class="card-subtitle">資料交付、用途回報與衍生物，應有連續的 provenance。</p>
   <p class="card-kind">2026-09-07 · Kentaro Oda · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
   <div class="topic-list"><span>Data Lineage</span><span>DSPM / DLP</span></div>
   
   <div class="detail-section"><h4>核心發現</h4><p>以雙方簽署交付、使用回報及衍生紀錄連結資料生命週期，再以資料指紋輔助追查外洩。</p><ul><li>資料本體在鏈外交換；帳本保存交付、身分、時間、連結與簽章。</li><li>使用回報可控制後续供應，但模型 hash 不能證明資料真的用於訓練。</li><li>作者揭露自己為相關日本專利 JP 7894573 B2 發明人之一，屬重要利益關係。</li></ul></div>
@@ -107,6 +116,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#8</span><span class="decision deep">深入審閱</span></div>
   <h3>Signing the Transaction but Not the Decision</h3><p class="card-subtitle">AP2 Whisper：交易簽章有效，仍可能簽下被商家文字帶偏的決策。</p>
   <p class="card-kind">2026-09-10 · Yedidel Louck、Amit Dvir、Ariel Stulman｜Ariel University／Jerusalem College of Technology · Preprint</p>
+  <p class="source-meta">供稿／發現：ChatGPT AI 研究；查核：ChatGPT AI 研究；查核日期：2026-09-12</p>
   <div class="topic-list"><span>Agent Security</span><span>AI System Threat Modeling</span><span>Identity</span></div>
   
   <div class="detail-section"><h4>核心發現</h4><p>研究將商家控制的商品描述分成三種攻擊：跨帳戶憑證別名查詢、購物車內容竄改，以及以庫存／替代品說法誘導較昂貴的選擇。最後一種可讓購物車與展示資料完全一致，結構驗證仍會放行。</p><ul><li>在 AP2 v0.2.0 human-present 參考部署，Vault／Branded 最後措辭輪分別為 45/50、28/50；Selection 在不同的 GA 模型為 66/90。三列分母與模型不同，不能當成共同基準排名。</li><li>A-VIP 將憑證查詢綁定 session、購物車綁定展示快照與收款者；Selection 只能提示額外支出供使用者確認，不能宣稱已消除。</li><li>AP2-WhisperBench 有 1,544 情境，但屬公開開發／回歸集，非 held-out 泛化測試；論文提供程式、TLA+ 規格與回應紀錄。</li></ul></div>
@@ -119,6 +129,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#9</span><span class="decision select">選讀</span></div>
   <h3>Atlas: Efficient Verifiable Semantic Search</h3><p class="card-subtitle">讓 RAG 檢索對承諾的索引與演算法提出證明；資料本身的可信度仍須另管。</p>
   <p class="card-kind">2026-09-10 · Nikolay Avramov、Hidde Lycklama、Alexander Viand、Anwar Hithnawi｜University of Toronto／Belfort Labs · Preprint</p>
+  <p class="source-meta">供稿／發現：ChatGPT AI 研究；查核：ChatGPT AI 研究；查核日期：2026-09-12</p>
   <div class="topic-list"><span>RAG</span><span>Data Lineage</span><span>AI Data Protection</span></div>
   
   <div class="detail-section"><h4>核心發現</h4><p>Atlas 以零知識證明驗證 HNSW 查詢是否依約定程序操作已承諾的索引，將資料庫相關成本移到離線前處理。這能處理服務端偷減搜尋或換索引的風險，但不等於證明文件正確、最新或具合法存取權。</p><ul><li>表 1 的 SIFT1M 證明時間為 0.80 秒、100M 向量為 1.98 秒；960 維 GIST1M 則為 36.66 秒。測試主機具 96 核 CPU、768 GB RAM，前處理使用 H100，不能把約 2 秒當成一般 RAG SLA。</li><li>保證相對於承諾索引及固定搜尋預算；8-bit 量化在 GIST1M 某組態損失 5.2 個 recall@1 百分點。完整 RAG 評測的 proving time 另有 13.3 秒組態。</li><li>查詢明文送至服務端；索引構造的正確性不在此證明範圍。沒有主張同時提供 query confidentiality、DLP 或來源真實性。</li></ul></div>
@@ -131,7 +142,8 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   <div class="card-topline"><span class="card-rank">#10</span><span class="decision deep">深入審閱</span></div>
   <h3>Grid Trouble in Paradise</h3><p class="card-subtitle">廠務能源設備的遠端管理介面，也應納入 OT 邊界與維運責任。</p>
   <p class="card-kind">2026-09-07 · Anna Raymaker、Samuel Talkington 等 11 人｜Georgia Institute of Technology · 已接受</p>
-  <div class="topic-list"><span>OT/ICS</span><span>Remote Access</span><span>供應鏈治理</span></div>
+  <p class="source-meta">供稿／發現：ChatGPT 企業資安研究；查核：ChatGPT 企業資安研究；查核日期：2026-09-12</p>
+  <div class="topic-list"><span>OT / ICS</span><span>Remote Access</span><span>供應鏈治理</span></div>
   
   <div class="detail-section"><h4>核心發現</h4><p>研究從兩次相隔約四個月的 Internet 掃描資料識別太陽能 DER，再以合成電網量化潛在影響。值得採用的是部署者與整合商也須負責暴露面治理；設備原廠安全設定不能取代安裝後驗收。</p><ul><li>作者識別 66,379 個公開可達 DER hosts，11,826 個依揭露版本匹配潛在 CVE；這不是已成功入侵的數量，host 也不能直接等同實體逆變器。</li><li>Oahu 情境將 571 個觀測對象映射為 41.1 MW，於合成 37-bus 模型分別求各元件最壞情境。18 個 bus、6 條線路的結果不是一次攻擊同時達成，也不是當地真實電網的停電預測。</li><li>Snapshot 2 僅抽查 100 個預測陽性及 100 個預測陰性。後者 98/100 為正確排除，不能直接當成母體 recall；本期不採用表 2 將其列為 98% recall 的說法。</li></ul></div>
   <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>Inferred relevance：若跨國工廠有屋頂光電、能源管理或第三方遠端維運，應納入 OT 資產盤點、遠端存取、廠務變更與營運持續治理。本研究沒有證明任何特定 ODM/OEM 已暴露或受影響。</p></article><article><h4>最小驗證行動</h4><p>READ NOW，優先讀第 3、4、6 節，約 30 分鐘；電力模型細節由廠務專業人員複核。先選一個自有廠區，以既有資產、網路規則及維運契約核對能源 gateway、對外管理介面與廠商帳號；要求核准的存取路徑、停用帳號證據及復原演練紀錄。只在授權測試環境確認拒絕非核准來源，不掃描第三方或切換生產電力。</p></article></div>
@@ -140,7 +152,7 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
   
   <p class="detail-section"><a href="https://arxiv.org/abs/2609.07783">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2609.07783v2">PDF ↗</a> · <a href="#reading-73">本篇連結</a></p>
 </article></div></section>
-<section class="about"><h2>Weekly AI Report 整合</h2><p><a href="https://docs.google.com/document/d/1pdNzXb3q2FEv2ZyGk_ziO8TIBUI39O6Uuo1tZoBilVM/edit?usp=drivesdk">GSMD-WATCH-2026-0908-01_製造業AI_Security週報_2026W37</a></p><p>Drive 修改時間：2026.09.08 15:38:50（臺北時間）</p><ul><li>2026-09-12 重新列出 5 份直接檔案、按 Drive modified_time 排序並讀取最新全文；未以檔名推定。</li><li>沿用 W37 的授權連續性、runtime 監控、資料 provenance 與 RAG 管線邊界作待核實背景；不把舊論文計為本期新發。</li></ul><ul><li>A2ABreak 與官方 A2A 規格交叉閱讀；協定缺少統一機制，不等於企業一定未實施授權。</li><li>安裝研究的 9 次陽性包含 3 次未完成安裝；MemSentry signed delta 不是數位簽章。</li><li>原期關於 OWASP 排序權重、事故數與特定攻擊最高成功率，本次不提升為普遍事實。</li></ul><p>公開原始來源的核實紀錄見各篇；內部 WORK 責任、期限與完成證據不列入公開版。</p></section>
+<section class="about"><h2>Claude 週報整合紀錄</h2><p>本期曾讀取：GSMD-WATCH-2026-0908-01_製造業AI_Security週報_2026W37（私人歸檔不公開連結）</p><p>Drive 修改時間：2026.09.08 15:38:50（臺北時間）</p><ul><li>2026-09-12 重新列出 5 份直接檔案、按 Drive modified_time 排序並讀取最新全文；未以檔名推定。</li><li>沿用 W37 的授權連續性、runtime 監控、資料 provenance 與 RAG 管線邊界作待核實背景；不把舊論文計為本期新發。</li></ul><ul><li>A2ABreak 與官方 A2A 規格交叉閱讀；協定缺少統一機制，不等於企業一定未實施授權。</li><li>安裝研究的 9 次陽性包含 3 次未完成安裝；MemSentry signed delta 不是數位簽章。</li><li>原期關於 OWASP 排序權重、事故數與特定攻擊最高成功率，本次不提升為普遍事實。</li></ul><p>公開原始來源的核實紀錄見各篇；內部 WORK 責任、期限與完成證據不列入公開版。</p></section>
 <section class="about"><h2>本期略過</h2><ul><li><a href="https://arxiv.org/abs/2609.11596">From Intent to Execution Grant</a>：2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。</li><li><a href="https://doi.org/10.1016/j.comnet.2026.112695">Industry 5.0 Zero Trust 回顧</a>：9/4 已推薦，沒有本次實質更新，不重複計數。</li></ul><p>本次搜尋未找到方法透明且適合入選的新 DSPM／DDR 專題實證研究。外部 Cowork 歷史全文未取得，跨平台去重覆蓋有限。未以推估值補填掃描或初篩數量。</p></section>
-<section class="about"><h2>版本與交付辨識</h2><p>本檔為閱讀結果完成的 r4 公開保存版。取得此檔表示可讀取這一版內容；GitHub commit、索引與 Pages 部署結果另由版本紀錄和部署頁確認，不能由報告完成推定網站已發布。</p></section>
+<section class="about"><h2>版本與交付辨識</h2><p>本檔為閱讀結果完成的 r5 公開保存版。取得此檔表示可讀取這一版內容；GitHub commit、索引與 Pages 部署結果另由版本紀錄和部署頁確認，不能由報告完成推定網站已發布。</p></section>
 </main></body></html>
