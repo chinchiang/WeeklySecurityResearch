@@ -1,3 +1,4 @@
+import type { Provenance } from "./provenance";
 export type EvidenceLevel = "同儕審查" | "已接受" | "Preprint" | "政策報告" | "廠商遙測";
 
 /** 三軸評分：1 = 明顯不足，2 = 部分達成，3 = 完整達成。 */
@@ -25,6 +26,7 @@ export type Correction = {
 };
 
 export type Reading = {
+  provenance?: Provenance;
   id: number;
   rank: number;
   week: string;
@@ -72,6 +74,7 @@ export const readings: Reading[] = [
     "Snapshot 2 僅抽查 100 個預測陽性及 100 個預測陰性。後者 98/100 為正確排除，不能直接當成母體 recall；本期不採用表 2 將其列為 98% recall 的說法。"
   ],
   "id": 73,
+  "provenance": {"origins":["chatgpt-enterprise"],"reviewedBy":"chatgpt-enterprise","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityReaseach/blob/main/public/reading-runs/2026-09-12-enterprise.json"},
   "kind": "學術論文",
   "pdf": "https://arxiv.org/pdf/2609.07783v2",
   "rank": 10,
@@ -87,7 +90,7 @@ export const readings: Reading[] = [
   "summary": "研究從兩次相隔約四個月的 Internet 掃描資料識別太陽能 DER，再以合成電網量化潛在影響。值得採用的是部署者與整合商也須負責暴露面治理；設備原廠安全設定不能取代安裝後驗收。",
   "title": "Grid Trouble in Paradise",
   "topics": [
-    "OT/ICS",
+    "OT / ICS",
     "Remote Access",
     "供應鏈治理"
   ],
@@ -95,6 +98,7 @@ export const readings: Reading[] = [
 },
 {
   "id": 71,
+  "provenance": {"origins":["chatgpt-ai"],"reviewedBy":"chatgpt-ai","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityReaseach/blob/main/public/reading-runs/2026-09-12-ai.json"},
   "rank": 8,
   "week": "2026.09.11",
   "batch": "本週新發",
@@ -132,6 +136,7 @@ export const readings: Reading[] = [
 },
 {
   "id": 72,
+  "provenance": {"origins":["chatgpt-ai"],"reviewedBy":"chatgpt-ai","checkedAt":"2026-09-12","evidence":"https://github.com/chinchiang/WeeklySecurityReaseach/blob/main/public/reading-runs/2026-09-12-ai.json"},
   "rank": 9,
   "week": "2026.09.11",
   "batch": "本週新發",
@@ -2703,7 +2708,7 @@ export const editorialMethod = {
   rankingRule: "同一週先依製造業風險急迫性與可採取行動程度排序，再以證據等級、交叉核實完整度及發布日期作為同分決勝。",
   correctionRule: "已發佈項目不刪除。原始研究撤稿、數據更正或被後續研究取代時，於該筆加註修訂紀錄並在卡片與詳細頁顯示；撤稿項目不再進入「建議下一步」。",
   verifiedChecklist: ["原始連結可識別且使用 HTTPS", "作者／機構與發布日期已對照原始頁面", "摘要中的關鍵數字可回溯原文", "限制、樣本與不可外推範圍已揭露", "重要主張至少以獨立研究或權威框架交叉判讀"],
-  sourceScope: ["arXiv 與已接受／同儕審查論文", "政府與權威政策研究", "具方法揭露的安全研究團隊報告", "製造業 AI、DSPM／DLP、Data Lineage、DDR 與 Agent Security 主題來源"],
+  sourceScope: ["arXiv 與已接受／同儕審查論文", "政府與權威政策研究", "具方法揭露的安全研究團隊報告", "製造業 AI Security、企業架構、OT／ICS、產品安全與資料保護主題來源"],
 } as const;
 
 export type WeeklyEditorial = {
@@ -2774,7 +2779,6 @@ export const currentEditorial = editorialFor(CURRENT_WEEK);
 export const weeklyReportIntegration = {
   "title": "GSMD-WATCH-2026-0908-01_製造業AI_Security週報_2026W37",
   "modifiedAt": "2026.09.08 15:38:50（臺北時間）",
-  "url": "https://docs.google.com/document/d/1pdNzXb3q2FEv2ZyGk_ziO8TIBUI39O6Uuo1tZoBilVM/edit?usp=drivesdk",
   "candidates": 8,
   "selected": 0,
   "adopted": [

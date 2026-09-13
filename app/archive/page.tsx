@@ -4,6 +4,8 @@ import { sitePath } from "../site-config";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { SourceMeta, SourceFilter } from "../components/source-meta";
+import { matchesOrigin } from "../data/provenance";
 import { ArchitectureReview } from "../components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "../components/reading-meta";
 import {
@@ -18,6 +20,7 @@ import {
 
 export default function ArchivePage() {
   const [week, setWeek] = useState("全部週次");
+  const [origin, setOrigin] = useState("all");
   const [topic, setTopic] = useState("全部");
   const [decision, setDecision] = useState("全部判定");
   const [query, setQuery] = useState("");
@@ -100,12 +103,13 @@ export default function ArchivePage() {
     return archiveReadings
       .filter((reading) => {
         const matchesWeek = week === "全部週次" || reading.week === week;
-        const matchesTopic =
+        const matchesSource = matchesOrigin(reading, origin);
+      const matchesTopic =
           topic === "全部" || reading.topics.includes(topic);
         const matchesDecision =
           decision === "全部判定" || reading.decision === decision;
         return (
-          matchesWeek &&
+          matchesSource && matchesWeek &&
           matchesTopic &&
           matchesDecision &&
           readingSearchText(reading).includes(normalized)
@@ -116,7 +120,7 @@ export default function ArchivePage() {
           ? b.dateValue.localeCompare(a.dateValue)
           : b.week.localeCompare(a.week) || a.rank - b.rank,
       );
-  }, [decision, query, sort, topic, week]);
+  }, [origin, decision, query, sort, topic, week]);
 
   const toggleComplete = (id: number) => {
     setCompleted((current) =>
@@ -137,9 +141,9 @@ export default function ArchivePage() {
     <main>
       <header className="topbar">
         <Link className="brand" href="/" aria-label="返回最新一期">
-          <span className="brand-mark">AI</span>
+          <span className="brand-mark">研</span>
           <span>
-            <strong>Manufacturing AI Security</strong>
+            <strong>科技・資安・架構週讀</strong>
             <small>READING INTELLIGENCE HUB</small>
           </span>
         </Link>
@@ -273,7 +277,7 @@ export default function ArchivePage() {
                 <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
                 <h3>{reading.title}</h3>
                 <p className="card-subtitle">{reading.subtitle}</p>
-                <CorrectionNotice reading={reading} />
+                <SourceMeta reading={reading} /><CorrectionNotice reading={reading} />
                 <p className="card-summary">{reading.summary}</p>
                 <ScoreBreakdown reading={reading} />
                 {reading.metric && (
@@ -351,9 +355,9 @@ export default function ArchivePage() {
 
       <footer>
         <div className="brand footer-brand">
-          <span className="brand-mark">AI</span>
+          <span className="brand-mark">研</span>
           <span>
-            <strong>Manufacturing AI Security</strong>
+            <strong>科技・資安・架構週讀</strong>
             <small>RESEARCH ARCHIVE</small>
           </span>
         </div>
@@ -403,7 +407,7 @@ export default function ArchivePage() {
                 <span key={item}>{item}</span>
               ))}
             </div>
-            <CorrectionNotice reading={selected} />
+            <SourceMeta reading={selected} /><CorrectionNotice reading={selected} />
             <div className="detail-section">
               <h3>判定依據</h3>
               <ScoreBreakdown reading={selected} />

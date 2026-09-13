@@ -3,6 +3,8 @@
 import { sitePath } from "./site-config";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { SourceMeta, SourceFilter, SourcesOverview } from "./components/source-meta";
+import { matchesOrigin } from "./data/provenance";
 import { ArchitectureReview } from "./components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
 import {
@@ -24,6 +26,7 @@ function Mark({ children }: { children: React.ReactNode }) {
 }
 
 export default function Home() {
+  const [origin, setOrigin] = useState("all");
   const [topic, setTopic] = useState("全部");
   const [decision, setDecision] = useState("全部判定");
   const [query, setQuery] = useState("");
@@ -111,10 +114,11 @@ export default function Home() {
   const visibleReadings = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     const result = currentReadings.filter((reading) => {
+      const matchesSource = matchesOrigin(reading, origin);
       const matchesTopic = topic === "全部" || reading.topics.includes(topic);
       const matchesDecision =
         decision === "全部判定" || reading.decision === decision;
-      return matchesTopic && matchesDecision && readingSearchText(reading).includes(normalized);
+      return matchesSource && matchesTopic && matchesDecision && readingSearchText(reading).includes(normalized);
     });
 
     return result.sort((a, b) =>
@@ -122,7 +126,7 @@ export default function Home() {
         ? b.dateValue.localeCompare(a.dateValue)
         : a.rank - b.rank,
     );
-  }, [decision, query, sort, topic]);
+  }, [origin, decision, query, sort, topic]);
 
   const toggleComplete = (id: number) => {
     setCompleted((current) =>
@@ -141,16 +145,16 @@ export default function Home() {
     <main>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="回到頁首">
-          <span className="brand-mark">AI</span>
+          <span className="brand-mark">研</span>
           <span>
-            <strong>Manufacturing AI Security</strong>
+            <strong>科技・資安・架構週讀</strong>
             <small>READING INTELLIGENCE HUB</small>
           </span>
         </a>
         <a className="mobile-history-link" href={sitePath("/archive")} >過去必讀</a>
         <nav aria-label="主要導覽">
           <a href="#weekly">本週精選</a>
-          <a href="#index">主題索引</a>
+          <a href="#index">主題索引</a><a href="#sources">來源分工</a>
           <a href="#progress">閱讀進度</a>
           <a href={sitePath("/archive")} >歷史資料</a>
         </nav>
@@ -170,8 +174,8 @@ export default function Home() {
       <section className="hero" id="top">
         <div className="hero-copy">
           <p className="eyebrow">WEEKLY RESEARCH · {CURRENT_WEEK}</p>
-          <h1>AI Security <span>與架構閱讀清單</span></h1>
-          <p className="hero-subtitle">製造業 AI、企業資料保護與產品安全。從研究證據，走到可驗證的控制。</p>
+          <h1>科技・資安・架構<span>週讀</span></h1>
+          <p className="hero-subtitle">製造業 AI Security、企業架構、OT／ICS、資料保護與產品安全。從研究證據，走到可驗證的控制。</p>
           <div className="kpi-row" aria-label="本週清單統計">
             <div className="kpi"><b>{currentStats.total}</b><span>本期入選</span></div>
             <div className="kpi purple"><b>{currentStats.deep}</b><span>深入審閱</span></div>
@@ -182,6 +186,7 @@ export default function Home() {
         </div>
       </section>
 
+      <SourcesOverview />
       <section className="featured" id="weekly">
         <div className="section-heading">
           <div>
@@ -255,6 +260,7 @@ export default function Home() {
               </button>
             ))}
           </div>
+          <SourceFilter value={origin} onChange={setOrigin} />
           <select value={decision} onChange={(event) => setDecision(event.target.value)} aria-label="判定篩選">
             <option>全部判定</option>
             <option>深入審閱</option>
@@ -281,7 +287,7 @@ export default function Home() {
                 <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
                 <h3>{reading.title}</h3>
                 <p className="card-subtitle">{reading.subtitle}</p>
-                <CorrectionNotice reading={reading} />
+                <SourceMeta reading={reading} /><CorrectionNotice reading={reading} />
                 <p className="card-summary">{reading.summary}</p>
                 <ScoreBreakdown reading={reading} />
                 {reading.metric && <div className="metric">{reading.metric}</div>}
@@ -320,13 +326,13 @@ export default function Home() {
         <div className="report-heading">
           <div>
             <p className="eyebrow">GOOGLE DRIVE · VERIFIED REPORT INPUT</p>
-            <h2>Weekly AI Report 整合</h2>
+            <h2>Claude 週報整合紀錄</h2>
           </div>
-          <a href={weeklyReportIntegration.url} target="_blank" rel="noreferrer">開啟原始週報 ↗</a>
+          <span>Weekly Security Reports · 私人歸檔不公開連結</span>
         </div>
         <div className="report-grid">
           <article className="report-source-card">
-            <Mark>最新檔案</Mark>
+            <Mark>本期曾讀取的報告</Mark>
             <h3>{weeklyReportIntegration.title}</h3>
             <p>最後修改：{weeklyReportIntegration.modifiedAt}</p>
             <div className="report-counts">
@@ -411,7 +417,7 @@ export default function Home() {
       </section>
 
       <footer>
-        <div className="brand footer-brand"><span className="brand-mark">AI</span><span><strong>Manufacturing AI Security</strong><small>SECURE · RELIABLE · RESPONSIBLE AI</small></span></div>
+        <div className="brand footer-brand"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>RESEARCH · SECURITY · ARCHITECTURE</small></span></div>
         <p>本週更新：{CURRENT_WEEK} · 正體中文／臺灣慣用語</p>
         <a href={sitePath("/archive")} >歷史資料庫 →</a>
       </footer>
@@ -429,7 +435,7 @@ export default function Home() {
               <span className={`evidence-badge evidence-${selected.evidenceLevel}`}>{selected.evidenceLevel}</span>
               {selected.topics.map((item) => <span key={item}>{item}</span>)}
             </div>
-            <CorrectionNotice reading={selected} />
+            <SourceMeta reading={selected} /><CorrectionNotice reading={selected} />
             <div className="detail-section">
               <h3>判定依據</h3>
               <ScoreBreakdown reading={selected} />

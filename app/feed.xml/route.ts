@@ -1,6 +1,7 @@
 import { allWeeks, feedWeeks, readings, type Reading } from "../data/readings";
 
 import { SITE_URL as SITE } from "../site-config";
+import { provenanceText } from "../data/provenance";
 export const dynamic = "force-static";
 
 const xml = (value: string) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -22,7 +23,7 @@ function entryUpdated(reading: Reading) {
 function entrySummary(reading: Reading) {
   const corrections = reading.corrections ?? [];
   const prefix = corrections.map((correction) => `【${correction.type}】${correction.note}`).join(" ");
-  return `${prefix ? `${prefix} ` : ""}${reading.decision}｜${reading.summary}`;
+  return `${prefix ? `${prefix} ` : ""}${reading.decision}｜${reading.summary}｜${provenanceText(reading)}`;
 }
 
 export async function GET() {
@@ -50,7 +51,7 @@ export async function GET() {
   );
 
   return new Response(
-    `<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><id>${SITE}/</id><title>Manufacturing AI Security 必讀清單</title><link href="${SITE}/feed.xml" rel="self"/><link href="${SITE}/"/><updated>${updated}</updated><subtitle>製造業 AI Security 每週精選與查核摘要（最近 ${weeks.length} 期）</subtitle>${entries}</feed>`,
+    `<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><id>${SITE}/</id><title>科技・資安・架構週讀</title><link href="${SITE}/feed.xml" rel="self"/><link href="${SITE}/"/><updated>${updated}</updated><subtitle>製造業科技、資安與架構每週精選與查核摘要（最近 ${weeks.length} 期）</subtitle>${entries}</feed>`,
     { headers: { "content-type": "application/atom+xml; charset=utf-8", "cache-control": "public, max-age=3600" } },
   );
 }
