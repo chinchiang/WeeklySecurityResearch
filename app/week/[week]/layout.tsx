@@ -16,10 +16,10 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Omit<WeekLayoutProps, "children">): Promise<Metadata> {
   const { week } = await params;
   const decodedWeek = decodeURIComponent(week);
-  // Unknown slugs are rejected by WeekLayout below. Metadata is streamed
-  // (vinext 1.x mirrors Next.js metadata streaming), so a notFound() thrown
-  // here would not become an HTTP 404; it only has to avoid reflecting the
-  // slug or declaring a canonical for a page that does not exist.
+  // Unknown slugs are rejected by WeekLayout below. Next.js streams metadata,
+  // so a notFound() thrown here would not reliably become a 404; it only has
+  // to avoid reflecting the slug or declaring a canonical for a page that
+  // does not exist.
   if (!weekSlugs.has(decodedWeek)) {
     return { title: "找不到週次", robots: { index: false, follow: false }, alternates: { canonical: null } };
   }
