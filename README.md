@@ -63,6 +63,7 @@ npm run lint
 
 - `npm run test:data`：ID、排名、必填欄位、HTTPS URL、合法枚舉及 KPI 一致性。
 - `npm run check:links`：檢查原始來源與 PDF 是否仍可達。`.github/workflows/check-links.yml` 每週一 09:00（台北）自動執行並把結果寫入 job summary；失效連結只以 warning 標示，不會讓 workflow 轉紅；但腳本本身無法執行時會轉紅，避免工具壞掉被誤判為連結全部正常。也可用 workflow_dispatch 手動觸發。
+- 連結檢查的 stdout 固定為 `{ checked, failures }` JSON，Node Type Stripping 警告等診斷保留在 stderr。workflow 分別保存並顯示 `links.json`、`links.stderr.log`，獨立的結果 gate 驗證 JSON 與 exit code 一致性；摘要寫入失敗只提示，不會改寫來源檢查判定，也不會掩蓋工具錯誤。離線回歸測試：`node --test tests/check-links.test.mjs`（亦包含在 `npm test`）。
 - `npm run audit`：依賴漏洞稽核（`.npmrc` 關閉了安裝時的自動稽核，因此需要明確執行）。
 - `npm test`：先靜態匯出，再對 `out/` 跑全部測試：資料完整性、來源與歷史保存、各路由 canonical 與 base path、feed 涵蓋週數與連結、404 頁不索引且無 canonical、robots 與 sitemap 指向正式站。
 - `npm run typecheck`：先執行 `next typegen` 重新產生 `.next/types`，再跑 `tsc --noEmit`。
