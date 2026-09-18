@@ -57,10 +57,7 @@ for (const url of urls) {
   }
 }
 
-if (failures.length) {
-  console.error(JSON.stringify(failures, null, 2));
-  process.exitCode = 1;
-} else {
-  console.log(`Checked ${urls.length} source/PDF links successfully.`);
-}
+// stdout is a machine-readable contract; Node/runtime diagnostics stay on stderr.
+console.log(JSON.stringify({ checked: urls.length, failures }, null, 2));
+process.exitCode = failures.length ? 1 : 0;
 

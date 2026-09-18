@@ -1,0 +1,93 @@
+{
+  "report_id": "AISEC-ARCH-2026-W38-20260918",
+  "revision": 1,
+  "workflow": "chatgpt-ai",
+  "execution_mode": "scheduled",
+  "observation_cutoff": "2026-09-18T08:00:00+08:00",
+  "checked_at": "2026-09-18",
+  "research_status": "completed",
+  "scheduled_trigger_verified": false,
+  "input_report_id": "GSMD-WATCH-2026-0915-01",
+  "input_report_modified_at": "2026-09-15T07:23:10.091Z",
+  "input_status": "read",
+  "input_note": "列出來源資料夾 6 個直接檔案並依 modified_time 排序，完整讀取最新檔 GSMD-WATCH-2026-0915-01_製造業資安觀測週報_2026W38；實際週次 W38。只接手第一部分 2 個 AI 候選，採用 NIST 為背景補讀；第二部分不重做。執行模式不等於排程觸發已取得獨立稽核證據。",
+  "added_reading_ids": [74, 75, 76, 77, 78],
+  "revised_reading_ids": [],
+  "issue_total": 5,
+  "new_research_total": 4,
+  "background_total": 1,
+  "deduplication_note": "依最新 main 的全部 Reading 原始 URL／arXiv ID 及可讀上游週報去重；NIST 過去僅列略過，首次正式收錄。網站外完整跨任務歷史不可得。",
+  "evidence_note": "四篇 preprint 皆讀取原始全文與方法，數值屬作者實驗／觀察，未獨立重現。NIST 為官方草案建議，不是效能實驗。無安全測試實際執行。",
+  "publication_status": "verified",
+  "publication_evidence": {
+    "content_pr": "https://github.com/chinchiang/WeeklySecurityResearch/pull/32",
+    "content_commit": "c29fdcf1e07e43c38f4e819544696aa171ea4032",
+    "pr_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/35290454650",
+    "main_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/35290612860",
+    "pages_deployment": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/35290612860/job/105432636097",
+    "verified_on": "2026-09-18",
+    "scope": "驗證 content_commit 對應的 W38 內容。CI 的 build-and-test 與 deploy-pages 均 success，正式站 GET 200；首頁、期別頁、HTML、Feed 含全部五個原始來源。archive 依既有設計只列舊期，已確認 W37 與歷史 73 篇保留；sitemap 含 W38 固定網址。本次只回填發布證據，不新增研究或改文章 ID。",
+    "checks": [
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/",
+        "status": 200,
+        "sha256": "6533e8794a19d734cadfa90dfc5cb5f16b6d0a0ef8e5bc564f4c90836e7aff37",
+        "bytes": 38654,
+        "issue": true,
+        "all_sources": true,
+        "previous_issue": false,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/week/2026-09-18/",
+        "status": 200,
+        "sha256": "f9abb37132ceb92d3576e367b6c5d770b8eeca31ab2656e4c1509473963ecc0d",
+        "bytes": 30341,
+        "issue": true,
+        "all_sources": true,
+        "previous_issue": false,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/reports/2026-09-18.html",
+        "status": 200,
+        "sha256": "07c87ede5771e109cd85866ca71bd6d76b87f4f0eaca945c24e189d39459af9b",
+        "bytes": 40758,
+        "issue": true,
+        "all_sources": true,
+        "previous_issue": false,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/feed.xml",
+        "status": 200,
+        "sha256": "e22b41b4928c4d439b937cc444f8b8dee4c60a58b1527c7f88dffb1c9e4d1caa",
+        "bytes": 16799,
+        "issue": true,
+        "all_sources": true,
+        "previous_issue": true,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/archive/",
+        "status": 200,
+        "sha256": "d34055189a659dff5d1a2e127027c288119a0dc4699775a72baff6959f443ec5",
+        "bytes": 143027,
+        "issue": false,
+        "all_sources": false,
+        "previous_issue": true,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/sitemap.xml",
+        "status": 200,
+        "sha256": "2830a3fa5273e3976a8b077ab7befe90dbbc857cdd443d1f18be0ec9b998dece",
+        "bytes": 1610,
+        "issue": true,
+        "all_sources": false,
+        "previous_issue": true,
+        "private_drive_link": false
+      }
+    ]
+  }
+}
