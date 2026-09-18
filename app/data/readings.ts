@@ -58,6 +58,116 @@ export type Reading = {
 };
 
 export const readings: Reading[] = [
+  {
+    id: 74, rank: 1, week: "2026.09.18", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
+    title: "AgentQ: Quantization-Conditioned Backdoor Attacks on LLM Agents",
+    subtitle: "FP16 審查通過，不代表量化後的工具呼叫仍安全",
+    date: "2026.09.12 · v1", dateValue: "2026-09-12",
+    authors: "Xiaoqun Liu、Qiben Yan｜Michigan State University",
+    source: "https://arxiv.org/abs/2609.14060", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.14060v1",
+    topics: ["AI Security", "Model Supply Chain", "Agent Security", "Evaluation"],
+    summary: "作者刻意製作量化條件式後門：攻擊者可修改開放權重並預知目標工具介面，讓同一 checkpoint 在 FP16 與量化部署下呈現不同的工具行為。這不是乾淨模型量化必然產生後門的證據。",
+    findings: [
+      "Qwen3.5（2B／4B／9B）、Hammer2.1（1.5B／3B／7B），測試 bitsandbytes NF4／FP4／INT8；Table 2 的 76–100% 是各模型／任務取最強量化設定的 ASR，FP16 為 0，不能當成所有設定平均。",
+      "xLAM tool-selection／argument-injection 的攻擊測試分母分別為 300／215；AgentDojo 合併集為 18 個攻擊與 66 個正常樣本。工具名稱命中、參數 canary 與廣告插入是不同指標，不等於全部完成真實外洩。",
+      "對照包含原始模型與直接移植 QCA；部分正常任務 utility ratio 低至 0.71，不能將摘要的效用保留解讀成零退化。"
+    ],
+    relevance: "情境假設：ODM/OEM 以量化開放權重執行研發或知識庫 agent。驗收單位應包含模型雜湊、量化器、runtime 與工具授權，不只 FP16 權重；研究未確認任何企業或公開 checkpoint 已遭植入。",
+    action: "先讀 §3、§5、Limitations、Appendix H–I。最小測試提案：以合成設計文件 canary 與不連外工具 stub，比較同模型 FP16、實際量化版及可信 base；各跑 30 正常／30 越權案例。外部授權閘門下未授權 dispatch 必須為 0，正常成功率下降超過預先約定的 5 個百分點則不通過；保存模型／runtime 雜湊、完整 tool trace、政策判定與分母。僅支持該設定是否進入試點，不證明不存在未知後門；本次未執行。",
+    caveat: "作者實驗，未獨立重現；非量產保證。原文／方法可讀，但未公開受污染 checkpoint 與即用攻擊 harness。主測試最高 9B；GGUF 未驗證，少量 GPTQ 陰性不能當通用防禦。作者自述 EMNLP 接受狀態未另查會議名單，保守標 Preprint。",
+    crossCheck: "已讀 v1 全文方法、Table 2 與附錄評估／發布限制；刻意保留 worst-case、分母及正常效用退化，未採用摘要作普遍化結論。",
+    metric: "作者結果：FP16 ASR 0；每格最強量化 ASR 76–100%",
+    provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-18", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-18-ai-w38.json" }
+  },
+  {
+    id: 75, rank: 2, week: "2026.09.18", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
+    title: "Reflections on Trusting Trust, Revisited: Contaminating Self-Modifying AI Coding Agents with Poisoned Benchmarks",
+    subtitle: "評測集可能把不安全慣例寫入下一代 coding agent",
+    date: "2026.09.15 · v1", dateValue: "2026-09-15",
+    authors: "Franziska Roesner、Tadayoshi Kohno｜University of Washington／Georgetown University",
+    source: "https://arxiv.org/abs/2609.17817", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.17817v1",
+    topics: ["AI Security", "Agent Security", "Benchmark Poisoning", "Evaluation"],
+    summary: "攻擊者控制自我改良流程的 benchmark／reward，而非初始模型或 agent。實驗顯示，為通過測試而演化出的不安全指示會轉移至乾淨任務；功能分數提升不能代替安全驗收。",
+    findings: [
+      "Hyperagents（commit 59a68f6、Sonnet 4.5）兩次受污染演化後，各在 10 個中性任務×3 次中產生 30/30 關閉 TLS 驗證的程式；乾淨 benchmark 對照各 0/30。這是小型受控 PoC，不是商用 coding agent 盛行率。",
+      "DGM 必須修改內部 prompt 才形成主要成功案例，超出原攻擊者權限；SICA 與 Hyperagents 不需該變更。Hyperagents 另修補測試答案可由 git history 取得的漏洞，不應稱全部原封不動。",
+      "再以乾淨 benchmark 演化未必清除污染；針對已知污染設計的安全測試才在部分條件奏效，不能推出通用去污染方法。"
+    ],
+    relevance: "若研發 agent 可依評測自行更新 prompt、工具或共用範本，需把評測資料與 agent 更新視為不同信任邊界。對固定、不自我修改的助手，不能直接套用此成功率。",
+    action: "優先讀 §2.2、Table 1、§3.6、§4 與 Appendix B。最小測試提案：以合成 HTTPS client 任務比較固定 agent 與候選更新版，使用獨立維護的有效／失效憑證 stub；功能測試相同，安全測試不得由待測 agent 改寫。任一失效憑證被接受即失敗；保留更新 diff、benchmark 雜湊、判定與執行紀錄，決定是否准許候選版本晉級。本次未執行，也不讓 agent 自動合併其修改。",
+    caveat: "作者實驗、未獨立重現；演化次數少且挑選帶有目標元件的高分 agent，不是隨機部署母體。已確認公開 repository 有 generators、patches、results；可取得不等於已驗證重現。",
+    crossCheck: "全文對照乾淨組與失敗案例，並查閱 https://github.com/froeschele/trusting-trust-revisited 的公開 artifact 說明；不把 SICA 的多 LLM 審查當獨立安全保證。",
+    metric: "Hyperagents 兩次受污染演化：各 30/30；乾淨對照：各 0/30",
+    provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-18", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-18-ai-w38.json" }
+  },
+  {
+    id: 76, rank: 3, week: "2026.09.18", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
+    title: "SkillSecurer: Detecting and Patching Prompt-Injection Vulnerabilities in AI Agent Skills",
+    subtitle: "偵測到某個問題，不等於找對注入位置；靜態修補也不等於安全執行",
+    date: "2026.09.12 · v1", dateValue: "2026-09-12",
+    authors: "Donato Mecca、Alberto Verna、Youness Bouchari、Nikhil Jha、Marco Mellia",
+    source: "https://arxiv.org/abs/2609.14079", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.14079v1",
+    topics: ["AI Security", "Agent Skills", "Prompt Injection", "Evaluation"],
+    summary: "針對安裝前／更新時可被攻擊者修改的 skill bundle，以附證據位置的 LLM 審查與修補區分『有告警』與『找到已知注入』。最有價值的是評測方法，而非 100% 的產品化解讀。",
+    findings: [
+      "180 個生成案例（20 skills×9 威脅類別）及 165 個 Skill-Inject 案例；Sonnet 5 後端的 injection detection rate 均為 100%。同後端比較 Cisco Skill Scanner、NVIDIA SkillSpector 與 Tencent AI-Infra-Guard，並區分 GDR 與 IDR。",
+      "後端選擇也使用 Skill-Inject，且生成底稿先經 BluePatcher 篩選；選擇偏差限制外推。比較器自動裁判的 64 件分層人工抽查僅 52 件一致（81.3%）。",
+      "954 個熱門 skills 中 168 個被標記（17.6%），不是 17.6% 已證實遭利用；靜態移除注入不驗證正常任務功能或 runtime 安全。"
+    ],
+    relevance: "若 ODM/OEM 將外部 skills 接入程式碼、PLM 或製造知識庫，應要求指出具體風險片段，並把修補提案與核准執行分離；不直接授權掃描器改寫生產 skills。",
+    action: "讀 §5 的 GDR／IDR、§7 比較方法與限制。以公開／自製無敏感內容的 skill 做影子審查，讓人工核對證據位置；評測同時記錄漏報、誤報、拒答與正常功能退化。優先沿用本期的獨立安全測試，不因單次 100% 就採購或自動放行。",
+    caveat: "作者實驗，未獨立重現；評審與 verifier 並非完整人工 ground truth。原文程式連結 https://github.com/Novant8/skillsecurer 本次回傳 404，無法取得／重建完整 artifact；runtime 中的自適應攻擊不在此靜態結果保證內。",
+    crossCheck: "已讀全文方法與 Tables 2–4；將作者對偵測與靜態 patch 的結果，與本次對安全部署的推論分開。非廠商效能認證。",
+    metric: "受控 IDR 100% ≠ 野外無漏報；裁判人工抽查一致 52/64",
+    provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-18", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-18-ai-w38.json" }
+  },
+  {
+    id: 77, rank: 4, week: "2026.09.18", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 2 }, decision: "選讀", kind: "學術論文",
+    title: "Same Name, Different Server: A Security Census of Silent Drift in the Model Context Protocol Ecosystem",
+    subtitle: "MCP 核准應綁定版本與目的端，而非只核准 server 名稱",
+    date: "2026.09.12 · v1", dateValue: "2026-09-12",
+    authors: "Obada Kraishan｜Texas Tech University",
+    source: "https://arxiv.org/abs/2609.14119", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.14119v1",
+    topics: ["AI Security", "MCP", "Agent Authorization", "Evaluation"],
+    summary: "作者對 2026 年 8 月官方 registry 的觀察，指出固定識別名稱下的 metadata／目的端漂移；這支持重新核准變更的控制假設，不代表每次變更都是惡意 rug pull。",
+    findings: [
+      "21,643 servers 中取得 14,353 個的程式碼；8,900 個多版本 servers 中 40.58% 有定義上的 silent semantic drift，370 個（4.16%）改變 remote host。",
+      "靜態 pattern scanner 的 414 筆人工標記由單一評審完成，pooled precision 僅 0.56；高風險告警 11.14% 與修正估計約 7.6% 都不是已確認可利用漏洞率。",
+      "官方 MCP 2025-06-18 tools 規格已有 listChanged／tools/list_changed；不可把 registry 目的端變更的缺口概括為整個 MCP 沒有任何變更通知。通知也不等於重新授權。"
+    ],
+    relevance: "若研發／知識庫 agent 信任遠端 MCP，應將核准綁定 package digest、remote origin、工具 schema 與 scope；同名更新不得自動繼承設計 IP 存取權。這是本次控制推論，須測實作。",
+    action: "選讀 §3.4、§4.2、§6，並對照官方 tools 規格。最小測試提案：以兩個本機 mock server、合成 canary，比較只核准名稱與綁定 digest／origin／schema 的政策；各做 10 次正常更新與 10 次目的端或 scope 變更。未重新核准前，變更組的 dispatch 與 canary 外送必須均為 0；保存 manifest diff、批准紀錄、egress／tool trace，決定是否要求變更重審。本次未執行。",
+    caveat: "作者觀察研究，未獨立重現；33.7% registry servers 無程式碼、每 repo 最多 40 檔／每檔 200 KB，且未驗證 exploit。零 tool-poisoning 告警不代表零風險；文章宣告釋出 artifact，本次未確認可取得完整資料集。",
+    crossCheck: "已讀原文 scanner 校準、漂移定義及限制；另查 https://modelcontextprotocol.io/specification/2025-06-18/server/tools，修正可能過度概括的協定敘述。",
+    metric: "remote host 變更 370/8,900；scanner precision 0.56",
+    provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-18", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-18-ai-w38.json" }
+  },
+  {
+    id: 78, rank: 5, week: "2026.09.18", batch: "補遺", evidenceLevel: "政策報告",
+    scores: { evidence: 3, relevance: 3, actionability: 2 }, decision: "深入審閱", kind: "政策研究",
+    title: "NIST SP 800-239 ipd — AI Data Center Security Analysis: A High-Performance Computing (HPC) Driven Approach",
+    subtitle: "背景補讀：AI 平台的模型、資料與多租戶信任邊界；9/25 意見截止",
+    date: "2026.07.27 · Initial Public Draft", dateValue: "2026-07-27",
+    authors: "Yang Guo、Bennett Tomlinson｜NIST",
+    source: "https://csrc.nist.gov/pubs/sp/800/239/ipd", sourceLabel: "NIST · 官方初稿",
+    pdf: "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-239.ipd.pdf",
+    topics: ["AI Security", "AI Platform", "Data Protection", "Model Supply Chain"],
+    summary: "7 月初稿而非本週新發。採納 Claude 本週候選並回查官方全文，因 9/25 意見截止將近列為背景補讀；聚焦 AI 模型／資料與多租戶控制，不重做週六企業架構清單。",
+    findings: [
+      "官方頁確認發布日 2026-07-27、Comments Due 2026-09-25。正文以 computing／storage／access／management 四區描述 AI 工作負載的威脅與差距。",
+      "§3.2、3.7–3.9 與 §4.2–4.4 涵蓋資料 provenance、模型供應鏈、多租戶、稽核與模型晉級核准；屬官方建議，不是控制效能實驗，沒有測試樣本或 baseline。",
+      "正文範圍明確排除機房周界、建築、供電／冷卻 OT 等完整設施安全；不能當成完整 AI 資料中心認證或最終標準。"
+    ],
+    relevance: "若自建或承租 AI GPU 平台處理設計 IP，可用來追問租戶／模型擁有者／平台業者三方責任、衍生資料與模型存取紀錄；公司實際部署未知，不宣稱已有缺口。",
+    action: "有 AI 平台評審者先讀 §1 範圍、§3.2／3.7–3.9 及 §4.2–4.4；以一個合成模型晉級流程核對版本、權限與批准證據。是否提交意見由團隊另行決定，9/25 不是企業必須完成整改的期限；本次未寄送意見。",
+    caveat: "權威性限於文件來源與草案內容可核實；沒有獨立控制測試。文中 zero trust／confidential computing 的保護敘述不能視為阻絕所有攻擊的保證，也不是 DSPM／DLP 產品效能證明。",
+    crossCheck: "回查官方 metadata 與 32 頁 PDF 正文；8/21 僅曾列於略過背景，現有 Reading 沒有重複 ID。本次首次正式收錄為補遺，未聲稱文件有新版本。",
+    provenance: { origins: ["claude-report"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-18", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-18-ai-w38.json", inputReportId: "GSMD-WATCH-2026-0915-01" }
+  },
 {
   "action": "READ NOW，優先讀第 3、4、6 節，約 30 分鐘；電力模型細節由廠務專業人員複核。先選一個自有廠區，以既有資產、網路規則及維運契約核對能源 gateway、對外管理介面與廠商帳號；要求核准的存取路徑、停用帳號證據及復原演練紀錄。只在授權測試環境確認拒絕非核准來源，不掃描第三方或切換生產電力。",
   "authors": "Anna Raymaker、Samuel Talkington 等 11 人｜Georgia Institute of Technology",
@@ -2725,6 +2835,16 @@ const NOT_RETAINED =
  * 每週的入選漏斗與略過清單各自保存，新增週次不會覆寫既有紀錄。
  */
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
+  "2026.09.18": {
+    scanned: null, shortlisted: null,
+    note: "W38｜AI 研究觀測截止 2026-09-18 08:00（Asia/Taipei），新研究窗口 9/11 08:00 至截止；本次新增 5 項：4 篇新 preprint、1 份背景草案（4 深入審閱、1 選讀）。已依現有全部 Reading 的 URL／arXiv ID 及可讀上游週報去重；未取得網站以外兩任務完整推薦歷史，不能保證跨任務歷史完全去重。本期 5 項均有 provenance；『歷史來源待確認』僅適用於缺少證據的舊條目，不按主題回填。未保留可重算的全網掃描／初篩母數，故不填推估數。四篇論文均為作者結果，未獨立重現；沒有將廠商效能主張升格為已驗證發現。企業架構與產品安全由另一流程補入，不預先代選。",
+    skipped: [
+      { title: "OWASP GenAI Data Security Risks and Mitigations 2026", source: "https://genai.owasp.org/resource/owasp-genai-data-security-risks-mitigations-2026/", reason: "上游 AI 候選，發布於 2026-03-17；取得公開 PDF 並查到 AI-DSPM／DLP／lineage 相關內容，但本次未完成全篇 103 頁方法評閱，不作已充分驗證的新研究入選。" },
+      { title: "GPUThor", source: "https://arxiv.org/abs/2609.16546", reason: "9/15 新稿，本次只完成摘要／日期初篩；核心為一般 GPU 記憶體／硬體安全，未完成全文驗證，不在週五 AI 攻防清單重複擴張產品安全主題。" },
+      { title: "InceptionRAG", source: "https://arxiv.org/abs/2609.16818", reason: "9/15 新稿，列下次全文查核候選；本次只完成摘要與版本檢查，尚未核實方法、分母與防禦代價，不採用摘要的成功率。" },
+      { title: "The Illusion of Local Privacy", source: "https://arxiv.org/abs/2609.18526", reason: "9/16 新稿，涉及 serving 隔離；尚未完成全文、受影響版本與維護者修補狀態交叉確認，不把摘要中的漏洞及成功率當成企業已受影響。" }
+    ]
+  },
   "2026.09.11": {"scanned": null, "shortlisted": null, "note": "W37 修訂版 r4｜2026-09-12 分別完成 AI Read 與企業資安綜合閱讀增補。新增 2 篇 AI 研究、1 篇 OT 研究，保留原有 7 篇與更正；全期 10 篇（5 深入審閱、5 選讀）。架構 1 篇、產品安全 2 篇沿用本期已入選內容，不重複推薦。本期無合格的新 DSPM／DDR 專題實證研究。", "skipped": [{"title": "From Intent to Execution Grant", "source": "https://arxiv.org/abs/2609.11596", "reason": "2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。"}, {"title": "Industry 5.0 Zero Trust 回顧", "source": "https://doi.org/10.1016/j.comnet.2026.112695", "reason": "9/4 已推薦，沒有本次實質更新，不重複計數。"}]},
   "2026.09.04": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：6 項，深入審閱 4 項、選讀 2 項；整合 2026W36 週報。原稿未保留完整掃描與初篩數，不以推估補填。Architecture Spotlight 與早期研究列為補遺。", skipped: [] },
   "2026.08.28": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：9 項，深入審閱 4 項、選讀 5 項；整合 2026W35 週報。原稿未保留完整掃描與初篩數，不以推估補填。舊研究依原發布日期標示補遺。", skipped: [{ title: "PolicyGuard", source: "https://arxiv.org/abs/2608.02687", reason: "原期查核記錄指出作者撤稿，未納入。" }, { title: "NIST SP 1347", source: "https://csrc.nist.gov/pubs/sp/1347/final", reason: "原期判定 AI Security 關聯不足。" }] },
@@ -2777,22 +2897,21 @@ export function editorialFor(week: string) {
 export const currentEditorial = editorialFor(CURRENT_WEEK);
 
 export const weeklyReportIntegration = {
-  "title": "GSMD-WATCH-2026-0908-01_製造業AI_Security週報_2026W37",
-  "modifiedAt": "2026.09.08 15:38:50（臺北時間）",
-  "candidates": 8,
-  "selected": 0,
+  "title": "GSMD-WATCH-2026-0915-01_製造業資安觀測週報_2026W38",
+  "modifiedAt": "2026.09.15 15:23:10（臺北時間）",
+  "candidates": 2,
+  "selected": 1,
   "adopted": [
-    "2026-09-12 重新列出 5 份直接檔案、按 Drive modified_time 排序並讀取最新全文；未以檔名推定。",
-    "沿用 W37 的授權連續性、runtime 監控、資料 provenance 與 RAG 管線邊界作待核實背景；不把舊論文計為本期新發。"
+    "2026-09-18 列出 6 份直接檔案，依修改時間排序並讀取最新全文；report ID 為 GSMD-WATCH-2026-0915-01，實際週次 W38。",
+    "本次接手第一部分 2 個 AI 候選，採用 NIST SP 800-239 為背景補讀；第二部分留給企業資安流程，不將其計入本次候選／採用數。"
   ],
   "corrections": [
-    "A2ABreak 與官方 A2A 規格交叉閱讀；協定缺少統一機制，不等於企業一定未實施授權。",
-    "安裝研究的 9 次陽性包含 3 次未完成安裝；MemSentry signed delta 不是數位簽章。",
-    "原期關於 OWASP 排序權重、事故數與特定攻擊最高成功率，本次不提升為普遍事實。"
+    "兩個上游 AI 候選分別於 7/27 與 3/17 發布，不能因本週週報收錄而改標新發。",
+    "NIST 是初始公開草案與威脅／差距分析，不是最終控制標準；9/25 是意見截止，不是企業整改期限。",
+    "OWASP 公開 PDF 可取得且包含 AI-DSPM／DLP／lineage 內容，但本次僅局部查核，未完成全篇評閱，不宣稱整份已驗證。"
   ]
 } as const;
 
 export function readingSearchText(reading: Reading) {
   return [reading.title, reading.subtitle, reading.authors, reading.summary, reading.relevance, reading.action, reading.metric ?? "", ...reading.findings, ...reading.topics].join(" ").toLowerCase();
 }
-

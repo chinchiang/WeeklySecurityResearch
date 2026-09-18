@@ -1,0 +1,23 @@
+{
+  "report_id": "AISEC-ARCH-2026-W38-20260918",
+  "revision": 1,
+  "workflow": "chatgpt-ai",
+  "execution_mode": "scheduled",
+  "observation_cutoff": "2026-09-18T08:00:00+08:00",
+  "checked_at": "2026-09-18",
+  "research_status": "completed",
+  "scheduled_trigger_verified": false,
+  "input_report_id": "GSMD-WATCH-2026-0915-01",
+  "input_report_modified_at": "2026-09-15T07:23:10.091Z",
+  "input_status": "read",
+  "input_note": "列出來源資料夾 6 個直接檔案並依 modified_time 排序，完整讀取最新檔 GSMD-WATCH-2026-0915-01_製造業資安觀測週報_2026W38；實際週次 W38。只接手第一部分 2 個 AI 候選，採用 NIST 為背景補讀；第二部分不重做。執行模式不等於排程觸發已取得獨立稽核證據。",
+  "added_reading_ids": [74, 75, 76, 77, 78],
+  "revised_reading_ids": [],
+  "issue_total": 5,
+  "new_research_total": 4,
+  "background_total": 1,
+  "deduplication_note": "依最新 main 的全部 Reading 原始 URL／arXiv ID 及可讀上游週報去重；NIST 過去僅列略過，首次正式收錄。網站外完整跨任務歷史不可得。",
+  "evidence_note": "四篇 preprint 皆讀取原始全文與方法，數值屬作者實驗／觀察，未獨立重現。NIST 為官方草案建議，不是效能實驗。無安全測試實際執行。",
+  "publication_status": "pending",
+  "publication_evidence": "本收據為研究輸入；PR、必要 CI／review、main、Pages、HTML、Feed 與歷史索引尚待本次發布後逐項驗證。"
+}
