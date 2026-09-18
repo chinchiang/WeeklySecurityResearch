@@ -32,8 +32,8 @@ for (const url of urls) {
       signal: AbortSignal.timeout(12_000),
     });
 
-    // If HEAD is blocked or disallowed (common on arXiv, Cloudflare bot protections, etc.), fallback to GET
-    if (!response.ok && [403, 405, 400].includes(response.status)) {
+    // Some sources serve valid files with GET but return 404 for HEAD; verify before classifying them.
+    if (!response.ok && [400, 403, 404, 405].includes(response.status)) {
       response = await fetch(url, {
         method: "GET",
         redirect: "follow",

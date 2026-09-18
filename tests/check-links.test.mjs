@@ -91,6 +91,51 @@ test("real checker success produces one JSON document and deduplicates source/PD
   assert.equal(runStep("Enforce link checker result", context, { LINK_OUTCOME: "pass" }).status, 0);
 });
 
+test("HEAD 404 falls back to GET before declaring a source unreachable", async (t) => {
+  for (const status of [200, 206]) {
+    await t.test(`GET ${status}`, (t) => {
+      const context = fixture(t, `
+        const { appendFileSync } = await import("node:fs");
+        globalThis.fetch = async (url, options) => {
+          appendFileSync("fetch-calls.jsonl", JSON.stringify({ url, method: options.method, range: options.headers.Range }) + "\\n");
+          return new Response(null, { status: options.method === "HEAD" ? 404 : ${status} });
+        };
+      `);
+      const run = runStep("Check source and PDF links", context);
+      assert.equal(run.status, 0, run.stderr);
+      assert.deepEqual(JSON.parse(readFileSync(path.join(context.dir, "links.json"), "utf8")), { checked: 2, failures: [] });
+      assert.equal(readFileSync(context.env.GITHUB_OUTPUT, "utf8"), "outcome=pass\n");
+      const calls = readFileSync(path.join(context.dir, "fetch-calls.jsonl"), "utf8").trim().split("\n").map(JSON.parse);
+      assert.deepEqual(calls, ["one", "two"].flatMap(name => [
+        { url: `https://source.example/${name}`, method: "HEAD" },
+        { url: `https://source.example/${name}`, method: "GET", range: "bytes=0-1024" },
+      ]));
+    });
+  }
+});
+
+test("HEAD 404 followed by GET 404 remains an unreachable source", (t) => {
+  const context = fixture(t, `
+    const { appendFileSync } = await import("node:fs");
+    globalThis.fetch = async (url, options) => {
+      appendFileSync("fetch-calls.jsonl", JSON.stringify({ url, method: options.method }) + "\\n");
+      return new Response(null, { status: 404 });
+    };
+  `);
+  const run = runStep("Check source and PDF links", context);
+  assert.equal(run.status, 0, run.stderr);
+  assert.deepEqual(JSON.parse(readFileSync(path.join(context.dir, "links.json"), "utf8")), {
+    checked: 2,
+    failures: ["one", "two"].map(name => ({ url: `https://source.example/${name}`, status: 404 })),
+  });
+  assert.equal(readFileSync(context.env.GITHUB_OUTPUT, "utf8"), "outcome=unreachable\n");
+  const calls = readFileSync(path.join(context.dir, "fetch-calls.jsonl"), "utf8").trim().split("\n").map(JSON.parse);
+  assert.deepEqual(calls, ["one", "two"].flatMap(name => [
+    { url: `https://source.example/${name}`, method: "HEAD" },
+    { url: `https://source.example/${name}`, method: "GET" },
+  ]));
+});
+
 test("Type Stripping warning stays on stderr while real 404s remain source warnings", (t) => {
   const context = fixture(t, `
     process.emitWarning("Type Stripping is an experimental feature and might change at any time", "ExperimentalWarning");
