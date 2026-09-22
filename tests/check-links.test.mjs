@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -8,9 +8,23 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { classifyResult, renderSummary } from "../scripts/report-links.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const workflow = readFileSync(path.join(root, ".github/workflows/check-links.yml"), "utf8");
+const workflow = readFileSync(path.join(root, ".github/workflows/check-links.yml"), "utf8").replaceAll("\r\n", "\n");
 const failure = { url: "https://source.example/missing", status: 404 };
 const report = (failures = []) => JSON.stringify({ checked: 2, failures });
+
+const bashBin = (() => {
+  if (process.platform === "win32") {
+    const candidates = [
+      path.join(process.env.LOCALAPPDATA || "", "Programs/Git/bin/bash.exe"),
+      "C:\\Program Files\\Git\\bin\\bash.exe",
+      "C:\\Program Files (x86)\\Git\\bin\\bash.exe",
+    ];
+    for (const c of candidates) {
+      if (existsSync(c)) return c;
+    }
+  }
+  return "bash";
+})();
 
 function stepBody(name) {
   const part = workflow.split(`      - name: ${name}\n`)[1]?.split("\n      - name:")[0];
@@ -56,8 +70,10 @@ function fixture(t, behavior) {
 }
 
 function runStep(name, context, extraEnv = {}) {
-  return spawnSync("bash", ["--noprofile", "--norc", "-e", "-o", "pipefail", "-c", stepRun(name)], {
-    cwd: context.dir, env: { ...context.env, ...extraEnv }, encoding: "utf8",
+  const nodeDir = path.dirname(process.execPath);
+  const currentPath = context.env.PATH || process.env.PATH || "";
+  return spawnSync(bashBin, ["--noprofile", "--norc", "-e", "-o", "pipefail", "-c", stepRun(name)], {
+    cwd: context.dir, env: { ...context.env, PATH: `${nodeDir}${path.delimiter}${currentPath}`, ...extraEnv }, encoding: "utf8",
   });
 }
 

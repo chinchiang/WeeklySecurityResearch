@@ -8,6 +8,7 @@
     71,
     72
   ],
+  "revised_reading_ids": [],
   "preserved_reading_ids": [
     64,
     65,
@@ -20,6 +21,11 @@
   "issue_total": 9,
   "research_status": "completed",
   "scheduled_trigger_verified": false,
+  "input_report_id": "GSMD-WATCH-2026-0908-01_製造業AI_Security週報_2026W37",
+  "input_report_modified_at": "2026.09.08 15:38:50（臺北時間）",
+  "input_status": "background",
+  "input_note": "沿用 W37 的授權連續性、runtime 監控、資料 provenance 與 RAG 管線邊界作待核實背景；不把舊論文計為本期新發。",
+  "publication_status": "verified",
   "publication_evidence": "GitHub PR, main CI and live page are verified separately; this record is a research input receipt.",
   "excluded": "No new independently supported DSPM/DDR study; unchanged prior recommendations are preserved, not counted as additions."
 }

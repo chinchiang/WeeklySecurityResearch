@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { readings } from "../app/data/readings.ts";
 import { originsFor, matchesOrigin, provenanceText, sourceLabels, studyKey } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
@@ -58,3 +58,50 @@ test("Pages paths follow repo rename and explicit local configuration", () => {
   assert.equal(pagesConfig({GITHUB_REPOSITORY:"team/team.github.io"}).base,"");
   assert.deepEqual(pagesConfig({NEXT_PUBLIC_BASE_PATH:"/preview",NEXT_PUBLIC_SITE_URL:"https://example.com/preview/"}),{base:"/preview",site:"https://example.com/preview"});
 });
+
+test("all reading receipts conform to the source-workflow specification schema", () => {
+  const receiptFiles = readdirSync("public/reading-runs").filter(f => f.endsWith(".json"));
+  assert.ok(receiptFiles.length > 0, "must have at least one receipt file");
+
+  for (const file of receiptFiles) {
+    const raw = readFileSync(`public/reading-runs/${file}`, "utf8");
+    const r = JSON.parse(raw);
+
+    assert.match(r.report_id, /^AISEC-ARCH-\d{4}-W\d{2}-\d{8}$/, `${file}: invalid report_id`);
+    assert.ok(typeof r.revision === "number" && r.revision >= 1, `${file}: invalid revision`);
+    assert.ok(typeof r.workflow === "string" && r.workflow.length > 0, `${file}: invalid workflow`);
+    assert.ok(
+      ["scheduled", "manual_execution_of_saved_instructions"].includes(r.execution_mode),
+      `${file}: invalid execution_mode: ${r.execution_mode}`
+    );
+    assert.ok(!isNaN(Date.parse(r.checked_at)), `${file}: invalid checked_at date`);
+    assert.ok(Array.isArray(r.added_reading_ids), `${file}: added_reading_ids must be array`);
+    assert.ok(Array.isArray(r.revised_reading_ids), `${file}: revised_reading_ids must be array`);
+    assert.ok(typeof r.issue_total === "number" && r.issue_total > 0, `${file}: invalid issue_total`);
+    assert.ok(typeof r.research_status === "string" && r.research_status.length > 0, `${file}: invalid research_status`);
+    assert.ok(typeof r.scheduled_trigger_verified === "boolean", `${file}: scheduled_trigger_verified must be boolean`);
+    assert.ok(
+      r.input_report_id === null || typeof r.input_report_id === "string",
+      `${file}: input_report_id must be string or null`
+    );
+    assert.ok(
+      r.input_report_modified_at === null || typeof r.input_report_modified_at === "string",
+      `${file}: input_report_modified_at must be string or null`
+    );
+    assert.ok(
+      ["read", "background", "unavailable"].includes(r.input_status),
+      `${file}: invalid input_status: ${r.input_status}`
+    );
+    assert.ok(typeof r.input_note === "string", `${file}: input_note must be string`);
+    assert.ok(
+      ["pending", "verified", "failed"].includes(r.publication_status),
+      `${file}: invalid publication_status: ${r.publication_status}`
+    );
+    assert.ok(
+      (typeof r.publication_evidence === "string" && r.publication_evidence.length > 0) ||
+      (typeof r.publication_evidence === "object" && r.publication_evidence !== null),
+      `${file}: invalid publication_evidence`
+    );
+  }
+});
+

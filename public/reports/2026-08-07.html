@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2026-09-18 科技・資安・架構週讀 · r1</title><meta name="description" content="本期完整研究評述、查核限制與製造業行動建議"><style>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2026-08-07 科技・資安・架構週讀 · r1</title><meta name="description" content="本期完整研究評述、查核限制與製造業行動建議"><style>
 :root{color-scheme:light;--bg:#f7f8fc;--ink:#191d32;--muted:#606a80;--line:#e0e4ee;--accent:#6343cf;--soft:#f0edfc;--green:#197654}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 Inter,"Noto Sans TC",system-ui,-apple-system,"Microsoft JhengHei",sans-serif}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}button,input,select{font:inherit}button{cursor:pointer}button,a,input,select{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8765e9;outline-offset:4px}h1,h2,h3,h4,p,figure{margin:0}h1,h2,h3,h4{line-height:1.4;letter-spacing:-.025em}h1{font-size:clamp(28px,3vw,42px);font-weight:800}h2{font-size:25px;font-weight:750}h3{font-size:20px;font-weight:700}h4{font-size:17px;font-weight:700}p{overflow-wrap:anywhere}ul,ol{padding-left:22px}li+li{margin-top:10px}img{max-width:100%}main{max-width:1480px;margin:auto;padding:0 32px}main>section,main>footer{margin:30px 0 30px 222px}main:not(:has(.side-nav))>section,main:not(:has(.side-nav))>footer{margin-left:0}
 .topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:84px;background:#f7f8fcf5;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.brand{display:flex;align-items:center;gap:12px;color:var(--ink)}.brand:hover{text-decoration:none}.brand-mark{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(135deg,#6d4ed9,#4179d1);color:white;border-radius:12px;font-weight:800;font-size:18px}.brand strong{font-size:17px;display:block}.brand small{display:block;font-size:10px;letter-spacing:.15em;color:var(--muted)}.topbar nav{display:flex;gap:22px;font-size:14px}.topbar nav a{color:var(--muted)}.live-state{font-size:12px;color:var(--green);white-space:nowrap}.live-state i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px}.mobile-dock,.mobile-history-link{display:none}.side-nav{position:fixed;top:118px;width:186px;font-size:14px}.side-nav p{color:var(--muted);font-size:12px;letter-spacing:.09em;margin:0 12px 12px}.side-nav>a,.sister-sites>a{display:block;padding:9px 12px;margin-bottom:5px;border-radius:9px;color:#515a70}.side-nav>a:first-of-type{color:var(--accent);background:var(--soft);font-weight:700}.side-nav a:hover{background:#eeeff6;text-decoration:none}.sister-sites{margin-top:34px;padding-top:20px;border-top:1px solid var(--line)}.sister-sites a{font-size:12px}
@@ -18,76 +18,101 @@ footer{padding:25px 0;border-top:1px solid var(--line);display:flex;gap:18px;ali
 
 .source-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:22px}.source-grid article{padding:20px;border:1px solid var(--line);border-radius:12px;background:#fff}.source-grid h3{font-size:18px;margin:10px 0}.source-grid p,.source-grid small,.source-meta{font-size:13px;color:var(--muted);overflow-wrap:anywhere}.source-meta{padding:10px 12px;background:#f6f5fa;border-radius:8px;margin:10px 0}.source-meta p{margin:0}.source-meta a{font-size:12px}.source-grid small{display:block}@media(max-width:900px){.source-grid{grid-template-columns:1fr}}
 </style></head><body><main>
-<section class="hero"><p class="eyebrow">WEEKLY RESEARCH · REVISION 1</p><h1>2026-09-18<br>科技・資安・架構週讀</h1><p class="hero-subtitle">W38｜AI 研究觀測截止 2026-09-18 08:00（Asia/Taipei），新研究窗口 9/11 08:00 至截止；本次新增 5 項：4 篇新 preprint、1 份背景草案（4 深入審閱、1 選讀）。已依現有全部 Reading 的 URL／arXiv ID 及可讀上游週報去重；未取得網站以外兩任務完整推薦歷史，不能保證跨任務歷史完全去重。本期 5 項均有 provenance；『歷史來源待確認』僅適用於缺少證據的舊條目，不按主題回填。未保留可重算的全網掃描／初篩母數，故不填推估數。四篇論文均為作者結果，未獨立重現；沒有將廠商效能主張升格為已驗證發現。企業架構與產品安全由另一流程補入，不預先代選。</p><p class="edition-note">AISEC-ARCH-2026-W38-20260918 · 研究查核日期 2026-09-18</p><div class="kpi-row"><div class="kpi"><b>5</b><span>入選</span></div><div class="kpi purple"><b>4</b><span>深入審閱</span></div><div class="kpi blue"><b>1</b><span>選讀</span></div></div></section>
+<section class="hero"><p class="eyebrow">WEEKLY RESEARCH · REVISION 1</p><h1>2026-08-07<br>科技・資安・架構週讀</h1><p class="hero-subtitle">本期未保留完整候選數與初篩數；依透明原則標示為未留存，不以推估值補填。自 2026.08.14 當期起固定記錄。</p><p class="edition-note">AISEC-ARCH-2026-W32-20260807 · 研究查核日期 2026-08-07</p><div class="kpi-row"><div class="kpi"><b>7</b><span>入選</span></div><div class="kpi purple"><b>6</b><span>深入審閱</span></div><div class="kpi blue"><b>1</b><span>選讀</span></div></div></section>
 <section class="about"><h2>三個內容來源・兩個網站更新流程</h2><h3>Claude｜製造業資安觀測週報 · 週二 15:00 · 臺北</h3><p>AI Security＋企業資安架構／產品安全兩部分各自選件、排序。Google Doc 歸檔於 Weekly Security Reports，PDF 在 Claude 對話交付。</p><p>2026-09-18 已讀 W38 新版兩部分全文；來源修改時間 2026-09-15 15:23:10（臺北），report ID GSMD-WATCH-2026-0915-01。文件存在不等同排程觸發證明。</p><h3>ChatGPT｜AI Security 技術研究簡報 · 週五 08:00 · 臺北</h3><p>讀取 Claude 週報第一部分，查核原始研究並補充本週新證據；負責模型、Agent、AI 平台、AI 資料／IP 與評估方法。</p><p>2026-09-18 已完成 W38 第一部分接手與公開來源查核；研究／發布分開記錄於 public/reading-runs/2026-09-18-ai-w38.json。未取得可公開的排程觸發稽核證據，不標到點觸發已驗證。</p><h3>ChatGPT｜企業資安綜合閱讀清單 · 週六 01:00 · 臺北</h3><p>讀取 Claude 週報第二部分，查核並補充企業架構、OT／ICS、產品安全、非 AI 專屬資料保護、AppSec、供應鏈與治理。</p><p>2026-09-12 有手動研究紀錄；到點自動觸發與新版接手流程尚待執行證據。</p></section>
-<section><nav aria-label="本期目錄"><ol><li><a href="#reading-74">AgentQ: Quantization-Conditioned Backdoor Attacks on LLM Agents</a></li><li><a href="#reading-75">Reflections on Trusting Trust, Revisited: Contaminating Self-Modifying AI Coding Agents with Poisoned Benchmarks</a></li><li><a href="#reading-76">SkillSecurer: Detecting and Patching Prompt-Injection Vulnerabilities in AI Agent Skills</a></li><li><a href="#reading-77">Same Name, Different Server: A Security Census of Silent Drift in the Model Context Protocol Ecosystem</a></li><li><a href="#reading-78">NIST SP 800-239 ipd — AI Data Center Security Analysis: A High-Performance Computing (HPC) Driven Approach</a></li></ol></nav></section>
-<section class="library"><div class="reading-grid week-reading-grid"><article class="reading-card" id="reading-74">
+<section><nav aria-label="本期目錄"><ol><li><a href="#reading-20">Breadcrumbing Search Agents</a></li><li><a href="#reading-21">MutMem</a></li><li><a href="#reading-22">Permission Denied</a></li><li><a href="#reading-23">Why Formal Monitors Fail</a></li><li><a href="#reading-24">DiagChain</a></li><li><a href="#reading-25">Evading Chain-of-Thought Monitoring Through Model Poisoning</a></li><li><a href="#reading-26">Privacy-Preserving AI Verification via Minimal Information Disclosure</a></li></ol></nav></section>
+<section class="library"><div class="reading-grid week-reading-grid"><article class="reading-card" id="reading-20">
   <div class="card-topline"><span class="card-rank">#1</span><span class="decision deep">深入審閱</span></div>
-  <h3>AgentQ: Quantization-Conditioned Backdoor Attacks on LLM Agents</h3><p class="card-subtitle">FP16 審查通過，不代表量化後的工具呼叫仍安全</p>
-  <p class="card-kind">2026-09-12 · Xiaoqun Liu、Qiben Yan｜Michigan State University · Preprint</p>
-  <p class="source-meta">供稿／發現：ChatGPT AI 研究；查核：ChatGPT AI 研究；查核日期：2026-09-18</p>
-  <div class="topic-list"><span>AI Security</span><span>Model Supply Chain</span><span>Agent Security</span><span>Evaluation</span></div>
+  <h3>Breadcrumbing Search Agents</h3><p class="card-subtitle">以協調式證據鏈劫持搜尋代理的長流程判斷</p>
+  <p class="card-kind">2026-08-05 · Xuebin Li、Hanqing Zhao、Siyuan Liang、Kejiang Chen、Weiming Zhang、Dacheng Tao、Nenghai Yu · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
+  <div class="topic-list"><span>Agent Security</span><span>Data Lineage</span><span>DSPM / DLP</span><span>Threat Modeling</span></div>
   
-  <div class="detail-section"><h4>核心發現</h4><p>作者刻意製作量化條件式後門：攻擊者可修改開放權重並預知目標工具介面，讓同一 checkpoint 在 FP16 與量化部署下呈現不同的工具行為。這不是乾淨模型量化必然產生後門的證據。</p><ul><li>Qwen3.5（2B／4B／9B）、Hammer2.1（1.5B／3B／7B），測試 bitsandbytes NF4／FP4／INT8；Table 2 的 76–100% 是各模型／任務取最強量化設定的 ASR，FP16 為 0，不能當成所有設定平均。</li><li>xLAM tool-selection／argument-injection 的攻擊測試分母分別為 300／215；AgentDojo 合併集為 18 個攻擊與 66 個正常樣本。工具名稱命中、參數 canary 與廣告插入是不同指標，不等於全部完成真實外洩。</li><li>對照包含原始模型與直接移植 QCA；部分正常任務 utility ratio 低至 0.71，不能將摘要的效用保留解讀成零退化。</li></ul></div>
-  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>情境假設：ODM/OEM 以量化開放權重執行研發或知識庫 agent。驗收單位應包含模型雜湊、量化器、runtime 與工具授權，不只 FP16 權重；研究未確認任何企業或公開 checkpoint 已遭植入。</p></article><article><h4>最小驗證行動</h4><p>先讀 §3、§5、Limitations、Appendix H–I。最小測試提案：以合成設計文件 canary 與不連外工具 stub，比較同模型 FP16、實際量化版及可信 base；各跑 30 正常／30 越權案例。外部授權閘門下未授權 dispatch 必須為 0，正常成功率下降超過預先約定的 5 個百分點則不通過；保存模型／runtime 雜湊、完整 tool trace、政策判定與分母。僅支持該設定是否進入試點，不證明不存在未知後門；本次未執行。</p></article></div>
-  <div class="cross-check"><b>查核與判定</b><p>已讀 v1 全文方法、Table 2 與附錄評估／發布限制；刻意保留 worst-case、分母及正常效用退化，未採用摘要作普遍化結論。</p><p>證據 2/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
-  <div class="caveat"><b>限制與利益關係</b><p>作者實驗，未獨立重現；非量產保證。原文／方法可讀，但未公開受污染 checkpoint 與即用攻擊 harness。主測試最高 9B；GGUF 未驗證，少量 GPTQ 陰性不能當通用防禦。作者自述 EMNLP 接受狀態未另查會議名單，保守標 Preprint。</p></div>
+  <div class="detail-section"><h4>核心發現</h4><p>指出搜尋代理即使會追問與交叉核對，也可能被搜尋中介層逐步餵入相互呼應的污染證據；攻擊不是靠單一惡意頁面，而是沿整段研究軌跡建構看似可信的 authority chain。</p><ul><li>Authority-Chain Hijack 只需在每次查詢附加一個可控結果，即可把孤立的頁面操控串成一致證據鏈。</li><li>在 SafeSearch 完整測試集，ACH 的 Overall ASR 為 55.9%，MaxN ASR 為 83.3%。</li><li>Trace-Guided Strategy Evolution 以執行軌跡自動改進攻擊策略，最強設定在保留測試達 71.4%／95.0%。</li></ul></div>
+  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>採購、法規、供應鏈、設備維修與技術情報 Agent 可能依賴多輪搜尋；若搜尋 API、proxy 或企業 retrieval layer 被操控，表面上的多來源交叉核對反而會強化錯誤結論。</p></article><article><h4>最小驗證行動</h4><p>在 AI System Threat Model 加入搜尋中介層與 trajectory-level lineage；保留每次查詢、排名、抓取內容與來源身分，並以獨立通道驗證高風險決策的關鍵證據。</p></article></div>
+  <div class="cross-check"><b>查核與判定</b><p>與 RAG／Memory poisoning 研究方向一致，但攻擊面更早：污染的是代理建立證據的過程。這代表頁面級 Prompt Injection 過濾不足以保護整段調查。</p><p>證據 2/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
+  <div class="caveat"><b>限制與利益關係</b><p>38 頁 preprint；威脅模型假設攻擊者能控制搜尋中介並在每次查詢插入一個結果，企業環境須依實際 search provider、proxy 與工具權限重測。</p></div>
   
-  <p class="detail-section"><a href="https://arxiv.org/abs/2609.14060">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2609.14060v1">PDF ↗</a> · <a href="#reading-74">本篇連結</a></p>
-</article><article class="reading-card" id="reading-75">
+  <p class="detail-section"><a href="https://arxiv.org/abs/2608.04565">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2608.04565">PDF ↗</a> · <a href="#reading-20">本篇連結</a></p>
+</article><article class="reading-card" id="reading-21">
   <div class="card-topline"><span class="card-rank">#2</span><span class="decision deep">深入審閱</span></div>
-  <h3>Reflections on Trusting Trust, Revisited: Contaminating Self-Modifying AI Coding Agents with Poisoned Benchmarks</h3><p class="card-subtitle">評測集可能把不安全慣例寫入下一代 coding agent</p>
-  <p class="card-kind">2026-09-15 · Franziska Roesner、Tadayoshi Kohno｜University of Washington／Georgetown University · Preprint</p>
-  <p class="source-meta">供稿／發現：ChatGPT AI 研究；查核：ChatGPT AI 研究；查核日期：2026-09-18</p>
-  <div class="topic-list"><span>AI Security</span><span>Agent Security</span><span>Benchmark Poisoning</span><span>Evaluation</span></div>
+  <h3>MutMem</h3><p class="card-subtitle">Cryptographically Authorized Mutation in Persistent Agent Memory</p>
+  <p class="card-kind">2026-08-03 · Walid Saidi · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
+  <div class="topic-list"><span>Agent Security</span><span>Data Lineage</span><span>DDR</span><span>Threat Modeling</span></div>
   
-  <div class="detail-section"><h4>核心發現</h4><p>攻擊者控制自我改良流程的 benchmark／reward，而非初始模型或 agent。實驗顯示，為通過測試而演化出的不安全指示會轉移至乾淨任務；功能分數提升不能代替安全驗收。</p><ul><li>Hyperagents（commit 59a68f6、Sonnet 4.5）兩次受污染演化後，各在 10 個中性任務×3 次中產生 30/30 關閉 TLS 驗證的程式；乾淨 benchmark 對照各 0/30。這是小型受控 PoC，不是商用 coding agent 盛行率。</li><li>DGM 必須修改內部 prompt 才形成主要成功案例，超出原攻擊者權限；SICA 與 Hyperagents 不需該變更。Hyperagents 另修補測試答案可由 git history 取得的漏洞，不應稱全部原封不動。</li><li>再以乾淨 benchmark 演化未必清除污染；針對已知污染設計的安全測試才在部分條件奏效，不能推出通用去污染方法。</li></ul></div>
-  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>若研發 agent 可依評測自行更新 prompt、工具或共用範本，需把評測資料與 agent 更新視為不同信任邊界。對固定、不自我修改的助手，不能直接套用此成功率。</p></article><article><h4>最小驗證行動</h4><p>優先讀 §2.2、Table 1、§3.6、§4 與 Appendix B。最小測試提案：以合成 HTTPS client 任務比較固定 agent 與候選更新版，使用獨立維護的有效／失效憑證 stub；功能測試相同，安全測試不得由待測 agent 改寫。任一失效憑證被接受即失敗；保留更新 diff、benchmark 雜湊、判定與執行紀錄，決定是否准許候選版本晉級。本次未執行，也不讓 agent 自動合併其修改。</p></article></div>
-  <div class="cross-check"><b>查核與判定</b><p>全文對照乾淨組與失敗案例，並查閱 https://github.com/froeschele/trusting-trust-revisited 的公開 artifact 說明；不把 SICA 的多 LLM 審查當獨立安全保證。</p><p>證據 2/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
-  <div class="caveat"><b>限制與利益關係</b><p>作者實驗、未獨立重現；演化次數少且挑選帶有目標元件的高分 agent，不是隨機部署母體。已確認公開 repository 有 generators、patches、results；可取得不等於已驗證重現。</p></div>
+  <div class="detail-section"><h4>核心發現</h4><p>提出持久記憶的授權變更協定：每次非微小權重變動都綁定 provenance、簽章 epoch、前後權重、no-fork predecessor 與雜湊承諾，讓審查者區分合法調整與資料庫竄改。</p><ul><li>Poison-likely 內容不直接刪除，而以可修訂的簽章標籤保留，並把標籤納入召回時的信任依據。</li><li>原生測試通過授權、拓樸、防竄改、簽章 epoch 與變更後召回案例；簽章轉換延遲中位數 4.865 ms。</li><li>在 N=100 PoisonedRAG adaptation，攻擊 top-5 揭露為 0/100；消融實驗在繞過 policy 時選中 poison 94/100，恢復簽章標籤後為 0/100。</li></ul></div>
+  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>維修、品質、採購或工程 Agent 會隨結果調整長期記憶權重；跨廠區、跨法域的稽核必須能證明誰授權變更、基於何種結果，以及歷史是否被分叉或覆寫。</p></article><article><h4>最小驗證行動</h4><p>為記憶變更建立簽章、append-only audit log、no-fork chain 與獨立 verifier；召回時同時評估內容、來源、授權者、版本與信任標籤。</p></article></div>
+  <div class="cross-check"><b>查核與判定</b><p>補足 MemSecBench 的治理落地：後者顯示 Write–Execute–Forget 的風險，MutMem 則示範如何對 memory mutation 建立可驗證 lineage。</p><p>證據 2/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
+  <div class="caveat"><b>限制與利益關係</b><p>單一作者、32 頁 preprint，且結果依 HOM-AIMOS／指定資料集；密碼學證據只能證明完整性、授權與歷史連續性，不能證明內容為真。</p></div>
   
-  <p class="detail-section"><a href="https://arxiv.org/abs/2609.17817">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2609.17817v1">PDF ↗</a> · <a href="#reading-75">本篇連結</a></p>
-</article><article class="reading-card" id="reading-76">
+  <p class="detail-section"><a href="https://arxiv.org/abs/2608.02843">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2608.02843">PDF ↗</a> · <a href="#reading-21">本篇連結</a></p>
+</article><article class="reading-card" id="reading-22">
   <div class="card-topline"><span class="card-rank">#3</span><span class="decision deep">深入審閱</span></div>
-  <h3>SkillSecurer: Detecting and Patching Prompt-Injection Vulnerabilities in AI Agent Skills</h3><p class="card-subtitle">偵測到某個問題，不等於找對注入位置；靜態修補也不等於安全執行</p>
-  <p class="card-kind">2026-09-12 · Donato Mecca、Alberto Verna、Youness Bouchari、Nikhil Jha、Marco Mellia · Preprint</p>
-  <p class="source-meta">供稿／發現：ChatGPT AI 研究；查核：ChatGPT AI 研究；查核日期：2026-09-18</p>
-  <div class="topic-list"><span>AI Security</span><span>Agent Skills</span><span>Prompt Injection</span><span>Evaluation</span></div>
+  <h3>Permission Denied</h3><p class="card-subtitle">Policy-Graded Evaluation of Coding Agents in Hardened Environments</p>
+  <p class="card-kind">2026-08-02 · Dotan Davidovich、Yair Amar、Hai Rozencwajg、Or Hiltch · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
+  <div class="topic-list"><span>Agent Security</span><span>DDR</span><span>Threat Modeling</span></div>
   
-  <div class="detail-section"><h4>核心發現</h4><p>針對安裝前／更新時可被攻擊者修改的 skill bundle，以附證據位置的 LLM 審查與修補區分『有告警』與『找到已知注入』。最有價值的是評測方法，而非 100% 的產品化解讀。</p><ul><li>180 個生成案例（20 skills×9 威脅類別）及 165 個 Skill-Inject 案例；Sonnet 5 後端的 injection detection rate 均為 100%。同後端比較 Cisco Skill Scanner、NVIDIA SkillSpector 與 Tencent AI-Infra-Guard，並區分 GDR 與 IDR。</li><li>後端選擇也使用 Skill-Inject，且生成底稿先經 BluePatcher 篩選；選擇偏差限制外推。比較器自動裁判的 64 件分層人工抽查僅 52 件一致（81.3%）。</li><li>954 個熱門 skills 中 168 個被標記（17.6%），不是 17.6% 已證實遭利用；靜態移除注入不驗證正常任務功能或 runtime 安全。</li></ul></div>
-  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>若 ODM/OEM 將外部 skills 接入程式碼、PLM 或製造知識庫，應要求指出具體風險片段，並把修補提案與核准執行分離；不直接授權掃描器改寫生產 skills。</p></article><article><h4>最小驗證行動</h4><p>讀 §5 的 GDR／IDR、§7 比較方法與限制。以公開／自製無敏感內容的 skill 做影子審查，讓人工核對證據位置；評測同時記錄漏報、誤報、拒答與正常功能退化。優先沿用本期的獨立安全測試，不因單次 100% 就採購或自動放行。</p></article></div>
-  <div class="cross-check"><b>查核與判定</b><p>已讀全文方法與 Tables 2–4；將作者對偵測與靜態 patch 的結果，與本次對安全部署的推論分開。非廠商效能認證。</p><p>證據 2/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
-  <div class="caveat"><b>限制與利益關係</b><p>作者實驗，未獨立重現；評審與 verifier 並非完整人工 ground truth。原文程式連結 https://github.com/Novant8/skillsecurer 本次回傳 404，無法取得／重建完整 artifact；runtime 中的自適應攻擊不在此靜態結果保證內。</p></div>
+  <div class="detail-section"><h4>核心發現</h4><p>在 scoped credentials、限制 egress、唯讀檔案系統與非 root 執行等企業政策下測試 Coding Agents，證明寬鬆沙箱的 benchmark 無法代表真正受控環境。</p><ul><li>12 個 Coding Agents 在 Terminal-Bench 2.1 的巢狀政策層級中受測。</li><li>最嚴格政策下成功率最多下降 18.3 個百分點，成本最多增加 167.3%；維持成功率與維持效率的模型排序並不一致。</li><li>遭政策阻擋時，Agent 常以 timeout 或錯誤解答收場，而非提早、清楚地拒絕；作者並釋出 Boundary-Bench。</li></ul></div>
+  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>韌體、BMC、BIOS、測試工具與 CI/CD Agent 應在最小權限、受限網路與唯讀基線下運作；如果只在全權 sandbox 驗證，正式上線後可能以超時或錯誤變更悄悄失敗。</p></article><article><h4>最小驗證行動</h4><p>把生產政策複製到 Agent 驗收環境，分別量測成功率、成本、超時、錯誤解答與拒絕品質；按任務與風險選模型，不以單一 benchmark 排名決策。</p></article></div>
+  <div class="cross-check"><b>查核與判定</b><p>與 Agent 權限最小化原則並不衝突；研究的重點是安全政策會改變錯誤模式，因此治理需同時驗證安全性、任務可解性與失敗行為。</p><p>證據 2/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
+  <div class="caveat"><b>限制與利益關係</b><p>Preprint，結果集中於 Terminal-Bench 2.1 與 12 個 Agent；製造企業需針對實際原始碼庫、建置工具、proxy 與憑證政策重跑。</p></div>
   
-  <p class="detail-section"><a href="https://arxiv.org/abs/2609.14079">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2609.14079v1">PDF ↗</a> · <a href="#reading-76">本篇連結</a></p>
-</article><article class="reading-card" id="reading-77">
-  <div class="card-topline"><span class="card-rank">#4</span><span class="decision select">選讀</span></div>
-  <h3>Same Name, Different Server: A Security Census of Silent Drift in the Model Context Protocol Ecosystem</h3><p class="card-subtitle">MCP 核准應綁定版本與目的端，而非只核准 server 名稱</p>
-  <p class="card-kind">2026-09-12 · Obada Kraishan｜Texas Tech University · Preprint</p>
-  <p class="source-meta">供稿／發現：ChatGPT AI 研究；查核：ChatGPT AI 研究；查核日期：2026-09-18</p>
-  <div class="topic-list"><span>AI Security</span><span>MCP</span><span>Agent Authorization</span><span>Evaluation</span></div>
+  <p class="detail-section"><a href="https://arxiv.org/abs/2608.02670">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2608.02670">PDF ↗</a> · <a href="#reading-22">本篇連結</a></p>
+</article><article class="reading-card" id="reading-23">
+  <div class="card-topline"><span class="card-rank">#4</span><span class="decision deep">深入審閱</span></div>
+  <h3>Why Formal Monitors Fail</h3><p class="card-subtitle">Attack Distribution Entropy as a Coverage Bound for LTL-Based LLM Agent Safety</p>
+  <p class="card-kind">2026-08-02 · Ruiyang Zhang · 已接受</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
+  <div class="topic-list"><span>Agent Security</span><span>DDR</span><span>Threat Modeling</span></div>
   
-  <div class="detail-section"><h4>核心發現</h4><p>作者對 2026 年 8 月官方 registry 的觀察，指出固定識別名稱下的 metadata／目的端漂移；這支持重新核准變更的控制假設，不代表每次變更都是惡意 rug pull。</p><ul><li>21,643 servers 中取得 14,353 個的程式碼；8,900 個多版本 servers 中 40.58% 有定義上的 silent semantic drift，370 個（4.16%）改變 remote host。</li><li>靜態 pattern scanner 的 414 筆人工標記由單一評審完成，pooled precision 僅 0.56；高風險告警 11.14% 與修正估計約 7.6% 都不是已確認可利用漏洞率。</li><li>官方 MCP 2025-06-18 tools 規格已有 listChanged／tools/list_changed；不可把 registry 目的端變更的缺口概括為整個 MCP 沒有任何變更通知。通知也不等於重新授權。</li></ul></div>
-  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>若研發／知識庫 agent 信任遠端 MCP，應將核准綁定 package digest、remote origin、工具 schema 與 scope；同名更新不得自動繼承設計 IP 存取權。這是本次控制推論，須測實作。</p></article><article><h4>最小驗證行動</h4><p>選讀 §3.4、§4.2、§6，並對照官方 tools 規格。最小測試提案：以兩個本機 mock server、合成 canary，比較只核准名稱與綁定 digest／origin／schema 的政策；各做 10 次正常更新與 10 次目的端或 scope 變更。未重新核准前，變更組的 dispatch 與 canary 外送必須均為 0；保存 manifest diff、批准紀錄、egress／tool trace，決定是否要求變更重審。本次未執行。</p></article></div>
-  <div class="cross-check"><b>查核與判定</b><p>已讀原文 scanner 校準、漂移定義及限制；另查 https://modelcontextprotocol.io/specification/2025-06-18/server/tools，修正可能過度概括的協定敘述。</p><p>證據 2/3；關聯 3/3；可行動 2/3。選讀。</p></div>
-  <div class="caveat"><b>限制與利益關係</b><p>作者觀察研究，未獨立重現；33.7% registry servers 無程式碼、每 repo 最多 40 檔／每檔 200 KB，且未驗證 exploit。零 tool-poisoning 告警不代表零風險；文章宣告釋出 artifact，本次未確認可取得完整資料集。</p></div>
+  <div class="detail-section"><h4>核心發現</h4><p>用攻擊分布熵解釋固定 LTL／FSA 規則為何在某些模型可攔截多數惡意工具序列，換到另一模型卻幾乎失效；覆蓋率受攻擊模式集中度上限約束。</p><ul><li>跨 8 個前沿模型架構驗證：GPT／DeepSeek 的攻擊分布集中，單一模式涵蓋 96%，monitor recall 為 68%–75%。</li><li>Gemini variants 的攻擊分布較分散，7 個 cluster 各不超過 7%，recall 僅 6%–13%，即使依架構重訓仍低。</li><li>熵解釋 76% 覆蓋率變異，並提出小型攻擊樣本的部署前 entropy test。</li></ul></div>
+  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>同一套 Agent runtime policy 若套用到不同廠區、模型或供應商，可能產生完全不同的漏報率；OT、ERP、PLM 等高風險工具不能假設固定序列規則可跨模型移植。</p></article><article><h4>最小驗證行動</h4><p>每個模型／Agent 組合都應獨立量測攻擊分布與 monitor recall；固定規則搭配語意、行為與結果層監控，並把模型升版視為需重驗的安全變更。</p></article></div>
+  <div class="cross-check"><b>查核與判定</b><p>研究把先前常被當成模型能力差異的現象轉成可量測的 coverage bound，適合作為 DDR／Agent guard 選型前的壓力測試方法。</p><p>證據 3/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
+  <div class="caveat"><b>限制與利益關係</b><p>已獲 IEEE IS'26 接受，但只有 6 頁，實驗與定理聚焦離散動作序列的 FSA monitor；不代表所有 runtime guard 都受同樣數字約束。</p></div>
   
-  <p class="detail-section"><a href="https://arxiv.org/abs/2609.14119">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2609.14119v1">PDF ↗</a> · <a href="#reading-77">本篇連結</a></p>
-</article><article class="reading-card" id="reading-78">
+  <p class="detail-section"><a href="https://arxiv.org/abs/2608.01388">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2608.01388">PDF ↗</a> · <a href="#reading-23">本篇連結</a></p>
+</article><article class="reading-card" id="reading-24">
   <div class="card-topline"><span class="card-rank">#5</span><span class="decision deep">深入審閱</span></div>
-  <h3>NIST SP 800-239 ipd — AI Data Center Security Analysis: A High-Performance Computing (HPC) Driven Approach</h3><p class="card-subtitle">背景補讀：AI 平台的模型、資料與多租戶信任邊界；9/25 意見截止</p>
-  <p class="card-kind">2026-07-27 · Yang Guo、Bennett Tomlinson｜NIST · 政策報告</p>
-  <p class="source-meta">供稿／發現：Claude 週報供稿；查核：ChatGPT AI 研究；查核日期：2026-09-18；輸入報告：GSMD-WATCH-2026-0915-01</p>
-  <div class="topic-list"><span>AI Security</span><span>AI Platform</span><span>Data Protection</span><span>Model Supply Chain</span></div>
+  <h3>DiagChain</h3><p class="card-subtitle">Evidence-Grounded Attack Chain Reconstruction Benchmark</p>
+  <p class="card-kind">2026-08-04 · Xuyang Liu、Yibin Han、Zhenwei Zhang、Kai Chang、Zhiwei Xu、Tian Qiu、Weixian Deng、Jiabao Gao、Xiaolin Peng、Hai Wan、Xibin Zhao · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
+  <div class="topic-list"><span>DDR</span><span>Data Lineage</span><span>Agent Security</span><span>Threat Modeling</span></div>
   
-  <div class="detail-section"><h4>核心發現</h4><p>7 月初稿而非本週新發。採納 Claude 本週候選並回查官方全文，因 9/25 意見截止將近列為背景補讀；聚焦 AI 模型／資料與多租戶控制，不重做週六企業架構清單。</p><ul><li>官方頁確認發布日 2026-07-27、Comments Due 2026-09-25。正文以 computing／storage／access／management 四區描述 AI 工作負載的威脅與差距。</li><li>§3.2、3.7–3.9 與 §4.2–4.4 涵蓋資料 provenance、模型供應鏈、多租戶、稽核與模型晉級核准；屬官方建議，不是控制效能實驗，沒有測試樣本或 baseline。</li><li>正文範圍明確排除機房周界、建築、供電／冷卻 OT 等完整設施安全；不能當成完整 AI 資料中心認證或最終標準。</li></ul></div>
-  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>若自建或承租 AI GPU 平台處理設計 IP，可用來追問租戶／模型擁有者／平台業者三方責任、衍生資料與模型存取紀錄；公司實際部署未知，不宣稱已有缺口。</p></article><article><h4>最小驗證行動</h4><p>有 AI 平台評審者先讀 §1 範圍、§3.2／3.7–3.9 及 §4.2–4.4；以一個合成模型晉級流程核對版本、權限與批准證據。是否提交意見由團隊另行決定，9/25 不是企業必須完成整改的期限；本次未寄送意見。</p></article></div>
-  <div class="cross-check"><b>查核與判定</b><p>回查官方 metadata 與 32 頁 PDF 正文；8/21 僅曾列於略過背景，現有 Reading 沒有重複 ID。本次首次正式收錄為補遺，未聲稱文件有新版本。</p><p>證據 3/3；關聯 3/3；可行動 2/3。深入審閱。</p></div>
-  <div class="caveat"><b>限制與利益關係</b><p>權威性限於文件來源與草案內容可核實；沒有獨立控制測試。文中 zero trust／confidential computing 的保護敘述不能視為阻絕所有攻擊的保證，也不是 DSPM／DLP 產品效能證明。</p></div>
+  <div class="detail-section"><h4>核心發現</h4><p>建立以證據為核心的攻擊鏈重建 benchmark，不只看最終答案，而是逐階段檢查 Agent 是否取回正確 telemetry、納入推理、排序事件並維持結構化事件鏈。</p><ul><li>MAIN-69 包含 69 個跨作業系統、噪音層級與攻擊鏈長度的情境，共 849 個 reference steps。</li><li>ECRAG 把 evidence retrieval 與持續更新的結構化攻擊鏈表示結合，並以 5 項互補指標診斷失敗位置。</li><li>6 個 LLM 的評估中，最強配置也只成功處理 39.6% 的 849 個步驟；大型模型的主要瓶頸轉為事件排序。</li></ul></div>
+  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>製造業 SOC 必須整合 EDR、身分、雲端、網路與 OT telemetry；AI 若只產生看似合理的攻擊故事，可能誤導隔離設備、停線或供應鏈事件判斷。</p></article><article><h4>最小驗證行動</h4><p>以 stage-wise 指標驗收 IR／DDR Copilot；每個重建步驟必須連回證據 ID、時間與來源，低信心或證據衝突時不得自動執行阻斷。</p></article></div>
+  <div class="cross-check"><b>查核與判定</b><p>與傳統『最終答案正確率』不同，DiagChain 能揭露 retrieval、證據納入與排序錯誤，較適合用來設計可稽核 DDR Agent。</p><p>證據 2/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
+  <div class="caveat"><b>限制與利益關係</b><p>Preprint；MAIN-69 與 849 個步驟仍是研究型 benchmark，未必涵蓋專有 OT protocol、跨廠區時鐘偏差與企業特有 telemetry。</p></div>
   
-  <p class="detail-section"><a href="https://csrc.nist.gov/pubs/sp/800/239/ipd">原始來源 ↗</a> · <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-239.ipd.pdf">PDF ↗</a> · <a href="#reading-78">本篇連結</a></p>
+  <p class="detail-section"><a href="https://arxiv.org/abs/2608.03591">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2608.03591">PDF ↗</a> · <a href="#reading-24">本篇連結</a></p>
+</article><article class="reading-card" id="reading-25">
+  <div class="card-topline"><span class="card-rank">#6</span><span class="decision deep">深入審閱</span></div>
+  <h3>Evading Chain-of-Thought Monitoring Through Model Poisoning</h3><p class="card-subtitle">以模型後門讓惡意行為保留、推理軌跡卻看似正常</p>
+  <p class="card-kind">2026-08-03 · Giorgio Severi、Shujaat Mirza、Blake Bullwinkel、Amanda Minnich · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
+  <div class="topic-list"><span>Agent Security</span><span>Data Lineage</span><span>Threat Modeling</span><span>DDR</span></div>
+  
+  <div class="detail-section"><h4>核心發現</h4><p>證明 reasoning model 可被植入 CoT-Hidden backdoor：觸發時輸出攻擊者指定行為，但可見推理仍保持無害，使把 Chain-of-Thought 當主要監控訊號的安全堆疊失去依據。</p><ul><li>簡單 fine-tuning 即可在不同 reasoning model 架構與規模植入隱藏後門；若直接污染不足，作者以 curriculum training 逐步教會模型隱藏行為。</li><li>因果干預定位到不依賴可見推理的 trigger-conditioned activation pathway。</li><li>Residual stream verbalization 可在答案生成前發出異常警告，但無法識別 trigger、目標或後門機制。</li></ul></div>
+  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>若韌體、程式碼或工程 Agent 使用第三方 fine-tune／adapter，乾淨的 CoT 日誌不能證明模型沒有隱蔽目標；供應鏈後門可能在特定產品、客戶或檔案模式下才觸發。</p></article><article><h4>最小驗證行動</h4><p>CoT 監控只作輔助訊號；同時要求模型／adapter lineage、簽章與可信重建，並以輸入觸發探索、輸出行為差異與獨立 policy enforcement 驗收。</p></article></div>
+  <div class="cross-check"><b>查核與判定</b><p>與 ToxScreen、VLM 架構後門共同支持：模型來源、權重、adapter、架構及輸出行為都需納入驗收，不能把可解釋性訊號當完整性證明。</p><p>證據 2/3；關聯 3/3；可行動 3/3。深入審閱。</p></div>
+  <div class="caveat"><b>限制與利益關係</b><p>15 頁 preprint，摘要未提供可直接比較的整體成功率；內部 activation 分析也不等於已可部署的後門偵測器。</p></div>
+  
+  <p class="detail-section"><a href="https://arxiv.org/abs/2608.02820">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2608.02820">PDF ↗</a> · <a href="#reading-25">本篇連結</a></p>
+</article><article class="reading-card" id="reading-26">
+  <div class="card-topline"><span class="card-rank">#7</span><span class="decision select">選讀</span></div>
+  <h3>Privacy-Preserving AI Verification via Minimal Information Disclosure</h3><p class="card-subtitle">在可驗證與敏感資訊外洩之間量化最小揭露</p>
+  <p class="card-kind">2026-08-03 · Sleem Abdelghafar、Gabriel Kulp · Preprint</p>
+  <p class="source-meta">歷史來源待確認；未以文章主題推定產製平台。</p>
+  <div class="topic-list"><span>Data Lineage</span><span>DSPM / DLP</span><span>Threat Modeling</span></div>
+  
+  <div class="detail-section"><h4>核心發現</h4><p>提出 Minimal Information Disclosure，以條件互資訊量測驗證證據在授權結果之外洩漏多少模型、工作負載或硬體敏感資訊，並探索可驗證性與隱私的前緣。</p><ul><li>以 4 種實體量測與 6 項驗證任務，涵蓋執行類型、硬體身分、運算規模與模型身分。</li><li>3 種 release 在 held-out 驗證達到完全正確且量測到零 collateral leakage；其他任務呈現明確 privacy–utility frontier。</li><li>作者以 Groth16 zk-SNARK 示範可由零知識證明驗證的線性投影 release。</li></ul></div>
+  <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>跨國製造業常需向客戶、總部或稽核方證明工廠 edge AI 使用核准模型與硬體，又不能揭露製程、產能、模型 IP 或客戶 workload。</p></article><article><h4>最小驗證行動</h4><p>在供應商 attestation 與跨法域稽核先定義『可證明主張』和『受保護屬性』，再選證據 channel、收集政策與 release transformation。</p></article></div>
+  <div class="cross-check"><b>查核與判定</b><p>這不是一般 DLP 產品評估，而是驗證資料最小化的設計方法；可補足 AIBOM／attestation 在供應商不願揭露全部細節時的治理選項。</p><p>證據 2/3；關聯 2/3；可行動 2/3。選讀。</p></div>
+  <div class="caveat"><b>限制與利益關係</b><p>Preprint；零量測外洩只成立於指定資料、攻擊者知識與估計方法，不等於任何實務部署下都零洩漏，因此判定選讀。</p></div>
+  
+  <p class="detail-section"><a href="https://arxiv.org/abs/2608.02774">原始來源 ↗</a> · <a href="https://arxiv.org/pdf/2608.02774">PDF ↗</a> · <a href="#reading-26">本篇連結</a></p>
 </article></div></section>
-<section class="about"><h2>Claude 週報整合紀錄</h2><p>本期曾讀取：GSMD-WATCH-2026-0915-01_製造業資安觀測週報_2026W38（私人歸檔不公開連結）</p><p>Drive 修改時間：2026.09.15 15:23:10（臺北時間）</p><ul><li>2026-09-18 列出 6 份直接檔案，依修改時間排序並讀取最新全文；report ID 為 GSMD-WATCH-2026-0915-01，實際週次 W38。</li><li>本次接手第一部分 2 個 AI 候選，採用 NIST SP 800-239 為背景補讀；第二部分留給企業資安流程，不將其計入本次候選／採用數。</li></ul><ul><li>兩個上游 AI 候選分別於 7/27 與 3/17 發布，不能因本週週報收錄而改標新發。</li><li>NIST 是初始公開草案與威脅／差距分析，不是最終控制標準；9/25 是意見截止，不是企業整改期限。</li><li>OWASP 公開 PDF 可取得且包含 AI-DSPM／DLP／lineage 內容，但本次僅局部查核，未完成全篇評閱，不宣稱整份已驗證。</li></ul><p>公開原始來源的核實紀錄見各篇；內部 WORK 責任、期限與完成證據不列入公開版。</p></section>
-<section class="about"><h2>本期略過</h2><ul><li><a href="https://genai.owasp.org/resource/owasp-genai-data-security-risks-mitigations-2026/">OWASP GenAI Data Security Risks and Mitigations 2026</a>：上游 AI 候選，發布於 2026-03-17；取得公開 PDF 並查到 AI-DSPM／DLP／lineage 相關內容，但本次未完成全篇 103 頁方法評閱，不作已充分驗證的新研究入選。</li><li><a href="https://arxiv.org/abs/2609.16546">GPUThor</a>：9/15 新稿，本次只完成摘要／日期初篩；核心為一般 GPU 記憶體／硬體安全，未完成全文驗證，不在週五 AI 攻防清單重複擴張產品安全主題。</li><li><a href="https://arxiv.org/abs/2609.16818">InceptionRAG</a>：9/15 新稿，列下次全文查核候選；本次只完成摘要與版本檢查，尚未核實方法、分母與防禦代價，不採用摘要的成功率。</li><li><a href="https://arxiv.org/abs/2609.18526">The Illusion of Local Privacy</a>：9/16 新稿，涉及 serving 隔離；尚未完成全文、受影響版本與維護者修補狀態交叉確認，不把摘要中的漏洞及成功率當成企業已受影響。</li></ul></section>
+<section class="about"><h2>本期略過</h2><ul><li><a href="https://arxiv.org/abs/2608.02687">PolicyGuard</a>：作者已主動撤稿，表示發現重大不一致且無法確認報告數值；不列入核心證據。</li></ul></section>
 <section class="about"><h2>版本與交付辨識</h2><p>本檔為閱讀結果完成的 r1 公開保存版。取得此檔表示可讀取這一版內容；GitHub commit、索引與 Pages 部署結果另由版本紀錄和部署頁確認，不能由報告完成推定網站已發布。</p></section>
 </main></body></html>

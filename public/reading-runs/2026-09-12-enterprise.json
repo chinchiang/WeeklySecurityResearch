@@ -8,6 +8,7 @@
   "added_reading_ids": [
     73
   ],
+  "revised_reading_ids": [],
   "preserved_reading_ids": [
     64,
     65,
@@ -22,6 +23,11 @@
   "issue_total": 10,
   "research_status": "completed",
   "scheduled_trigger_verified": false,
+  "input_report_id": "GSMD-WATCH-2026-0908-01_製造業AI_Security週報_2026W37",
+  "input_report_modified_at": "2026.09.08 15:38:50（臺北時間）",
+  "input_status": "background",
+  "input_note": "Latest report reread in full, unchanged since the previous W37 revision; used as background, not new evidence.",
+  "publication_status": "verified",
   "drive_integration": "Latest report reread in full, unchanged since the previous W37 revision; used as background, not new evidence.",
   "category_status": {
     "architecture": "Retain one existing Spotlight; no second recommendation.",

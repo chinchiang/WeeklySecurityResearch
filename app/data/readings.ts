@@ -2826,6 +2826,10 @@ export type WeeklyEditorial = {
   shortlisted: number | null;
   note: string;
   skipped: { title: string; source: string; reason: string }[];
+  revision?: number;
+  verifiedAt?: string;
+  presentationNote?: string;
+  reportSkipNote?: string;
 };
 
 const NOT_RETAINED =
@@ -2843,9 +2847,23 @@ export const weeklyEditorials: Record<string, WeeklyEditorial> = {
       { title: "GPUThor", source: "https://arxiv.org/abs/2609.16546", reason: "9/15 新稿，本次只完成摘要／日期初篩；核心為一般 GPU 記憶體／硬體安全，未完成全文驗證，不在週五 AI 攻防清單重複擴張產品安全主題。" },
       { title: "InceptionRAG", source: "https://arxiv.org/abs/2609.16818", reason: "9/15 新稿，列下次全文查核候選；本次只完成摘要與版本檢查，尚未核實方法、分母與防禦代價，不採用摘要的成功率。" },
       { title: "The Illusion of Local Privacy", source: "https://arxiv.org/abs/2609.18526", reason: "9/16 新稿，涉及 serving 隔離；尚未完成全文、受影響版本與維護者修補狀態交叉確認，不把摘要中的漏洞及成功率當成企業已受影響。" }
-    ]
+    ],
+    revision: 1,
+    verifiedAt: "2026-09-18",
   },
-  "2026.09.11": {"scanned": null, "shortlisted": null, "note": "W37 修訂版 r4｜2026-09-12 分別完成 AI Read 與企業資安綜合閱讀增補。新增 2 篇 AI 研究、1 篇 OT 研究，保留原有 7 篇與更正；全期 10 篇（5 深入審閱、5 選讀）。架構 1 篇、產品安全 2 篇沿用本期已入選內容，不重複推薦。本期無合格的新 DSPM／DDR 專題實證研究。", "skipped": [{"title": "From Intent to Execution Grant", "source": "https://arxiv.org/abs/2609.11596", "reason": "2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。"}, {"title": "Industry 5.0 Zero Trust 回顧", "source": "https://doi.org/10.1016/j.comnet.2026.112695", "reason": "9/4 已推薦，沒有本次實質更新，不重複計數。"}]},
+  "2026.09.11": {
+    scanned: null,
+    shortlisted: null,
+    note: "W37 修訂版 r4｜2026-09-12 分別完成 AI Read 與企業資安綜合閱讀增補。新增 2 篇 AI 研究、1 篇 OT 研究，保留原有 7 篇與更正；全期 10 篇（5 深入審閱、5 選讀）。架構 1 篇、產品安全 2 篇沿用本期已入選內容，不重複推薦。本期無合格的新 DSPM／DDR 專題實證研究。",
+    skipped: [
+      { title: "From Intent to Execution Grant", source: "https://arxiv.org/abs/2609.11596", reason: "2026-09-10 新提案，驗證範圍主要為小型參考實作；本次不取代更貼近跨 Agent 協定評審的 Spotlight。" },
+      { title: "Industry 5.0 Zero Trust 回顧", source: "https://doi.org/10.1016/j.comnet.2026.112695", reason: "9/4 已推薦，沒有本次實質更新，不重複計數。" }
+    ],
+    revision: 5,
+    verifiedAt: "2026-09-12",
+    presentationNote: "2026-09-13 r5：網站更名、來源分工與來源標示；沿用 r4 的研究查核與 10 篇內容，未新增研究。",
+    reportSkipNote: "本次搜尋未找到方法透明且適合入選的新 DSPM／DDR 專題實證研究。外部 Cowork 歷史全文未取得，跨平台去重覆蓋有限。未以推估值補填掃描或初篩數量。"
+  },
   "2026.09.04": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：6 項，深入審閱 4 項、選讀 2 項；整合 2026W36 週報。原稿未保留完整掃描與初篩數，不以推估補填。Architecture Spotlight 與早期研究列為補遺。", skipped: [] },
   "2026.08.28": { scanned: null, shortlisted: null, note: "2026.09.07 依原期已完成閱讀清單補登：9 項，深入審閱 4 項、選讀 5 項；整合 2026W35 週報。原稿未保留完整掃描與初篩數，不以推估補填。舊研究依原發布日期標示補遺。", skipped: [{ title: "PolicyGuard", source: "https://arxiv.org/abs/2608.02687", reason: "原期查核記錄指出作者撤稿，未納入。" }, { title: "NIST SP 1347", source: "https://csrc.nist.gov/pubs/sp/1347/final", reason: "原期判定 AI Security 關聯不足。" }] },
   "2026.08.21": {
@@ -2896,21 +2914,75 @@ export function editorialFor(week: string) {
 
 export const currentEditorial = editorialFor(CURRENT_WEEK);
 
-export const weeklyReportIntegration = {
-  "title": "GSMD-WATCH-2026-0915-01_製造業資安觀測週報_2026W38",
-  "modifiedAt": "2026.09.15 15:23:10（臺北時間）",
-  "candidates": 2,
-  "selected": 1,
-  "adopted": [
-    "2026-09-18 列出 6 份直接檔案，依修改時間排序並讀取最新全文；report ID 為 GSMD-WATCH-2026-0915-01，實際週次 W38。",
-    "本次接手第一部分 2 個 AI 候選，採用 NIST SP 800-239 為背景補讀；第二部分留給企業資安流程，不將其計入本次候選／採用數。"
-  ],
-  "corrections": [
-    "兩個上游 AI 候選分別於 7/27 與 3/17 發布，不能因本週週報收錄而改標新發。",
-    "NIST 是初始公開草案與威脅／差距分析，不是最終控制標準；9/25 是意見截止，不是企業整改期限。",
-    "OWASP 公開 PDF 可取得且包含 AI-DSPM／DLP／lineage 內容，但本次僅局部查核，未完成全篇評閱，不宣稱整份已驗證。"
-  ]
-} as const;
+export type WeeklyReportIntegration = {
+  title: string;
+  modifiedAt: string;
+  candidates: number;
+  selected: number;
+  adopted: readonly string[];
+  corrections: readonly string[];
+};
+
+export const weeklyReportIntegrations: Record<string, WeeklyReportIntegration> = {
+  "2026.09.18": {
+    title: "GSMD-WATCH-2026-0915-01_製造業資安觀測週報_2026W38",
+    modifiedAt: "2026.09.15 15:23:10（臺北時間）",
+    candidates: 2,
+    selected: 1,
+    adopted: [
+      "2026-09-18 列出 6 份直接檔案，依修改時間排序並讀取最新全文；report ID 為 GSMD-WATCH-2026-0915-01，實際週次 W38。",
+      "本次接手第一部分 2 個 AI 候選，採用 NIST SP 800-239 為背景補讀；第二部分留給企業資安流程，不將其計入本次候選／採用數。"
+    ],
+    corrections: [
+      "兩個上游 AI 候選分別於 7/27 與 3/17 發布，不能因本週週報收錄而改標新發。",
+      "NIST 是初始公開草案與威脅／差距分析，不是最終控制標準；9/25 是意見截止，不是企業整改期限。",
+      "OWASP 公開 PDF 可取得且包含 AI-DSPM／DLP／lineage 內容，但本次僅局部查核，未完成全篇評閱，不宣稱整份已驗證。"
+    ]
+  },
+  "2026.09.11": {
+    title: "GSMD-WATCH-2026-0908-01_製造業AI_Security週報_2026W37",
+    modifiedAt: "2026.09.08 15:38:50（臺北時間）",
+    candidates: 8,
+    selected: 0,
+    adopted: [
+      "2026-09-12 重新列出 5 份直接檔案、按 Drive modified_time 排序並讀取最新全文；未以檔名推定。",
+      "沿用 W37 的授權連續性、runtime 監控、資料 provenance 與 RAG 管線邊界作待核實背景；不把舊論文計為本期新發。"
+    ],
+    corrections: [
+      "A2ABreak 與官方 A2A 規格交叉閱讀；協定缺少統一機制，不等於企業一定未實施授權。",
+      "安裝研究的 9 次陽性包含 3 次未完成安裝；MemSentry signed delta 不是數位簽章。",
+      "原期關於 OWASP 排序權重、事故數與特定攻擊最高成功率，本次不提升為普遍事實。"
+    ]
+  },
+  "2026.09.04": {
+    title: "GSMD-WATCH-2026-0901-01_製造業AI_Security週報_2026W36",
+    modifiedAt: "2026.09.03 14:20:14（臺北時間）",
+    candidates: 4,
+    selected: 0,
+    adopted: [
+      "加密 reasoning block 仍可能包含敏感資料；Agent 資料外洩控制不能只檢查可見文字；工業 AI 防護需要可追溯的 runtime 行為與資料 lineage。"
+    ],
+    corrections: [
+      "Orca 數字屬供應商客戶 telemetry，取樣母體與分母無法獨立稽核，保留為供應商觀察，不列入本週入選。",
+      "Multi-Agent Firewall、LASM、資料 lineage 回顧均沒有本週實質更新，僅作背景。"
+    ]
+  },
+  "2026.08.28": {
+    title: "GSMD-WATCH-2026-0825-01_製造業AI_Security週報_2026W35",
+    modifiedAt: "2026.08.26 07:02:28（臺北時間）",
+    candidates: 3,
+    selected: 0,
+    adopted: [
+      "可執行紅隊驗證、認知—執行落差、OT×AI 信任邊界、trajectory/runtime 控制、多雲資料保護。"
+    ],
+    corrections: [
+      "OWASP 官方日期已核定為 2026-08-03；Supply Chain 是 LLM04，不是 LLM05。",
+      "Nozomi 報告未附可定位原始來源，未寫入事實性結論。"
+    ]
+  }
+};
+
+export const weeklyReportIntegration = weeklyReportIntegrations[CURRENT_WEEK]!;
 
 export function readingSearchText(reading: Reading) {
   return [reading.title, reading.subtitle, reading.authors, reading.summary, reading.relevance, reading.action, reading.metric ?? "", ...reading.findings, ...reading.topics].join(" ").toLowerCase();

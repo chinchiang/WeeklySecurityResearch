@@ -7,13 +7,15 @@ import Link from "next/link";
 import { SourceMeta } from "../../components/source-meta";
 import { ArchitectureReview } from "../../components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "../../components/reading-meta";
-import { editorialFor, readings } from "../../data/readings";
+import { editorialFor, readings, weeklyReportIntegrations } from "../../data/readings";
 
 export default function WeekPage() {
   const params = useParams<{ week: string }>();
-  const week = decodeURIComponent(params.week ?? "").replaceAll("-", ".");
+  const rawWeek = decodeURIComponent(params.week ?? "");
+  const week = rawWeek.replaceAll("-", ".");
   const items = readings.filter((reading) => reading.week === week).sort((a, b) => a.rank - b.rank);
   const editorial = editorialFor(week);
+  const integration = weeklyReportIntegrations[week];
 
   return (
     <main>
@@ -24,7 +26,17 @@ export default function WeekPage() {
       </header>
       <section className="archive-hero week-hero">
         <div className="grid-noise" aria-hidden="true" />
-        <div><p className="eyebrow">PERMANENT WEEKLY EDITION</p><h1>{week || "無效週次"}<span>必讀清單</span></h1><p>此網址固定保存該週入選內容，適合引用、分享與稽核追溯。</p><a className="secondary-button" href={sitePath("/archive")} >← 返回歷史資料庫</a></div>
+        <div>
+          <p className="eyebrow">PERMANENT WEEKLY EDITION</p>
+          <h1>{week || "無效週次"}<span>必讀清單</span></h1>
+          <p>此網址固定保存該週入選內容，適合引用、分享與稽核追溯。</p>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "12px" }}>
+            <a className="secondary-button" href={sitePath("/archive")}>← 返回歷史資料庫</a>
+            {items.length > 0 && (
+              <a className="secondary-button" href={sitePath(`/reports/${rawWeek}.html`)} target="_blank" rel="noreferrer">本期完整報告 ↗</a>
+            )}
+          </div>
+        </div>
         <div className="archive-stat"><b>{String(items.length).padStart(2, "0")}</b><span>READINGS</span><p>{week}</p></div>
       </section>
       <section className="library archive-library">
@@ -37,6 +49,27 @@ export default function WeekPage() {
               <ul className="week-skipped">
                 {editorial.skipped.map((item) => (
                   <li key={item.title}><a href={item.source} target="_blank" rel="noreferrer">{item.title}</a>：{item.reason}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+        {items.length > 0 && integration && (
+          <div className="week-editorial" style={{ marginTop: "16px" }}>
+            <b>Claude 週報整合紀錄</b>
+            <p>本期曾讀取：<span>{integration.title}</span>（私人歸檔不公開連結）</p>
+            <small>Drive 修改時間：{integration.modifiedAt}</small>
+            {integration.adopted.length > 0 && (
+              <ul className="week-skipped" style={{ marginTop: "8px" }}>
+                {integration.adopted.map((item, idx) => (
+                  <li key={idx}>採納洞察：{item}</li>
+                ))}
+              </ul>
+            )}
+            {integration.corrections.length > 0 && (
+              <ul className="week-skipped" style={{ marginTop: "8px" }}>
+                {integration.corrections.map((item, idx) => (
+                  <li key={idx}>修正事項：{item}</li>
                 ))}
               </ul>
             )}
