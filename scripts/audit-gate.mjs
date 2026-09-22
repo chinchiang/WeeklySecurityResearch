@@ -9,7 +9,7 @@
  *
  * Exit codes: 0 clean, 1 blocking advisory, 2 stale or expired allowlist.
  */
-import { execFile } from "node:child_process";
+import { exec } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
 const BLOCKING = new Set(["high", "critical"]);
@@ -19,7 +19,7 @@ const runAudit = () =>
   new Promise((resolve, reject) => {
     // npm audit exits non-zero whenever it finds anything, so a non-zero code
     // is not an error here — only the absence of parsable JSON is.
-    execFile("npm", ["audit", "--json"], { maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
+    exec("npm audit --json", { maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
       if (stdout) {
         resolve(stdout);
         return;

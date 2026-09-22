@@ -14,8 +14,8 @@
     "test:pages": "node --experimental-strip-types --test checks/pages-export.test.mjs",
     "check:links": "node --experimental-strip-types scripts/check-links.mjs",
     "audit": "node scripts/audit-gate.mjs",
-    "lint": "eslint .",
-    "typecheck": "NEXT_TELEMETRY_DISABLED=1 next typegen && tsc --noEmit",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "typecheck": "node scripts/typecheck.mjs",
     "build:report": "node --experimental-strip-types scripts/build-report.mjs"
   },
   "dependencies": {
