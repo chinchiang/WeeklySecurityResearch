@@ -2972,7 +2972,7 @@ const NOT_RETAINED =
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
   "2026.09.25": {
     scanned: null, shortlisted: null,
-    note: "W39 r2｜AI 流程原有 3 篇完整保留；2026-09-26 企業資安流程新增 2 篇，合計 5 篇（3 深入審閱、2 選讀）。Architecture Spotlight 為 Safety-Aware Zero Trust：OT 的 deny／isolate 也可能造成製程風險，應把 capability degradation 與 policy latency 納入驗收。Product Security 精選 TrustBOM：零知識 proof 可減少跨公司 SBOM 揭露，但無法自行證明 SBOM 完整或元件不可利用。本期無合格的新非 AI DSPM／DLP／DDR 深度研究，不為分類補量；所有量化結果均保留實驗分母與不可外推邊界。",
+    note: "W39 r2｜AI 流程原有 3 篇完整保留；2026-09-26 企業資安流程新增 2 篇，合計 5 篇（3 深入審閱、2 選讀）。Architecture Spotlight 為 Safety-Aware Zero Trust：OT 的 deny／isolate 也可能造成製程風險，應把 capability degradation 與 policy latency 納入驗收。Product Security 精選 TrustBOM：零知識 proof 可減少跨公司 SBOM 揭露，但無法自行證明 SBOM 完整或元件不可利用。本期無合格的新非 AI DSPM／DLP／DDR 深度研究，不為分類補量；所有量化結果均保留實驗分母與不可外推邊界。本期 5 篇均有可歸屬 provenance；「歷史來源待確認」只適用缺少收據的舊資料。",
     skipped: [
       { title: "CSA：OWASP’s Agentic AI Maturity Model — A CISO Guide", source: "https://labs.cloudsecurityalliance.org/research/csa-research-note-owasp-agentic-ai-governance-maturity-v2-20/", reason: "上游 AI 候選；較早治理研究筆記，非本週新實證。核對公開頁面後不新增 Reading，未將其轉述的採用率或事故數升格為已驗證結果。" },
       { title: "NIST SP 1353 Initial Public Draft", source: "https://csrc.nist.gov/pubs/sp/1353/ipd", reason: "上游 AI 候選；官方頁確認 8/19 發布、10/15 徵詢截止。核心是 AI 協助 CSF 分析，不是 AI 系統攻防研究，交由企業資安流程判斷，不重複計數。" },
