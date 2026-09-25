@@ -136,6 +136,60 @@ export const readings: Reading[] = [
     provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-25", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-25-ai-w39.json" }
   },
   {
+    id: 82, rank: 4, week: "2026.09.25", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
+    title: "Safety-Aware Zero Trust Enforcement for IoT and Cyber-Physical Systems",
+    subtitle: "在 OT 裡，拒絕或隔離本身也可能成為實體風險",
+    date: "2026.09.23 · v1", dateValue: "2026-09-23",
+    authors: "Alessandro Lotto、Alessandro Brighente、Mauro Conti｜University of Padua",
+    source: "https://arxiv.org/abs/2609.28170", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.28170v1",
+    topics: ["Enterprise Architecture", "Zero Trust", "OT / ICS", "Safety"],
+    summary: "本期 Architecture Spotlight。SA-ZT 指出，IT 常見的 deny／isolate 在 cyber-physical system 可能同時切斷必要 telemetry 或控制，因此把安全可接受性放進 policy decision：分離 raw visibility、estimator influence、command authority 與 peer communication，再依風險和製程安全逐級降權。",
+    findings: [
+      "作者把 NIST SP 800-207 的七項 tenets 對照成九類 CPS 壓力，設計 Safety Engine 與 Telemetry Broker。已查證事實是 NIST 要求不因網路位置或資產所有權給予隱含信任，且每次 session 前應完成驗證與授權；SA-ZT 的安全分級是作者提案，不是 NIST 或 IEC 的新增要求。",
+      "單一 IEEE 30-bus、100-MVA 模擬中共有 8,000 組配對決策。相較不執行控制，graduated telemetry 將平均 compromised-endpoint fraction 降低 84.2%，impactful FDIA bypass 降低 91.3%；但 binary isolation 在若干 containment／estimator 指標略優。數字只屬該模型與攻擊設定。",
+      "靜態 response-induced-risk 項在 8,000 次均未改變 selector；限制 command 的模式卻出現 15／18／23 個 infeasible epochs。動態項僅改變 92 次命令（1.15%），其中 40 次降低 stress、49 次提高、3 次相同。作者因此沒有證明 safety term 普遍改善所有結果。",
+      "把 Full／Guarded authorization delay 由 0.10／0.20 秒提高至 0.40／0.60 秒，在該模型使平均最大頻率偏差 0.02789→0.04216 Hz、settling 0.07740→0.23023 秒；這支持把 policy latency 納入驗收，但不是製造產線通用門檻。"
+    ],
+    relevance: "對跨臺／中／美／墨／捷的 ODM／EMS，ERP／PLM／MES 到 cell gateway 的每次請求仍需分資源、身分與動作授權；但疑似受害端點不宜只剩全放或全斷。可將觀測、估測、寫入與設備命令拆成可降級 capability，讓 brownfield 資產透過 gateway 執行。China zone 的 CSL／DSL／PIPL 適用性仍須依資料類型、角色與傳輸路徑另行法律判斷；本研究沒有驗證任何公司的法遵或既有架構。",
+    action: "Jungle 建議先讀 §2–5、Evaluation 與 Limitations；一般背景與推導可略讀，約 35–45 分鐘。最小驗證：在非生產 testbed 選一條 MES／gateway 路徑，列出 observe／influence／actuate／peer 四類 capability；定義 hard safety admissibility、人工接管與 fail-safe；注入可疑 telemetry 及 0.1–0.6 秒授權延遲；確認未授權 command 被抑制、原始 telemetry 僅對核准角色可見，並留存政策版本、p95／p99 latency、fallback 與操作員核准紀錄。對應 WORK-23／WORK-31／WORK-22；責任接受狀態未確認，本次僅完成閱讀證據。",
+    caveat: "單一學術 preprint；一個 power-grid 模擬、DC／聚合 dynamics，未涵蓋 AC／voltage／protection／cascade、通訊失效、自適應攻擊或 hardware-in-the-loop，也沒有製造情境實驗、形式化安全保證或認證控制器。原文 HTML 未見明確利益衝突聲明；三位作者均列 University of Padua，不能因此推定不存在其他利益。未取得 IEC 62443 標準全文核對條號，僅可說概念上可補充 zones／conduits 與 least privilege 設計，不能宣稱符合性。",
+    crossCheck: "2026-09-26 已完整讀取 v1 主文、架構、演算法、全部結果、附錄及限制，並與 NIST SP 800-207 官方頁核對 Zero Trust 基線。事實／主張／推論分開：8,000 次與表中結果為作者實驗；SA-ZT 可移植至 ODM gateway 是本次分析推論；未獨立重跑公開程式。",
+    metric: "8,000 配對決策；dynamic safety term 僅改變 1.15%",
+    spotlight: [
+      { heading: "為何值得 Jungle 閱讀", text: "這篇沒有把 Zero Trust 簡化成更多 deny。它把『安全政策延遲與隔離動作也會影響製程』寫成可測的架構問題，正好補上 ERP／PLM／MES 跨 IT/OT 邊界時最難處理的權衡。" },
+      { heading: "證據品質", text: "方法、分母、基準與失敗結果完整，並誠實呈現 safety term 有時提高 stress；但全部量化證據來自單一電力模擬，尚未有 manufacturing 或 HIL 重現。" },
+      { heading: "盲點", text: "未處理跨國資料分類／主權、S/4HANA 或 PLM 身分委派、legacy protocol 語意、供應商遠端維護、IEC 62443 conformity assessment，也未回答誰能改 safety constraint。這些需在企業 threat model 與治理流程補齊。" },
+      { heading: "可採取決策", text: "先決定是否把 capability-level degradation 與 authorization latency 納入一條非生產 OT 路徑驗收；不要以本研究直接核准自動隔離、正式採購或法遵結論。" }
+    ],
+    provenance: { origins: ["chatgpt-enterprise"], reviewedBy: "chatgpt-enterprise", checkedAt: "2026-09-26", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-26-enterprise-w39.json" }
+  },
+  {
+    id: 83, rank: 5, week: "2026.09.25", batch: "本週新發", evidenceLevel: "已接受",
+    scores: { evidence: 2, relevance: 3, actionability: 2 }, decision: "選讀", kind: "學術論文",
+    title: "TrustBOM: A Scalable Architecture for Confidentiality-Preserving SBOMs Across Organizations",
+    subtitle: "用零知識 non-membership proof 驗證禁用元件，但證明不了 SBOM 本身完整",
+    date: "2026.09.18 · v1", dateValue: "2026-09-18",
+    authors: "Maximilian Baumgart、Nikolai Müller、David L. A. Schaumann、Marcel Husung、Marcus Meyer、Wanja Zaeske、Lennart Bader、Fabian P. Martin、Axel Küpper｜TU Berlin",
+    source: "https://arxiv.org/abs/2609.21419", sourceLabel: "arXiv · EDOC 2026 accepted", pdf: "https://arxiv.org/pdf/2609.21419v1",
+    topics: ["Product Security", "SBOM / VEX", "Software Supply Chain", "Data Protection"],
+    summary: "TrustBOM 將 CycloneDX 元件 PURL 寫入 Sparse Merkle Tree，只公開 root；供應商可用 zero-knowledge proof 回答『這批 prohibited PURL 不在此 image』，而不交付完整 dependency graph。它解決的是選擇性揭露，不是 SBOM 正確性或 CVE 可利用性。",
+    findings: [
+      "威脅模型允許 provider 惡意、consumer 誠實，但假設 blockchain 與密碼實作正確，也假設 CI 能從 artifact 正確產生完整 SBOM／SMT。若供應商漏列、誤標版本或 artifact 與 SBOM 未綁定，non-membership proof 仍可能為真。",
+      "評估只用一個 adesso SE production application 的 CycloneDX SBOM、200 個 Maven prohibited PURL、7 個工作量（2–200 constraints），每組 10 次共 70 次；Merkle paths 預先計算。作者硬體為 AMD EPYC 8224P、NVIDIA L4、188 GB RAM。",
+      "作者回報 proving time 由 2 個 constraints 的 2.4 秒增至 200 個的 178.9 秒，proof 由 0.28 MB 增至 21.4 MB，約每 constraint 0.9 秒／0.1 MB，run-to-run SD 低於 1%。這只量測 proof generation，不是漏洞偵測率、SBOM completeness 或跨產品部署成效。"
+    ],
+    relevance: "OEM 客戶常想核對禁用 library，ODM 又不願揭露完整依賴與 IP。選擇性揭露可降低供應鏈資料暴露，但跨公司採用仍需 artifact digest、生成工具與 policy vocabulary 的共同契約；公開鏈也可能暴露 release cadence，且跨境／China zone 的 metadata 與責任配置需另行法務判斷。",
+    action: "先讀 Threat Model、Protocol、Evaluation、Limitations，背景與鏈上成本估算可略讀，約 25–35 分鐘。最小驗證：建立 10 個 fixture，包含已知 prohibited PURL、刻意遺漏的 transitive dependency、PURL alias／版本錯配、被竄改 image digest 與舊 root；要求 artifact→SBOM attestation，並確認所有 negative controls fail closed。再比較 proof time／size、CI 成本與客戶實際 disclosure requirement。對應 WORK-24／WORK-32／WORK-01-D；建議 Product Security／PSIRT owner，責任尚未接受。",
+    caveat: "EDOC 2026 accepted，但仍是單一應用原型；exact PURL absence 不等於元件不可達或 CVE 不可利用，也不等於 SBOM 完整。只處理 Maven 測試集，未驗 firmware／BMC／BIOS、embedded C/C++、跨供應商串鏈或撤銷。作者亦警告 SBOM 品質與 zkVM soundness 是基礎假設；鏈上成本取決於時點價格，未用於本次採購結論。原文未見利益衝突聲明。",
+    crossCheck: "2026-09-26 已完整讀取 v1 方法、threat model、protocol、evaluation 與 limitations；確認 accepted 標示來自作者／arXiv，未另查會議最終論文集。沒有把 confidential SBOM proof 說成 VEX 或 CRA 合規證明，也沒有採用不穩定的幣價成本。",
+    metric: "70 次原型測試；200 constraints：178.9 秒／21.4 MB",
+    spotlight: [
+      { heading: "產品安全判斷", text: "值得關注的是跨公司『證明禁用元件不存在』的資料最小化模式；應優先補 artifact-to-SBOM completeness evidence，否則漂亮的零知識 proof 只是證明一份可能不完整的清單。" }
+    ],
+    provenance: { origins: ["chatgpt-enterprise"], reviewedBy: "chatgpt-enterprise", checkedAt: "2026-09-26", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-26-enterprise-w39.json" }
+  },
+  {
     id: 74, rank: 1, week: "2026.09.18", batch: "本週新發", evidenceLevel: "Preprint",
     scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
     title: "AgentQ: Quantization-Conditioned Backdoor Attacks on LLM Agents",
@@ -2918,16 +2972,20 @@ const NOT_RETAINED =
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
   "2026.09.25": {
     scanned: null, shortlisted: null,
-    note: "會前摘要｜W39：資料期間 2026-09-18 08:00 至 2026-09-25 08:00（Asia/Taipei）。本期新增 3 篇 preprint、0 修訂、0 背景補遺（2 深入審閱、1 選讀）。首要判斷：ASR 低不等於最小權限；單輪拒絕不涵蓋延遲注入；最後答案不代表全部可見外洩通道。均為研究者結果、尚未獨立重現，不是廠商防護有效性保證。本期三篇均有來源證據；『歷史來源待確認』僅適用缺乏證據的舊資料。只提出受控測試，不執行。三篇的會前決策、投影片與 demo 建議見各篇；企業架構與產品安全留予週六流程。",
+    note: "W39 r2｜AI 流程原有 3 篇完整保留；2026-09-26 企業資安流程新增 2 篇，合計 5 篇（3 深入審閱、2 選讀）。Architecture Spotlight 為 Safety-Aware Zero Trust：OT 的 deny／isolate 也可能造成製程風險，應把 capability degradation 與 policy latency 納入驗收。Product Security 精選 TrustBOM：零知識 proof 可減少跨公司 SBOM 揭露，但無法自行證明 SBOM 完整或元件不可利用。本期無合格的新非 AI DSPM／DLP／DDR 深度研究，不為分類補量；所有量化結果均保留實驗分母與不可外推邊界。本期 5 篇均有可歸屬 provenance；「歷史來源待確認」只適用缺少收據的舊資料。",
     skipped: [
       { title: "CSA：OWASP’s Agentic AI Maturity Model — A CISO Guide", source: "https://labs.cloudsecurityalliance.org/research/csa-research-note-owasp-agentic-ai-governance-maturity-v2-20/", reason: "上游 AI 候選；較早治理研究筆記，非本週新實證。核對公開頁面後不新增 Reading，未將其轉述的採用率或事故數升格為已驗證結果。" },
       { title: "NIST SP 1353 Initial Public Draft", source: "https://csrc.nist.gov/pubs/sp/1353/ipd", reason: "上游 AI 候選；官方頁確認 8/19 發布、10/15 徵詢截止。核心是 AI 協助 CSF 分析，不是 AI 系統攻防研究，交由企業資安流程判斷，不重複計數。" },
       { title: "Origin Is All You Need", source: "https://arxiv.org/abs/2609.21088", reason: "來源標籤與模型結構值得追蹤，但原始提交 9/17，未在本期完成全部結果查核；不因本週被索引就當新發入選。" },
       { title: "Beyond Single-Model Injection", source: "https://arxiv.org/abs/2609.22949", reason: "已讀威脅模型與方法初篩；本期優先選測量分母與 artifact 邊界較清楚的 Ajar，不以模型間最高觀測成功率作企業部署效果。" },
-      { title: "Not All 4-bit Quantizers Are Equal", source: "https://arxiv.org/abs/2609.25014", reason: "原始頁的 v1 日期列 8/2，與 2609 識別碼月份不同；未釐清日期及全文前不列本週新件，不採摘要數值。" }
+      { title: "Not All 4-bit Quantizers Are Equal", source: "https://arxiv.org/abs/2609.25014", reason: "原始頁的 v1 日期列 8/2，與 2609 識別碼月份不同；未釐清日期及全文前不列本週新件，不採摘要數值。" },
+      { title: "W39 上游企業段：SAP／Windchill／Teamcenter 漏洞事件", source: "https://www.cisa.gov/known-exploited-vulnerabilities-catalog", reason: "已完整讀取上游第二部分並核對其定位；內容屬 patch／KEV／產品弱點營運資訊，不是本排程要求的深度研究。PTC 項亦非本週新件，因此不重製為 Reading，應由漏洞與廠商變更流程持續處置。" },
+      { title: "DistillGuard", source: "https://arxiv.org/abs/2609.28996", reason: "惡意 npm 偵測方向相關，但標籤由 GPT-5 產生、benign 套件以熱門度近似、未清楚說明 temporal／package-family leakage 與 out-of-distribution 測試；本期不把 93.8 F1 外推為供應鏈控制成效。" },
+      { title: "ENISA Single Reporting Platform", source: "https://www.enisa.europa.eu/news/enisa-launches-the-single-reporting-platform-for-cybersecurity-incidents", reason: "官方且重要，但屬法規／事件通報作業資訊，不是本週深度閱讀研究；維持與 CyberRegulationWatch 分工。" }
     ],
-    revision: 1, verifiedAt: "2026-09-25",
-    reportSkipNote: "未留存可重算的全網掃描母數，故 scanned／shortlisted 不推估。已依 main 全部 78 筆原始 URL／arXiv ID 與最新上游報告去重；網站外兩流程完整推薦歷史不可得。較早上游候選不冒充本週新件；本週沒有額外採用可核實的模型供應鏈或廠商平台新控制實證，不為分類湊數。"
+    revision: 2, verifiedAt: "2026-09-26",
+    presentationNote: "企業資安更新：Architecture Spotlight 1 篇、OT／ICS 1 篇（與 Spotlight 同篇只計一次）、Product Security 1 篇；非 AI 資料保護從缺。AI 研究由週五流程負責，未重寫。",
+    reportSkipNote: "未留存可重算的全網掃描母數，scanned／shortlisted 不推估。已依 main 全部 81 筆原始 URL／DOI／arXiv ID、W39 上游完整報告與可讀網站歷史去重；外部 Claude／Cowork 的完整週六歷史仍不可得，故不宣稱跨平台完全去重。上游漏洞事件不冒充深度研究，非 AI DSPM／DLP／DDR 與額外 OT 項目無達標新增。"
   },
   "2026.09.18": {
     scanned: null, shortlisted: null,
@@ -3016,14 +3074,14 @@ export type WeeklyReportIntegration = {
 export const weeklyReportIntegrations: Record<string, WeeklyReportIntegration> = {
   "2026.09.25": {
     title: "GSMD-WATCH-2026-0922-01_製造業資安觀測週報_2026W39",
-    modifiedAt: "2026.09.22 15:26:28（臺北時間）", candidates: 2, selected: 0,
+    modifiedAt: "2026.09.22 15:26:28（臺北時間）", candidates: 5, selected: 0,
     adopted: [
-      "2026-09-25 列出來源資料夾 7 個直接檔案，依 modified_time 排序並讀取最新全文；report ID GSMD-WATCH-2026-0922-01，實際週次 W39。",
-      "第一部分 2 個正式候選均未新增為本期 Reading；新研究由 chatgpt-ai 公開來源檢索發現。第二部分留予企業資安流程，未採計或重製。"
+      "2026-09-26 企業流程再次確認來源資料夾 7 個直接檔案，依 modified_time 選取並完整讀取最新文件；report ID GSMD-WATCH-2026-0922-01，實際週次 W39。",
+      "上游第一部分 2 個 AI 候選已由 chatgpt-ai 判讀；第二部分 3 個企業候選均為漏洞／修補事件，本次採用 0。Safety-Aware Zero Trust 與 TrustBOM 均由 chatgpt-enterprise 公開來源檢索發現。"
     ],
     corrections: [
-      "CSA／OWASP 治理筆記及 NIST SP 1353 不是本週新發布研究；NIST 的 AI-for-security 用途與 security-of-AI 不混列。",
-      "上游的二手數字與治理建議不等於本次已驗證的攻防實證；私人歸檔與內部責任紀錄不公開。"
+      "SAP／PTC／Siemens 項目可支援 patch 優先順序，但屬營運告警，不符合本排程深度閱讀門檻；PTC 項亦是較早事件，不因 W39 收錄改標新發。",
+      "上游提到的 IEC 62443-4-2:2026 未以可取得的一次標準來源核實，沒有寫成標準要求；私人 Drive 連結、原文與內部責任證據不公開。"
     ]
   },
   "2026.09.18": {

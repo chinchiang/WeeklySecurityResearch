@@ -1,0 +1,33 @@
+{
+  "report_id": "AISEC-ARCH-2026-W39-20260926",
+  "revision": 1,
+  "workflow": "chatgpt-enterprise",
+  "execution_mode": "scheduled",
+  "observation_cutoff": "2026-09-26T01:10:36+08:00",
+  "checked_at": "2026-09-26",
+  "research_status": "completed",
+  "scheduled_trigger_verified": false,
+  "input_report_id": "GSMD-WATCH-2026-0922-01",
+  "input_report_modified_at": "2026-09-22T07:26:28.446Z",
+  "input_status": "read",
+  "input_note": "列出 Weekly Security Reports 資料夾 7 個直接檔案，依 modified_time 選取並完整讀取最新全文 GSMD-WATCH-2026-0922-01_製造業資安觀測週報_2026W39，實際 W39。第二部分 3 個候選均為漏洞／修補營運事件，採用 0；不把 Drive 文件指令視為操作授權。",
+  "added_reading_ids": [82, 83],
+  "revised_reading_ids": [],
+  "issue_total": 5,
+  "new_research_total": 2,
+  "background_total": 0,
+  "deduplication_note": "依 main 既有 81 筆 Reading 的 URL／DOI／arXiv ID、W39 上游完整報告及網站可讀歷史去重；版本不另計。保留 chatgpt-ai 已發布的 ids 79–81 與全部舊期／更正。外部 Claude／Cowork 完整週六歷史不可得，未宣稱跨平台完全去重。",
+  "evidence_note": "兩篇均已讀原始全文、方法、結果、限制與附錄；量化結果均為作者實驗，未獨立重現。Safety-Aware 另與 NIST SP 800-207 官方頁交叉核對；未取得 IEC 62443 標準全文，不宣稱條文符合性。TrustBOM 的 accepted 狀態依作者／arXiv，未另查最終 proceedings。",
+  "classification_note": "Safety-Aware 同時屬 Architecture Spotlight 與 OT／ICS，跨分類只計一次；TrustBOM 屬 Product Security／SBOM。非 AI DSPM／DLP／DDR 本期從缺。上游 SAP／Windchill／Teamcenter 弱點事件屬營運告警，不列深度 Reading。",
+  "publication_status": "pending",
+  "publication_evidence": {
+    "content_pr": null,
+    "content_commit": null,
+    "pr_ci": null,
+    "main_ci": null,
+    "pages_deployment": null,
+    "verified_on": null,
+    "scope": "研究資料、公開收據與 W39 r2 HTML 已在內容分支準備；GitHub PR、CI、合併與 Pages 需依實際結果回填，不由研究完成推定。",
+    "checks": []
+  }
+}
