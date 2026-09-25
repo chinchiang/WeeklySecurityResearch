@@ -1,6 +1,6 @@
 {
   "report_id": "AISEC-ARCH-2026-W39-20260926",
-  "revision": 1,
+  "revision": 2,
   "workflow": "chatgpt-enterprise",
   "execution_mode": "scheduled",
   "observation_cutoff": "2026-09-26T01:10:36+08:00",
@@ -19,15 +19,22 @@
   "deduplication_note": "依 main 既有 81 筆 Reading 的 URL／DOI／arXiv ID、W39 上游完整報告及網站可讀歷史去重；版本不另計。保留 chatgpt-ai 已發布的 ids 79–81 與全部舊期／更正。外部 Claude／Cowork 完整週六歷史不可得，未宣稱跨平台完全去重。",
   "evidence_note": "兩篇均已讀原始全文、方法、結果、限制與附錄；量化結果均為作者實驗，未獨立重現。Safety-Aware 另與 NIST SP 800-207 官方頁交叉核對；未取得 IEC 62443 標準全文，不宣稱條文符合性。TrustBOM 的 accepted 狀態依作者／arXiv，未另查最終 proceedings。",
   "classification_note": "Safety-Aware 同時屬 Architecture Spotlight 與 OT／ICS，跨分類只計一次；TrustBOM 屬 Product Security／SBOM。非 AI DSPM／DLP／DDR 本期從缺。上游 SAP／Windchill／Teamcenter 弱點事件屬營運告警，不列深度 Reading。",
-  "publication_status": "pending",
+  "publication_status": "verified",
   "publication_evidence": {
-    "content_pr": null,
-    "content_commit": null,
-    "pr_ci": null,
-    "main_ci": null,
-    "pages_deployment": null,
-    "verified_on": null,
-    "scope": "研究資料、公開收據與 W39 r2 HTML 已在內容分支準備；GitHub PR、CI、合併與 Pages 需依實際結果回填，不由研究完成推定。",
-    "checks": []
+    "content_pr": "https://github.com/chinchiang/WeeklySecurityResearch/pull/42",
+    "content_commit": "0b817cc0e368273e4875c46f2d85af46217bfe49",
+    "pr_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36165827879",
+    "main_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36165971740",
+    "pages_deployment": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36165971740/job/108174015457",
+    "verified_on": "2026-09-26",
+    "scope": "PR 與 main 的 Build and data integrity 均 success；main 的 Publish GitHub Pages job success，部署 artifact 由 workflow 發布。CI 已驗證首頁、W39 期別頁、完整 HTML、Feed、archive 與 sitemap 的產生、連結、provenance、品牌、歷史保留及私人 Drive URL 排除。公開網域因本次 web 讀取工具回傳 inaccessible，未取得獨立 HTTP body／hash；不把部署 job success 擴張為逐頁二次 GET 證據。",
+    "checks": [
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/", "artifact_check": "success", "live_get": "unavailable" },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/week/2026-09-25/", "artifact_check": "success", "live_get": "unavailable" },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/reports/2026-09-25.html", "artifact_check": "success", "live_get": "unavailable" },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/feed.xml", "artifact_check": "success", "live_get": "unavailable" },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/archive/", "artifact_check": "success", "live_get": "unavailable" },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/sitemap.xml", "artifact_check": "success", "live_get": "unavailable" }
+    ]
   }
 }
