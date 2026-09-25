@@ -1,0 +1,27 @@
+{
+  "report_id": "AISEC-ARCH-2026-W39-20260925",
+  "revision": 1,
+  "workflow": "chatgpt-ai",
+  "execution_mode": "scheduled",
+  "observation_cutoff": "2026-09-25T08:00:00+08:00",
+  "checked_at": "2026-09-25",
+  "research_status": "completed",
+  "scheduled_trigger_verified": false,
+  "input_report_id": "GSMD-WATCH-2026-0922-01",
+  "input_report_modified_at": "2026-09-22T07:26:28.446Z",
+  "input_status": "read",
+  "input_note": "列出 7 個直接檔案，依 modified_time 排序並讀取最新全文 GSMD-WATCH-2026-0922-01_製造業資安觀測週報_2026W39，實際 W39。第一部分 2 個正式候選採用 0；較早治理文件不冒充本週新件。第二部分未重做。執行模式不等於已取得獨立觸發稽核證據。",
+  "added_reading_ids": [79, 80, 81],
+  "revised_reading_ids": [],
+  "issue_total": 3,
+  "new_research_total": 3,
+  "background_total": 0,
+  "deduplication_note": "依 main 既有 78 筆 Reading 的 URL／arXiv ID 及最新上游週報去重；版本不另計。網站外完整跨任務歷史不可得。保留所有既有期別、ID、評述與更正。",
+  "evidence_note": "三篇 v1 均已讀原始主文、方法、關鍵表格與適用附錄；均為作者結果，未獨立重現。Ajar 程式庫可讀；CIPL 完整 artifact 尚待公開；DeFuse artifact 申請制，未取得。所有 demo／安全測試僅提案，未執行。",
+  "publication_status": "pending",
+  "publication_evidence": {
+    "base_commit": "20e72af5b14fff2d8eac343a69d554666e7a2cb9",
+    "base_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/35828484712",
+    "note": "main 原有 npm ci 因 React／types／scheduler lockfile 與 package.json 不同步失敗。依現有 package.json 重算 lockfile，不修改依賴宣告；同時清除已移除依賴的孤立 lock 紀錄。待本內容 PR 完整 CI／review 通過才合併，Pages 尚未驗證。"
+  }
+}

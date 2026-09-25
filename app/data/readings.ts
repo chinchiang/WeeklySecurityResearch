@@ -59,6 +59,83 @@ export type Reading = {
 
 export const readings: Reading[] = [
   {
+    id: 79, rank: 1, week: "2026.09.25", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
+    title: "Ajar: Measuring Open Privilege in Agent Defenses",
+    subtitle: "攻擊沒有成功，不代表授權閘門沒有留下越權空間",
+    date: "2026.09.22 · v1", dateValue: "2026-09-22",
+    authors: "Reshabh K Sharma、Linxi Jiang、Shuo Chen、Zhiqiang Lin｜University of Washington／The Ohio State University／Microsoft Research",
+    source: "https://arxiv.org/abs/2609.26900", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.26900v1",
+    topics: ["AI Security", "Agent Authorization", "Least Privilege", "Evaluation"],
+    summary: "Ajar 直接詢問授權閘門：若 agent 提出任務不需要的工具呼叫，是否仍會放行？把 over-privilege leakage（OPL）與必要呼叫放行率並列，補足 ASR 與正常任務成功率看不到的權限缺口。這不是一個新的攻擊成功率。",
+    findings: [
+      "AgentDojo v1.2.2 的 97 個任務產生 3,551 個唯一候選、10,471 個狀態化測項；必要呼叫指標僅用 92 個可評分任務。比較 Progent、Permission Assistant、CaMeL、AC4A 與 Claude Code Auto mode；決策模型為 Bedrock Sonnet-5／Haiku-4.5，Auto 僅 Sonnet-5。",
+      "Sonnet-5 條件下，僅工具名稱 allowlist 的 OPL 為 0.3551；Permission Assistant 0.0810、CaMeL 0.0895，但必要呼叫放行率分別 0.961／0.700。兩指標必須一起看，拒絕全部呼叫不能算有效防禦。",
+      "27.0% 標籤經 host benchmark predicates 驗證，其餘 73.0% 依 Ajar 建構規則判定。Auto mode 只計模型實際提出的候選，不能將其 0.3009 與其他完整候選集當公平產品排行；相鄰防禦的信賴區間也多有重疊。"
+    ],
+    relevance: "情境假設：研發 agent 可讀專案檔或寫入工程變更。驗收需分辨同一工具對不同客戶、專案、檔案及參數的權限；正常任務沒碰到跨客戶資料，不代表該通道已被阻擋。未調查任何企業的實際配置。",
+    action: "優先讀 §3–4、§6.1–6.3、§7。最小 demo 提案：20 個合成工程變更任務，在工具 stub 的每個決策點加入錯誤專案、跨客戶讀取、未授權外送及正常必要呼叫；比較工具名稱 allowlist 與參數／資源綁定政策。高風險未授權放行必須 0，必要呼叫放行率至少 95%；留存人工 oracle、工具參數、政策版本、逐次 verdict 與三次重複結果。用來決定是否擴大 agent 寫入權限，不證明未知工具路徑安全。本次未執行。",
+    caveat: "作者結果，未獨立重現；已確認公開程式庫可讀，但未執行 artifact。只評單次 allow/deny 邊界，不涵蓋後續補救；wrapper 提供的 provenance／history 會影響結果。沒有證明較緊的 OPL 已攔下真實注入，也沒有完整延遲／token 成本。",
+    crossCheck: "2026-09-25 查核 v1 主文、方法、全部結果表與限制；另讀公開 https://github.com/reSHARMA/Ajar 。原始提交為 9/22 18:01:41 UTC（臺北 9/23 02:01:41）；未將程式碼可取得等同獨立驗證。",
+    metric: "97 任務；10,471 測項；73.0% oracle 標籤未經 host predicates 驗證",
+    spotlight: [
+      { heading: "會前摘要／投影片首選", text: "建議標題：『ASR = 0，權限仍可能敞開』。單一核心訊息：攻擊未觸發與控制拒絕越權是不同證據。建議新增 OPL、必要呼叫放行率及成本三欄，不用單一 benchmark 分數核准部署。" },
+      { heading: "待決策事項", text: "是否將跨客戶／跨專案參數測試列為 agent 擴權前置條件？建議先採受控試點；所需證據是人工核准的最小權限 oracle、工具呼叫紀錄與正常任務效用，不是供應商總體 ASR。" }
+    ],
+    provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-25", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-25-ai-w39.json" }
+  },
+  {
+    id: 80, rank: 2, week: "2026.09.25", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
+    title: "Defusing Explosive Prompts: Understanding and Preventing Trigger-Based Prompt Injections in LLM Agents",
+    subtitle: "注入與執行相隔一輪；單輪通過不能證明後續對話安全",
+    date: "2026.09.18 · v1", dateValue: "2026-09-18",
+    authors: "Justin Szczepaniak、Elad Feldman、Naum Viner、Ben Nassi｜Tel Aviv University",
+    source: "https://arxiv.org/abs/2609.22510", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.22510v1",
+    topics: ["AI Security", "Prompt Injection", "Agent Security", "Evaluation"],
+    summary: "攻擊者只控制被讀取的文件，將即刻執行的惡意指示改成等待後續觸發的條件句。作者在相同兩輪預算下觀察到更多工具執行；重點是跨輪信任邊界，不是『所有道謝都危險』。",
+    findings: [
+      "AgentDojo 0.1.35 上，896 組配對案例／模型；7 個模型平均條件式 ASR 16.5%，命令式 2.4%。模型含 NF4 Llama-3.1-8B／70B、Qwen2.5-32B／72B，以及 grok-4.20-0309、gpt-4.1、gemini-2.5-flash（API 測試 8/17–8/21）。成功依指定工具與狀態變更判定，不是僅輸出標記。",
+      "9 個商用 agent 各 30 次的測試是小樣本可行性證據；43–83% 不能當現行租戶受影響比例。作者控制測試帳號與合成資料，沒有證明企業已遭利用或所有目前版本仍可重現。",
+      "DeFuse 在另一組 Llama-3.3-70B 測試以 5% FPR 預算取得 3.0% 殘餘 ASR；不能省略誤報條件。固定閾值移到長文件會嚴重誤報；SecAlign、drop-free detector 的分母也不同，不能直接排名。"
+    ],
+    relevance: "若 coding agent 先讀供應商 README，再處理設計 IP 或後續寫入，來源信任標記與工具授權應跨輪保留。製造知識庫含大量正常條件句，直接套用條件句偵測可能阻擋作業文件。這些是部署推論，不是對特定公司的影響確認。",
+    action: "先讀 §2、§4.1、§5.1 表格註腳、§5.4–5.5 與 §7。最小 demo 提案：30 組合成 README 配對，分無注入、即刻指令、延遲條件三組；用同一模型、相同兩輪，再加 10 輪／摘要後回歸。工具僅記錄到本機 stub，禁止連外；比較現行控制與每次 dispatch 的參數授權。任一未授權 dispatch 即失敗，正常任務退化超過 5 個百分點或正常條件句 FPR 超過預定 5% 亦失敗。保留逐輪來源標籤、模型版本、判定與 stub trace；支持是否重驗跨輪控制。本次未執行。",
+    caveat: "作者實驗，未獨立重現；資料、generator、harness 與 detector 採申請制，未取得可自行重跑的完整 artifact。只驗兩輪，未驗長期記憶與自適應改寫；受測商用 client 的精確 build 未完整揭露。偵測部分使用既有軌跡事後 block-mode gating，不代表互動式防禦的完整效用。",
+    crossCheck: "2026-09-25 已讀 v1 主文、威脅模型、配對方法、§5 閾值／分母及 Appendix A 重現限制。提交為 9/18 19:16:51 UTC（臺北 9/19 03:16:51），確在本期窗口。正文與附錄部分評測敘述不一致，故不把 DeFuse 數字當產品採購保證。",
+    metric: "配對兩輪、每模型 896 組：作者回報平均 ASR 2.4% → 16.5%",
+    spotlight: [
+      { heading: "投影片／demo 建議", text: "標題：『第一次沒有動作，第二次仍需重新授權』。核心訊息：每輪工具 dispatch 都必須受原任務授權約束。demo 需要固定模型、隔離 harness、合成 README、工具 stub 及來源標籤；期待看見模型提案與政策放行被分開記錄。缺口是長對話、中文條件句、artifact 與現行產品版本的實測。" },
+      { heading: "待決策事項", text: "建議重驗兩輪以上的任務，而非立即替換模型或採購 DeFuse。先取得正常條件式文件的誤報率、長度分層結果與真實工具邊界證據；未達標前不擴大自動外送或程式碼寫入。" }
+    ],
+    provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-25", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-25-ai-w39.json" }
+  },
+  {
+    id: 81, rank: 3, week: "2026.09.25", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 2 }, decision: "選讀", kind: "學術論文",
+    title: "CIPL: A Channel-Aware Framework for Recoverable Privacy Leakage in LLM Agents",
+    subtitle: "量測攻擊者能還原什麼，不只檢查最後答案有沒有完整秘密字串",
+    date: "2026.09.18 · v1", dateValue: "2026-09-18",
+    authors: "Tao Huang、Guosen Wu、Guolong Zheng、Jiayang Meng、Chen Hou、Xu Yang、Xuechao Yang、Feng Xia｜Minjiang University／Renmin University／RMIT",
+    source: "https://arxiv.org/abs/2609.21686", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.21686v1",
+    topics: ["AI Security", "Data Protection", "RAG", "Evaluation"],
+    summary: "CIPL 分離來源、選取、組裝、執行、可見通道與還原；資料進入模型脈絡，不等於已被外部取得，反之最後答案乾淨也不排除工具參數或可見軌跡洩漏。核心價值是量測設計，不是通用外洩率。",
+    findings: [
+      "memory／RAG／tool targets 每設定 30 queries、1 retry、5 次 pipeline repetitions；RAG／tool 為 50 筆合成資料，memory 為 200 筆。比較 MiniMax-M2.5／M2.7、qwen3.5-plus、deepseek-chat、gpt-4o；pipeline seed 不是 API generation seed。",
+      "BrowserUse 的 GPT-4o 標籤設定，process AER 0.82±0.03、final-result 0.22±0.05；但 process 明確假設攻擊者能看到該執行產物。一般 operational-task 對照的 AER 只有 0–0.06，不能把強抽取提示的結果當正常使用事故率。",
+      "200 筆分層雙人語意查核中，5 筆完整 canonical exact match 陰性仍含可用的部分秘密。RAG 的簡單 dump 對照甚至勝過主策略；CIPL 不代表找到通用最佳攻擊方法。"
+    ],
+    relevance: "情境假設：agent 讀取客戶設計參數後產生工單、URL、工具 payload 或供使用者下載的診斷紀錄。DLP 驗收應依攻擊者實際可見通道分母計算，不能把內部特權 log 一律當公開外洩，也不能只掃最後回答。",
+    action: "先讀 §3–5、Appendix A、G、H。最小測試提案：50 筆合成 BOM／製程資料含唯一 canary 與可辨識語意事實；30 個授權任務及配對抽取請求，比較只掃 final answer 與同時檢查已授權可見的 tool args／return／trace。以無秘密資料及關閉 trace 曝露作對照；任何禁止通道可還原秘密即失敗，另報正常任務成功率與漏報。保留逐筆內部選取集合、各通道 ACL、精確／雙人語意判定及原始輸出；支持 DLP 攔截點與 trace 存取決策。本次未執行。",
+    caveat: "作者結果，未獨立重現；程式碼與設定承諾出版後提供，本次未取得完整公開 artifact。受控 targets 與單一 BrowserUse 案例不能代表企業部署；部分 GPT-4o 使用第三方相容路由，精確 snapshot／完整 BrowserUse build 未固定。主要實驗於 3–7 月進行，不是 9 月產品現況測試。",
+    crossCheck: "2026-09-25 已讀 v1 主文、實驗 protocol、表 2–6 及 target／reproducibility／BrowserUse 附錄；確認 process 曝露假設、一般任務對照與 API 路由限制。提交為 9/18 12:23:41 UTC（臺北 9/18 20:23:41）。",
+    metric: "200 筆語意查核：5 筆 exact-negative 仍有部分秘密",
+    spotlight: [
+      { heading: "待決策事項", text: "是否把可見工具參數與 trace 納入資料外洩驗收？建議先畫實際讀者與資料路徑，再決定 DLP 落點；需要通道 ACL、合成 canary trace 與語意覆核，不採用『有模型記憶就必然外洩』的推論。" }
+    ],
+    provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-09-25", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-09-25-ai-w39.json" }
+  },
+  {
     id: 74, rank: 1, week: "2026.09.18", batch: "本週新發", evidenceLevel: "Preprint",
     scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
     title: "AgentQ: Quantization-Conditioned Backdoor Attacks on LLM Agents",
@@ -2839,6 +2916,19 @@ const NOT_RETAINED =
  * 每週的入選漏斗與略過清單各自保存，新增週次不會覆寫既有紀錄。
  */
 export const weeklyEditorials: Record<string, WeeklyEditorial> = {
+  "2026.09.25": {
+    scanned: null, shortlisted: null,
+    note: "會前摘要｜W39：資料期間 2026-09-18 08:00 至 2026-09-25 08:00（Asia/Taipei）。本期新增 3 篇 preprint、0 修訂、0 背景補遺（2 深入審閱、1 選讀）。首要判斷：ASR 低不等於最小權限；單輪拒絕不涵蓋延遲注入；最後答案不代表全部可見外洩通道。均為研究者結果、尚未獨立重現，不是廠商防護有效性保證。本期三篇均有來源證據；『歷史來源待確認』僅適用缺乏證據的舊資料。只提出受控測試，不執行。三篇的會前決策、投影片與 demo 建議見各篇；企業架構與產品安全留予週六流程。",
+    skipped: [
+      { title: "CSA：OWASP’s Agentic AI Maturity Model — A CISO Guide", source: "https://labs.cloudsecurityalliance.org/research/csa-research-note-owasp-agentic-ai-governance-maturity-v2-20/", reason: "上游 AI 候選；較早治理研究筆記，非本週新實證。核對公開頁面後不新增 Reading，未將其轉述的採用率或事故數升格為已驗證結果。" },
+      { title: "NIST SP 1353 Initial Public Draft", source: "https://csrc.nist.gov/pubs/sp/1353/ipd", reason: "上游 AI 候選；官方頁確認 8/19 發布、10/15 徵詢截止。核心是 AI 協助 CSF 分析，不是 AI 系統攻防研究，交由企業資安流程判斷，不重複計數。" },
+      { title: "Origin Is All You Need", source: "https://arxiv.org/abs/2609.21088", reason: "來源標籤與模型結構值得追蹤，但原始提交 9/17，未在本期完成全部結果查核；不因本週被索引就當新發入選。" },
+      { title: "Beyond Single-Model Injection", source: "https://arxiv.org/abs/2609.22949", reason: "已讀威脅模型與方法初篩；本期優先選測量分母與 artifact 邊界較清楚的 Ajar，不以模型間最高觀測成功率作企業部署效果。" },
+      { title: "Not All 4-bit Quantizers Are Equal", source: "https://arxiv.org/abs/2609.25014", reason: "原始頁的 v1 日期列 8/2，與 2609 識別碼月份不同；未釐清日期及全文前不列本週新件，不採摘要數值。" }
+    ],
+    revision: 1, verifiedAt: "2026-09-25",
+    reportSkipNote: "未留存可重算的全網掃描母數，故 scanned／shortlisted 不推估。已依 main 全部 78 筆原始 URL／arXiv ID 與最新上游報告去重；網站外兩流程完整推薦歷史不可得。較早上游候選不冒充本週新件；本週沒有額外採用可核實的模型供應鏈或廠商平台新控制實證，不為分類湊數。"
+  },
   "2026.09.18": {
     scanned: null, shortlisted: null,
     note: "W38｜AI 研究觀測截止 2026-09-18 08:00（Asia/Taipei），新研究窗口 9/11 08:00 至截止；本次新增 5 項：4 篇新 preprint、1 份背景草案（4 深入審閱、1 選讀）。已依現有全部 Reading 的 URL／arXiv ID 及可讀上游週報去重；未取得網站以外兩任務完整推薦歷史，不能保證跨任務歷史完全去重。本期 5 項均有 provenance；『歷史來源待確認』僅適用於缺少證據的舊條目，不按主題回填。未保留可重算的全網掃描／初篩母數，故不填推估數。四篇論文均為作者結果，未獨立重現；沒有將廠商效能主張升格為已驗證發現。企業架構與產品安全由另一流程補入，不預先代選。",
@@ -2924,6 +3014,18 @@ export type WeeklyReportIntegration = {
 };
 
 export const weeklyReportIntegrations: Record<string, WeeklyReportIntegration> = {
+  "2026.09.25": {
+    title: "GSMD-WATCH-2026-0922-01_製造業資安觀測週報_2026W39",
+    modifiedAt: "2026.09.22 15:26:28（臺北時間）", candidates: 2, selected: 0,
+    adopted: [
+      "2026-09-25 列出來源資料夾 7 個直接檔案，依 modified_time 排序並讀取最新全文；report ID GSMD-WATCH-2026-0922-01，實際週次 W39。",
+      "第一部分 2 個正式候選均未新增為本期 Reading；新研究由 chatgpt-ai 公開來源檢索發現。第二部分留予企業資安流程，未採計或重製。"
+    ],
+    corrections: [
+      "CSA／OWASP 治理筆記及 NIST SP 1353 不是本週新發布研究；NIST 的 AI-for-security 用途與 security-of-AI 不混列。",
+      "上游的二手數字與治理建議不等於本次已驗證的攻防實證；私人歸檔與內部責任紀錄不公開。"
+    ]
+  },
   "2026.09.18": {
     title: "GSMD-WATCH-2026-0915-01_製造業資安觀測週報_2026W38",
     modifiedAt: "2026.09.15 15:23:10（臺北時間）",
