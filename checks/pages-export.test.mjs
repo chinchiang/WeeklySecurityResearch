@@ -44,11 +44,14 @@ test("public pages expose provenance and the new brand without private Drive lin
   assert.ok(feed.includes("查核：ChatGPT"));
   assert.ok(feed.includes(site), "feed must reference the configured Pages site");
 });
-test("export excludes source files and the private WORK document identifier", () => {
+test("export excludes source files and private WORK identifiers", () => {
   const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir,e.name)]);
+  const privatePatterns = [/1r77GDSHTt-wk2dIcLDJLrR-mw0wK9uHBr8hFsYXqAPs/, /WORK-\d+/, /(?:docs|drive)\.google\.com\//, /\bJungle\b/];
   for (const file of walk("out")) {
     assert.ok(!/\.(?:env|tsx?|map)$/.test(file), file);
-    if (/\.(?:html|js|txt|json)$/.test(file)) assert.ok(!readFileSync(file, "utf8").includes("1r77GDSHTt-wk2dIcLDJLrR-mw0wK9uHBr8hFsYXqAPs"), file);
+    if (!/\.(?:html|js|txt|json|xml)$/.test(file)) continue;
+    const text = readFileSync(file, "utf8");
+    for (const pattern of privatePatterns) assert.doesNotMatch(text, pattern, `${file}: ${pattern}`);
   }
   assert.ok(existsSync("out/.nojekyll"));
   assert.ok(!existsSync("out/social-content"), "social content must not ship on the public Pages site");
