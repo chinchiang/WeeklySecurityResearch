@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   CURRENT_WEEK,
+  TOPICS,
+  archiveReadings,
+  archiveTopicFilters,
+  currentTopicFilters,
   DEEP_REVIEW_THRESHOLD,
   RUBRIC_WEIGHTS,
   correctionLog,
@@ -14,6 +18,7 @@ import {
   hasCorrections,
   isRetracted,
   readings,
+  topicFiltersFor,
   weeklyEditorials,
   weightedScore,
 } from "../app/data/readings.ts";
@@ -144,4 +149,23 @@ test("corrections keep retracted readings visible but out of the action list", (
   const retracted = { ...readings[0], corrections: [{ date: "2026.08.12", type: "撤稿", note: "測試用" }] };
   assert.equal(isRetracted(retracted), true);
   assert.equal(isRetracted(readings[0]), (readings[0].corrections ?? []).some((c) => c.type === "撤稿"));
+});
+
+test("every reading uses topics from the shared vocabulary", () => {
+  assert.equal(new Set(TOPICS).size, TOPICS.length, "duplicate topic in vocabulary");
+  for (const r of readings) {
+    assert.ok(r.topics.length > 0, `#${r.id}: no topics`);
+    assert.equal(new Set(r.topics).size, r.topics.length, `#${r.id}: duplicate topic`);
+    for (const t of r.topics) assert.ok(TOPICS.includes(t), `#${r.id}: "${t}" is not in TOPICS`);
+  }
+  for (const t of TOPICS) assert.ok(readings.some(r => r.topics.includes(t)), `unused topic "${t}"`);
+});
+
+test("topic filters only offer topics that return readings on that page", () => {
+  for (const [filters, list] of [[currentTopicFilters, currentReadings], [archiveTopicFilters, archiveReadings]]) {
+    assert.equal(filters[0], "全部");
+    for (const t of filters.slice(1)) assert.ok(list.filter(r => r.topics.includes(t)).length >= 2, t);
+  }
+  const sample = [{ topics: ["Evaluation", "RAG"] }, { topics: ["Evaluation", "RAG"] }, { topics: ["Evaluation"] }, { topics: ["MCP"] }];
+  assert.deepEqual(topicFiltersFor(sample), ["全部", "Evaluation", "RAG"]);
 });
