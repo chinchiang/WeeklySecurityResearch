@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { allWeeks, CURRENT_WEEK, currentReadings, readings, weeklyEditorials } from "../app/data/readings.ts";
+import { provenanceText } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
 import { findPrivate } from "../scripts/private-patterns.mjs";
 const { base, site } = pagesConfig();
@@ -54,7 +55,11 @@ test("public pages expose provenance and the new brand without private Drive lin
   for (const file of [...htmlFiles, `reports/${CURRENT_WEEK.replaceAll(".", "-")}.html`]) {
     const html = readFileSync(path.join("out",file),"utf8");
     assert.ok(html.includes("科技・資安・架構"),file);
-    assert.ok(html.includes("歷史來源待確認"),file);
+    // Home and archive offer the legacy label as a source filter; a week page or report
+    // shows each of its readings' own provenance, which is legacy only for old readings.
+    const week = file.match(/(\d{4})-(\d{2})-(\d{2})/)?.slice(1).join(".");
+    const expected = week ? readings.filter(r => r.week === week).map(provenanceText) : ["歷史來源待確認"];
+    for (const text of expected) assert.ok(html.includes(text), `${file}: missing provenance "${text}"`);
     assert.ok(!html.includes("docs.google.com/document/"),file);
     assert.ok(!html.includes("EveryWeekAIRead"),file);
   }

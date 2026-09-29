@@ -22,6 +22,8 @@ import {
   weeklyEditorials,
   weightedScore,
 } from "../app/data/readings.ts";
+// Messages are read by the scheduled ChatGPT runs; say what to fix and where the rule lives.
+const RULES = "規則見 docs/run-instructions.md";
 
 const decisions = new Set(["深入審閱", "選讀"]);
 const kinds = new Set(["學術論文", "政策研究", "產業報告"]);
@@ -154,11 +156,11 @@ test("corrections keep retracted readings visible but out of the action list", (
 test("every reading uses topics from the shared vocabulary", () => {
   assert.equal(new Set(TOPICS).size, TOPICS.length, "duplicate topic in vocabulary");
   for (const r of readings) {
-    assert.ok(r.topics.length > 0, `#${r.id}: no topics`);
-    assert.equal(new Set(r.topics).size, r.topics.length, `#${r.id}: duplicate topic`);
-    for (const t of r.topics) assert.ok(TOPICS.includes(t), `#${r.id}: "${t}" is not in TOPICS`);
+    assert.ok(r.topics.length > 0, `#${r.id}：topics 不可為空。${RULES}`);
+    assert.equal(new Set(r.topics).size, r.topics.length, `#${r.id}：topics 有重複的標籤。${RULES}`);
+    for (const t of r.topics) assert.ok(TOPICS.includes(t), `#${r.id}：標籤「${t}」不在 app/data/readings.ts 的 TOPICS；請改用詞彙表中的拼法，確實是新主題才加進 TOPICS。${RULES}`);
   }
-  for (const t of TOPICS) assert.ok(readings.some(r => r.topics.includes(t)), `unused topic "${t}"`);
+  for (const t of TOPICS) assert.ok(readings.some(r => r.topics.includes(t)), `TOPICS 中的「${t}」沒有任何讀物使用；新增標籤時要同時用在讀物上。${RULES}`);
 });
 
 test("topic filters only offer topics that return readings on that page", () => {
