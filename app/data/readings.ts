@@ -152,12 +152,12 @@ export const readings: Reading[] = [
       "把 Full／Guarded authorization delay 由 0.10／0.20 秒提高至 0.40／0.60 秒，在該模型使平均最大頻率偏差 0.02789→0.04216 Hz、settling 0.07740→0.23023 秒；這支持把 policy latency 納入驗收，但不是製造產線通用門檻。"
     ],
     relevance: "對跨臺／中／美／墨／捷的 ODM／EMS，ERP／PLM／MES 到 cell gateway 的每次請求仍需分資源、身分與動作授權；但疑似受害端點不宜只剩全放或全斷。可將觀測、估測、寫入與設備命令拆成可降級 capability，讓 brownfield 資產透過 gateway 執行。China zone 的 CSL／DSL／PIPL 適用性仍須依資料類型、角色與傳輸路徑另行法律判斷；本研究沒有驗證任何公司的法遵或既有架構。",
-    action: "Jungle 建議先讀 §2–5、Evaluation 與 Limitations；一般背景與推導可略讀，約 35–45 分鐘。最小驗證：在非生產 testbed 選一條 MES／gateway 路徑，列出 observe／influence／actuate／peer 四類 capability；定義 hard safety admissibility、人工接管與 fail-safe；注入可疑 telemetry 及 0.1–0.6 秒授權延遲；確認未授權 command 被抑制、原始 telemetry 僅對核准角色可見，並留存政策版本、p95／p99 latency、fallback 與操作員核准紀錄。對應 WORK-23／WORK-31／WORK-22；責任接受狀態未確認，本次僅完成閱讀證據。",
+    action: "建議先讀 §2–5、Evaluation 與 Limitations；一般背景與推導可略讀，約 35–45 分鐘。最小驗證：在非生產 testbed 選一條 MES／gateway 路徑，列出 observe／influence／actuate／peer 四類 capability；定義 hard safety admissibility、人工接管與 fail-safe；注入可疑 telemetry 及 0.1–0.6 秒授權延遲；確認未授權 command 被抑制、原始 telemetry 僅對核准角色可見，並留存政策版本、p95／p99 latency、fallback 與操作員核准紀錄。本次僅完成閱讀證據，未執行驗證。",
     caveat: "單一學術 preprint；一個 power-grid 模擬、DC／聚合 dynamics，未涵蓋 AC／voltage／protection／cascade、通訊失效、自適應攻擊或 hardware-in-the-loop，也沒有製造情境實驗、形式化安全保證或認證控制器。原文 HTML 未見明確利益衝突聲明；三位作者均列 University of Padua，不能因此推定不存在其他利益。未取得 IEC 62443 標準全文核對條號，僅可說概念上可補充 zones／conduits 與 least privilege 設計，不能宣稱符合性。",
     crossCheck: "2026-09-26 已完整讀取 v1 主文、架構、演算法、全部結果、附錄及限制，並與 NIST SP 800-207 官方頁核對 Zero Trust 基線。事實／主張／推論分開：8,000 次與表中結果為作者實驗；SA-ZT 可移植至 ODM gateway 是本次分析推論；未獨立重跑公開程式。",
     metric: "8,000 配對決策；dynamic safety term 僅改變 1.15%",
     spotlight: [
-      { heading: "為何值得 Jungle 閱讀", text: "這篇沒有把 Zero Trust 簡化成更多 deny。它把『安全政策延遲與隔離動作也會影響製程』寫成可測的架構問題，正好補上 ERP／PLM／MES 跨 IT/OT 邊界時最難處理的權衡。" },
+      { heading: "為何值得閱讀", text: "這篇沒有把 Zero Trust 簡化成更多 deny。它把『安全政策延遲與隔離動作也會影響製程』寫成可測的架構問題，正好補上 ERP／PLM／MES 跨 IT/OT 邊界時最難處理的權衡。" },
       { heading: "證據品質", text: "方法、分母、基準與失敗結果完整，並誠實呈現 safety term 有時提高 stress；但全部量化證據來自單一電力模擬，尚未有 manufacturing 或 HIL 重現。" },
       { heading: "盲點", text: "未處理跨國資料分類／主權、S/4HANA 或 PLM 身分委派、legacy protocol 語意、供應商遠端維護、IEC 62443 conformity assessment，也未回答誰能改 safety constraint。這些需在企業 threat model 與治理流程補齊。" },
       { heading: "可採取決策", text: "先決定是否把 capability-level degradation 與 authorization latency 納入一條非生產 OT 路徑驗收；不要以本研究直接核准自動隔離、正式採購或法遵結論。" }
@@ -180,7 +180,7 @@ export const readings: Reading[] = [
       "作者回報 proving time 由 2 個 constraints 的 2.4 秒增至 200 個的 178.9 秒，proof 由 0.28 MB 增至 21.4 MB，約每 constraint 0.9 秒／0.1 MB，run-to-run SD 低於 1%。這只量測 proof generation，不是漏洞偵測率、SBOM completeness 或跨產品部署成效。"
     ],
     relevance: "OEM 客戶常想核對禁用 library，ODM 又不願揭露完整依賴與 IP。選擇性揭露可降低供應鏈資料暴露，但跨公司採用仍需 artifact digest、生成工具與 policy vocabulary 的共同契約；公開鏈也可能暴露 release cadence，且跨境／China zone 的 metadata 與責任配置需另行法務判斷。",
-    action: "先讀 Threat Model、Protocol、Evaluation、Limitations，背景與鏈上成本估算可略讀，約 25–35 分鐘。最小驗證：建立 10 個 fixture，包含已知 prohibited PURL、刻意遺漏的 transitive dependency、PURL alias／版本錯配、被竄改 image digest 與舊 root；要求 artifact→SBOM attestation，並確認所有 negative controls fail closed。再比較 proof time／size、CI 成本與客戶實際 disclosure requirement。對應 WORK-24／WORK-32／WORK-01-D；建議 Product Security／PSIRT owner，責任尚未接受。",
+    action: "先讀 Threat Model、Protocol、Evaluation、Limitations，背景與鏈上成本估算可略讀，約 25–35 分鐘。最小驗證：建立 10 個 fixture，包含已知 prohibited PURL、刻意遺漏的 transitive dependency、PURL alias／版本錯配、被竄改 image digest 與舊 root；要求 artifact→SBOM attestation，並確認所有 negative controls fail closed。再比較 proof time／size、CI 成本與客戶實際 disclosure requirement。建議由 Product Security／PSIRT 主責。",
     caveat: "EDOC 2026 accepted，但仍是單一應用原型；exact PURL absence 不等於元件不可達或 CVE 不可利用，也不等於 SBOM 完整。只處理 Maven 測試集，未驗 firmware／BMC／BIOS、embedded C/C++、跨供應商串鏈或撤銷。作者亦警告 SBOM 品質與 zkVM soundness 是基礎假設；鏈上成本取決於時點價格，未用於本次採購結論。原文未見利益衝突聲明。",
     crossCheck: "2026-09-26 已完整讀取 v1 方法、threat model、protocol、evaluation 與 limitations；確認 accepted 標示來自作者／arXiv，未另查會議最終論文集。沒有把 confidential SBOM proof 說成 VEX 或 CRA 合規證明，也沒有採用不穩定的幣價成本。",
     metric: "70 次原型測試；200 constraints：178.9 秒／21.4 MB",
