@@ -4,6 +4,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { readings } from "../app/data/readings.ts";
 import { originsFor, matchesOrigin, provenanceText, sourceLabels, sourceWorkflows, studyKey } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
+import { findPrivate } from "../scripts/private-patterns.mjs";
 
 test("known import provenance matches research receipts, not article topics", () => {
   for (const flow of ["ai", "enterprise"]) {
@@ -106,16 +107,13 @@ test("all reading receipts conform to the source-workflow specification schema",
 });
 
 
-// Internal WORK tracking IDs, private Drive/Docs links and the private reader's
-// name must never reach public data. Match the shapes, not one known document.
-const PRIVATE_PATTERNS = [/WORK-\d+/, /(?:docs|drive)\.google\.com\//, /\bJungle\b/];
 test("public data, reports and receipts carry no private identifiers", () => {
   const files = ["app/data/readings.ts", "app/data/provenance.ts",
     ...readdirSync("public/reports").map(f => `public/reports/${f}`),
     ...readdirSync("public/reading-runs").map(f => `public/reading-runs/${f}`)];
   for (const file of files) {
     const text = readFileSync(file, "utf8");
-    for (const pattern of PRIVATE_PATTERNS) assert.doesNotMatch(text, pattern, `${file}: ${pattern}`);
+    assert.equal(findPrivate(text), null, file);
   }
 });
 

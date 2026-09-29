@@ -4,6 +4,7 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { allWeeks, CURRENT_WEEK, currentReadings, readings } from "../app/data/readings.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
+import { findPrivate } from "../scripts/private-patterns.mjs";
 const { base, site } = pagesConfig();
 const htmlFiles = ["index.html", "archive/index.html", ...allWeeks.map(w => `week/${w.replaceAll(".", "-")}/index.html`)];
 test("Pages export has all weekly routes, base-path-safe navigation and assets", () => {
@@ -56,12 +57,11 @@ test("public pages expose provenance and the new brand without private Drive lin
 });
 test("export excludes source files and private WORK identifiers", () => {
   const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir,e.name)]);
-  const privatePatterns = [/WORK-\d+/, /(?:docs|drive)\.google\.com\//, /\bJungle\b/];
   for (const file of walk("out")) {
     assert.ok(!/\.(?:env|tsx?|map)$/.test(file), file);
     if (!/\.(?:html|js|txt|json|xml)$/.test(file)) continue;
     const text = readFileSync(file, "utf8");
-    for (const pattern of privatePatterns) assert.doesNotMatch(text, pattern, `${file}: ${pattern}`);
+    assert.equal(findPrivate(text), null, file);
   }
   assert.ok(existsSync("out/.nojekyll"));
   assert.ok(!existsSync("out/social-content"), "social content must not ship on the public Pages site");
