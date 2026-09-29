@@ -7,7 +7,7 @@
 - 正式名稱：`chinchiang/WeeklySecurityResearch`（2026-09-13 由 EveryWeekAIRead 改名，中途曾誤拼為 WeeklySecurityReaseach／WeeklySecurityReseach，這兩個名字只會出現在歷史紀錄裡）。
 - 正式站：https://chinchiang.github.io/WeeklySecurityResearch/ ，GitHub Pages 是唯一部署目標。Next.js 靜態匯出，沒有伺服器、沒有 Worker，Pages 也無法設定 HTTP 回應標頭。
 - 舊的 ChatGPT Sites Worker 部署與 D1 範本已在 #22 全部移除，不要再引入 vinext、wrangler、Cloudflare vite plugin 或 drizzle。
-- 內容供稿與發布的契約在 `docs/source-workflow.md`：三個內容來源、兩個 GitHub 寫入者、provenance 欄位規則。改內容流程前先讀它。
+- 內容供稿與發布的契約在 `docs/source-workflow.md`：三個內容來源、兩個 GitHub 寫入者、provenance 欄位規則。改內容流程前先讀它。兩個 ChatGPT 排程任務的已儲存指示補充在 `docs/run-instructions.md`，改了 CI 規則要同步更新它。
 
 ## 指令（與 CI 完全相同）
 
