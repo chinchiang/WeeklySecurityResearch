@@ -3142,7 +3142,8 @@ export const weeklyReportIntegrations: Record<string, WeeklyReportIntegration> =
   }
 };
 
-export const weeklyReportIntegration = weeklyReportIntegrations[CURRENT_WEEK]!;
+/** Drive 不可讀時該週仍可發布，因此本期可能沒有整合紀錄。 */
+export const weeklyReportIntegration: WeeklyReportIntegration | undefined = weeklyReportIntegrations[CURRENT_WEEK];
 
 export function readingSearchText(reading: Reading) {
   return [reading.title, reading.subtitle, reading.authors, reading.summary, reading.relevance, reading.action, reading.metric ?? "", ...reading.findings, ...reading.topics].join(" ").toLowerCase();

@@ -67,7 +67,7 @@ export function generateReportForWeek(week) {
   <div class="cross-check"><b>查核與判定</b><p>${esc(r.crossCheck ?? "")}</p><p>證據 ${r.scores.evidence}/3；關聯 ${r.scores.relevance}/3；可行動 ${r.scores.actionability}/3。${esc(r.decision)}。</p></div>
   <div class="caveat"><b>限制與利益關係</b><p>${esc(r.caveat)}</p></div>
   ${r.spotlight ? `<div class="spotlight-detail">${r.spotlight.map((s) => `<section><h4>${esc(s.heading)}</h4><p>${linked(s.text)}</p></section>`).join("")}</div>` : ""}
-  <p class="detail-section"><a href="${esc(r.source)}">原始來源 ↗</a> · <a href="${esc(r.pdf)}">PDF ↗</a> · <a href="#reading-${r.id}">本篇連結</a></p>
+  <p class="detail-section"><a href="${esc(r.source)}">原始來源 ↗</a> · ${r.pdf ? `<a href="${esc(r.pdf)}">PDF ↗</a> · ` : ""}<a href="#reading-${r.id}">本篇連結</a></p>
 </article>`
     )
     .join("");
