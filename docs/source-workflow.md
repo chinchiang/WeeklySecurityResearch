@@ -26,6 +26,8 @@ Claude 是兩類候選的上游，不是第三個 GitHub 寫入者。原始文�
 
 以 `npm run build:report` 重新產生並提交 HTML 報告（建置不會代勞），生成索引、Feed，執行資料、來源、歷史保存、建置、lint、型別、安全稽核與 Pages 檢查。必要 review/CI 通過再合併；核實 main CI、部署及線上內容後，通知研究／GitHub 寫入／發布各自狀態。失敗保留已完成內容與確切缺口。公開版不含 Drive 原文、私人連結或 WORK 證據，不寄信、不修改 Drive 或分享權限。
 
+兩個 ChatGPT 排程任務須遵守的持續整合規則（主題標籤、報告編號與版次、報告快照）整理在 `docs/run-instructions.md`，可直接貼入已儲存指示。
+
 ## repo 更名
 
 Pages 建置採 `GITHUB_REPOSITORY` 推導 base path；本機預設目前正式 repo，可用 NEXT_PUBLIC_BASE_PATH／NEXT_PUBLIC_SITE_URL 指定。閱讀進度沿用原 localStorage key，歷史期別與文章 ID 不變。舊 Pages 路徑是否可用不得假設；正式 canonical、Feed 與 sitemap 使用新網址。
