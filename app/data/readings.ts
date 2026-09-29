@@ -2916,6 +2916,11 @@ export const archiveWeeks = [...new Set(archiveReadings.map((reading) => reading
 export const currentTopicFilters = topicFiltersFor(currentReadings);
 export const archiveTopicFilters = topicFiltersFor(archiveReadings);
 export const priorityReading = [...currentReadings].sort((a, b) => a.rank - b.rank)[0];
+/** 架構長文區塊指向本週排名最前的架構類讀物；本週沒有時為 undefined，首頁不顯示該區塊。 */
+export const ARCHITECTURE_TOPICS: readonly string[] = ["Enterprise Architecture", "Architecture"];
+export const currentArchitectureReading = [...currentReadings]
+  .sort((a, b) => a.rank - b.rank)
+  .find((reading) => reading.topics.some((topic) => ARCHITECTURE_TOPICS.includes(topic)));
 export const currentStats = {
   total: currentReadings.length,
   deep: currentReadings.filter((reading) => reading.decision === "深入審閱").length,

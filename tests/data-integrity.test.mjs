@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  ARCHITECTURE_TOPICS,
   CURRENT_WEEK,
   TOPICS,
   archiveReadings,
   archiveTopicFilters,
+  currentArchitectureReading,
   currentTopicFilters,
   DEEP_REVIEW_THRESHOLD,
   RUBRIC_WEIGHTS,
@@ -170,4 +172,15 @@ test("topic filters only offer topics that return readings on that page", () => 
   }
   const sample = [{ topics: ["Evaluation", "RAG"] }, { topics: ["Evaluation", "RAG"] }, { topics: ["Evaluation"] }, { topics: ["MCP"] }];
   assert.deepEqual(topicFiltersFor(sample), ["全部", "Evaluation", "RAG"]);
+});
+
+test("architecture spotlight opens a current-week architecture reading, or is hidden", () => {
+  for (const t of ARCHITECTURE_TOPICS) assert.ok(TOPICS.includes(t), `ARCHITECTURE_TOPICS 的「${t}」不在 TOPICS。`);
+  const candidates = currentReadings.filter(r => r.topics.some(t => ARCHITECTURE_TOPICS.includes(t)));
+  if (candidates.length === 0) {
+    assert.equal(currentArchitectureReading, undefined);
+    return;
+  }
+  assert.equal(currentArchitectureReading?.week, CURRENT_WEEK);
+  assert.equal(currentArchitectureReading?.rank, Math.min(...candidates.map(r => r.rank)));
 });

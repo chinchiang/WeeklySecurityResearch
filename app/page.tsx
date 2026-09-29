@@ -10,6 +10,7 @@ import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
 import { useReadingProgress } from "./components/use-reading-progress";
 import {
   CURRENT_WEEK,
+  currentArchitectureReading,
   currentTopicFilters,
   correctionLog,
   currentEditorial,
@@ -140,7 +141,7 @@ export default function Home() {
       </nav>
 
       <aside className="side-nav" aria-label="閱讀導覽">
-        <p>研究閱讀室</p><a href="#top">本期總覽</a><a href="#index">精選閱讀</a><a href="#spotlight">架構長文</a><a href={sitePath("/archive/")} >歷史清單</a><a href="#progress">閱讀進度</a><a href="#verification">查核方法</a>
+        <p>研究閱讀室</p><a href="#top">本期總覽</a><a href="#index">精選閱讀</a>{currentArchitectureReading && <a href="#spotlight">架構長文</a>}<a href={sitePath("/archive/")} >歷史清單</a><a href="#progress">閱讀進度</a><a href="#verification">查核方法</a>
         <div className="sister-sites"><p>相關情報站</p><a href="https://chinchiang.github.io/DailySOCVitamin/">Daily SOC Vitamin ↗</a><a href="https://chinchiang.github.io/CyberRegulationWatch/">Cyber Regulation Watch ↗</a></div>
       </aside>
       <section className="hero" id="top">
@@ -292,7 +293,9 @@ export default function Home() {
         )}
       </section>
 
-      <section id="spotlight" className="spotlight-section"><div className="section-heading"><div><p className="eyebrow">ENTERPRISE SECURITY ARCHITECTURE</p><h2>架構長文</h2></div></div><p>架構研究與 AI、產品安全共用同一份清單；入選時可透過「Architecture」分類閱讀完整評述。</p><button className="secondary-button" onClick={() => { setTopic("Architecture"); document.getElementById("index")?.scrollIntoView(); }}>閱讀架構評述 →</button></section>
+      {currentArchitectureReading && (
+        <section id="spotlight" className="spotlight-section"><div className="section-heading"><div><p className="eyebrow">ENTERPRISE SECURITY ARCHITECTURE</p><h2>架構長文</h2></div></div><p>架構研究與 AI、產品安全共用同一份清單；本週的架構類讀物是〈{currentArchitectureReading.title}〉。</p><button className="secondary-button" onClick={(event) => openReading(currentArchitectureReading!, event.currentTarget)}>閱讀架構評述 →</button></section>
+      )}
 
       <section className="report-integration" id="report-integration">
         <div className="report-heading">

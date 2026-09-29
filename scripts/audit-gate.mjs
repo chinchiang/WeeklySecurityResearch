@@ -7,7 +7,8 @@
  * gate for everything else and narrows it to advisories written down in
  * scripts/audit-allowlist.json with a reason.
  *
- * Exit codes: 0 clean, 1 blocking advisory, 2 stale or expired allowlist.
+ * Exit codes: 0 clean, 1 blocking advisory, 2 stale, expired or invalid
+ * allowlist, or npm audit returned no report.
  */
 import { exec } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -57,9 +58,28 @@ const collectAdvisories = (report) => {
   return found;
 };
 
+const fail = (message) => {
+  console.error(message);
+  process.exit(2);
+};
+
 const { allow = [] } = JSON.parse(await readFile(allowlistPath, "utf8"));
+// Every exception must say why it is safe and when it expires; an entry
+// without a review date would otherwise stay tolerated forever.
+for (const entry of allow) {
+  const missing = ["advisory", "reason", "blockedOn", "reviewBy"].filter((key) => typeof entry[key] !== "string" || entry[key].trim() === "");
+  if (missing.length > 0) fail(`INVALID  allowlist entry ${entry.advisory ?? "(no advisory)"} is missing: ${missing.join(", ")}.`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.reviewBy)) fail(`INVALID  ${entry.advisory} reviewBy must be YYYY-MM-DD, got "${entry.reviewBy}".`);
+}
 const allowed = new Map(allow.map((entry) => [entry.advisory, entry]));
-const advisories = collectAdvisories(JSON.parse(await runAudit()));
+
+// npm prints `{"error": {...}}` on registry, network or lockfile failures.
+// That is not a clean report, so it must not pass the gate.
+const report = JSON.parse(await runAudit());
+if (report.error || typeof report.vulnerabilities !== "object" || report.vulnerabilities === null) {
+  fail(`npm audit did not return a vulnerability report: ${report.error?.summary ?? report.error?.code ?? "no \"vulnerabilities\" field"}.`);
+}
+const advisories = collectAdvisories(report);
 
 const blocking = [...advisories.values()].filter((advisory) => !allowed.has(advisory.id));
 const tolerated = [...advisories.values()].filter((advisory) => allowed.has(advisory.id));
@@ -68,13 +88,13 @@ const unused = allow.filter((entry) => !advisories.has(entry.advisory));
 const today = new Date().toISOString().slice(0, 10);
 const expired = tolerated
   .map((advisory) => allowed.get(advisory.id))
-  .filter((entry) => entry.reviewBy && entry.reviewBy < today);
+  .filter((entry) => entry.reviewBy < today);
 
 for (const advisory of tolerated) {
   const entry = allowed.get(advisory.id);
   console.log(`allowed  ${advisory.severity.padEnd(8)} ${advisory.id}  ${[...advisory.packages].join(", ")}`);
   console.log(`         ${entry.reason}`);
-  console.log(`         blocked on: ${entry.blockedOn}  review by: ${entry.reviewBy ?? "n/a"}`);
+  console.log(`         blocked on: ${entry.blockedOn}  review by: ${entry.reviewBy}`);
 }
 
 for (const advisory of blocking) {
