@@ -5,6 +5,8 @@ import { readings } from "../app/data/readings.ts";
 import { originsFor, matchesOrigin, provenanceText, sourceLabels, sourceWorkflows, studyKey } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
 import { findPrivate } from "../scripts/private-patterns.mjs";
+// Messages are read by the scheduled ChatGPT runs; say what to fix and where the rule lives.
+const RULES = "規則見 docs/run-instructions.md";
 
 test("known import provenance matches research receipts, not article topics", () => {
   for (const flow of ["ai", "enterprise"]) {
@@ -135,28 +137,28 @@ test("receipts only list existing readings of one week and match its report ID",
   const revisions = new Map();
   for (const [file, r] of Object.entries(receipts)) {
     const flow = workflowId(r.workflow);
-    assert.ok(["chatgpt-ai", "chatgpt-enterprise"].includes(flow), `${file}: unknown workflow ${r.workflow}`);
+    assert.ok(["chatgpt-ai", "chatgpt-enterprise"].includes(flow), `${file}：workflow「${r.workflow}」無法辨識，請填 chatgpt-ai 或 chatgpt-enterprise。${RULES}`);
     const listed = [...r.added_reading_ids, ...r.revised_reading_ids].map(id => readings.find(x => x.id === id));
-    assert.ok(listed.every(Boolean), `${file}: lists a reading id that does not exist`);
+    assert.ok(listed.every(Boolean), `${file}：added_reading_ids／revised_reading_ids 列了不存在的讀物 ID。${RULES}`);
     const weeks = new Set(listed.map(x => x.week));
-    assert.ok(weeks.size <= 1, `${file}: spans weeks ${[...weeks]}`);
+    assert.ok(weeks.size <= 1, `${file}：列出的讀物分屬多個週次（${[...weeks]}），一份收據只能對應一週。${RULES}`);
     for (const id of r.added_reading_ids) {
-      assert.ok(!added.has(id), `#${id} added by both ${added.get(id)} and ${file}`);
+      assert.ok(!added.has(id), `#${id} 同時被 ${added.get(id)} 與 ${file} 列為新增；已發布的讀物再次修改請列在 revised_reading_ids。${RULES}`);
       added.set(id, file);
-      assert.equal(readings.find(x => x.id === id).provenance?.reviewedBy, flow, `${file}: #${id} reviewedBy`);
+      assert.equal(readings.find(x => x.id === id).provenance?.reviewedBy, flow, `${file}：#${id} 的 provenance.reviewedBy 必須等於收據的 workflow（${flow}）。${RULES}`);
     }
     if (r.new_research_total !== undefined) {
-      assert.equal(r.new_research_total + r.background_total, r.added_reading_ids.length, `${file}: totals`);
+      assert.equal(r.new_research_total + r.background_total, r.added_reading_ids.length, `${file}：new_research_total（${r.new_research_total}）加 background_total（${r.background_total}）必須等於 added_reading_ids 的篇數（${r.added_reading_ids.length}）。${RULES}`);
     }
     const [week] = weeks;
     if (!week) continue;
     // Both workflows of a week share the week's report ID and bump its revision.
-    assert.equal(r.report_id, `AISEC-ARCH-${isoWeek(week)}-${week.replaceAll(".", "")}`, `${file}: report_id`);
+    assert.equal(r.report_id, `AISEC-ARCH-${isoWeek(week)}-${week.replaceAll(".", "")}`, `${file}：report_id 必須用該週週五日期（week ${week}），同週兩個任務共用，不可用執行日期。${RULES}`);
     const revision = `${r.report_id} r${r.revision}`;
-    assert.ok(!revisions.has(revision), `${file}: ${revision} also used by ${revisions.get(revision)}`);
+    assert.ok(!revisions.has(revision), `${file}：${revision} 已被 ${revisions.get(revision)} 使用；後寫入的任務請把 editorial 與收據的 revision 加 1。${RULES}`);
     revisions.set(revision, file);
     const weekTotal = readings.filter(x => x.week === week).length;
-    assert.ok(r.issue_total >= r.added_reading_ids.length && r.issue_total <= weekTotal, `${file}: issue_total ${r.issue_total}`);
+    assert.ok(r.issue_total >= r.added_reading_ids.length && r.issue_total <= weekTotal, `${file}：issue_total（${r.issue_total}）必須介於新增篇數（${r.added_reading_ids.length}）與該週總篇數（${weekTotal}）之間。${RULES}`);
   }
 });
 
@@ -165,12 +167,12 @@ test("provenance evidence points at a receipt that lists the reading, or at a re
     const { evidence, reviewedBy, checkedAt, inputReportId } = x.provenance;
     if (PR_URL.test(evidence)) continue;
     const file = evidence.match(RECEIPT_URL)?.[1];
-    assert.ok(file, `#${x.id}: evidence is neither a receipt nor a PR: ${evidence}`);
+    assert.ok(file, `#${x.id}：provenance.evidence 必須是 https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/<收據檔名> 或本 repo 的 PR 網址，目前是 ${evidence}。${RULES}`);
     const r = receipts[file];
-    assert.ok(r, `#${x.id}: receipt ${file} does not exist`);
-    assert.ok([...r.added_reading_ids, ...r.revised_reading_ids].includes(x.id), `#${x.id}: not listed in ${file}`);
-    assert.equal(workflowId(r.workflow), reviewedBy, `#${x.id}: reviewedBy vs ${file}`);
-    assert.equal(checkedAt, r.checked_at.slice(0, 10), `#${x.id}: checkedAt vs ${file}`);
-    if (inputReportId) assert.equal(inputReportId, r.input_report_id, `#${x.id}: inputReportId vs ${file}`);
+    assert.ok(r, `#${x.id}：provenance.evidence 指向的收據 public/reading-runs/${file} 不存在，請確認檔名或一併提交收據。${RULES}`);
+    assert.ok([...r.added_reading_ids, ...r.revised_reading_ids].includes(x.id), `#${x.id}：收據 ${file} 的 added_reading_ids／revised_reading_ids 沒有列出這篇。${RULES}`);
+    assert.equal(workflowId(r.workflow), reviewedBy, `#${x.id}：provenance.reviewedBy 必須等於收據 ${file} 的 workflow。${RULES}`);
+    assert.equal(checkedAt, r.checked_at.slice(0, 10), `#${x.id}：provenance.checkedAt 必須等於收據 ${file} 的 checked_at 日期。${RULES}`);
+    if (inputReportId) assert.equal(inputReportId, r.input_report_id, `#${x.id}：provenance.inputReportId 必須等於收據 ${file} 的 input_report_id。${RULES}`);
   }
 });

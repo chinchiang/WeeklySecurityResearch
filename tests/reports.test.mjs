@@ -20,7 +20,7 @@ test("committed reports match what the generator renders from current data", () 
     assert.ok(existsSync(reportPath(week)), `${week}: missing report`);
     assert.ok(
       normalize(readFileSync(reportPath(week), "utf8")) === renderReport(week),
-      `${reportPath(week)} is out of date; run npm run build:report and commit the result`,
+      `${reportPath(week)} 與目前資料不一致：請執行 npm run build:report -- ${week.replaceAll(".", "-")} 並提交產生的檔案（run npm run build:report and commit the result）。規則見 docs/run-instructions.md`,
     );
   }
 });
