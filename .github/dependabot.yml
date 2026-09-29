@@ -11,6 +11,11 @@ updates:
     groups:
       minor-and-patch:
         update-types: ["minor", "patch"]
+    ignore:
+      # @types/node tracks the runtime in .nvmrc (Node 22); newer majors
+      # describe APIs CI does not have. Bump it together with .nvmrc.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: "/"
