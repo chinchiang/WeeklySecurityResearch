@@ -8,6 +8,7 @@ import { SourceMeta, SourceFilter } from "../components/source-meta";
 import { matchesOrigin } from "../data/provenance";
 import { ArchitectureReview } from "../components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "../components/reading-meta";
+import { useReadingProgress } from "../components/use-reading-progress";
 import {
   TOPIC_FILTERS,
   allWeeks,
@@ -26,30 +27,9 @@ export default function ArchivePage() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("newest");
   const [selected, setSelected] = useState<Reading | null>(null);
-  const [completed, setCompleted] = useState<number[]>([]);
+  const { completed, toggleComplete } = useReadingProgress();
   const modalRef = useRef<HTMLElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    const saved = window.localStorage.getItem("ai-security-reading-progress");
-    if (!saved) return;
-    const frame = window.requestAnimationFrame(() => {
-      try {
-        const parsed = JSON.parse(saved);
-        setCompleted(Array.isArray(parsed) ? parsed.filter(Number.isInteger) : []);
-      } catch {
-        setCompleted([]);
-      }
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem(
-      "ai-security-reading-progress",
-      JSON.stringify(completed),
-    );
-  }, [completed]);
 
   function openReading(reading: Reading, trigger?: HTMLElement) {
     lastTriggerRef.current = trigger ?? document.activeElement as HTMLElement;
@@ -122,20 +102,10 @@ export default function ArchivePage() {
       );
   }, [origin, decision, query, sort, topic, week]);
 
-  const toggleComplete = (id: number) => {
-    setCompleted((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id],
-    );
-  };
-
   const archiveCompleted = completed.filter((id) =>
     archiveReadings.some((reading) => reading.id === id),
   );
-  const progress = Math.round(
-    (archiveCompleted.length / archiveReadings.length) * 100,
-  );
+  const progress = archiveReadings.length ? Math.round((archiveCompleted.length / archiveReadings.length) * 100) : 0;
 
   return (
     <main>

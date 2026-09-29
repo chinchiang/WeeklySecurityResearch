@@ -33,11 +33,13 @@ export async function GET() {
   );
 
   const entries = feedReadings.map((reading) => {
-    // Each entry links to its own week, not to the current one.
-    const permalink = `${SITE}/week/${slug(reading.week)}#reading-${reading.id}`;
+    // Each entry links to its own week, not to the current one. The id keeps
+    // its original form so subscribers do not see published entries as new.
+    const id = `${SITE}/week/${slug(reading.week)}#reading-${reading.id}`;
+    const permalink = `${SITE}/week/${slug(reading.week)}/#reading-${reading.id}`;
     return `
     <entry>
-      <id>${permalink}</id>
+      <id>${id}</id>
       <title>${xml(reading.title)}</title>
       <link href="${xml(reading.source)}" rel="alternate" />
       <link href="${permalink}" rel="related" />
@@ -51,7 +53,7 @@ export async function GET() {
   );
 
   return new Response(
-    `<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><id>${SITE}/</id><title>科技・資安・架構週讀</title><link href="${SITE}/feed.xml" rel="self"/><link href="${SITE}/"/><updated>${updated}</updated><subtitle>製造業科技、資安與架構每週精選與查核摘要（最近 ${weeks.length} 期）</subtitle>${entries}</feed>`,
+    `<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><id>${SITE}/</id><title>科技・資安・架構週讀</title><author><name>科技・資安・架構週讀</name><uri>${SITE}/</uri></author><link href="${SITE}/feed.xml" rel="self"/><link href="${SITE}/"/><updated>${updated}</updated><subtitle>製造業科技、資安與架構每週精選與查核摘要（最近 ${weeks.length} 期）</subtitle>${entries}</feed>`,
     { headers: { "content-type": "application/atom+xml; charset=utf-8", "cache-control": "public, max-age=3600" } },
   );
 }
