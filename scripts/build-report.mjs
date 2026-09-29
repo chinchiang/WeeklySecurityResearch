@@ -1,4 +1,5 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { pathToFileURL } from "node:url";
 import {
   allWeeks,
   readings,
@@ -22,9 +23,13 @@ const linked = (value) =>
 
 const list = (items) => `<ul>${items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>`;
 
-const css = readFileSync("app/globals.css", "utf8").replace('@import "tailwindcss";', "");
+// Normalized so a Windows checkout (CRLF) renders the same bytes as CI.
+const css = readFileSync("app/globals.css", "utf8").replaceAll("\r\n", "\n").replace('@import "tailwindcss";', "");
 
-export function generateReportForWeek(week) {
+export const reportPath = (week) => `public/reports/${week.replaceAll(".", "-")}.html`;
+
+/** Renders one week from data only, so the committed file can be checked for drift. */
+export function renderReport(week) {
   const weekReadings = readings
     .filter((r) => r.week === week)
     .sort((a, b) => a.rank - b.rank);
@@ -86,30 +91,29 @@ export function generateReportForWeek(week) {
 
   const html = `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${slug} 科技・資安・架構週讀 · r${revision}</title><meta name="description" content="本期完整研究評述、查核限制與製造業行動建議"><style>${css}</style></head><body><main>
 <section class="hero"><p class="eyebrow">WEEKLY RESEARCH · REVISION ${revision}</p><h1>${slug}<br>科技・資安・架構週讀</h1><p class="hero-subtitle">${esc(editorial.note)}</p><p class="edition-note">${reportId} · 研究查核日期 ${verifiedAt}</p>${presentationNote ? `<p class="edition-note">${esc(presentationNote)}</p>` : ""}<div class="kpi-row"><div class="kpi"><b>${stats.total}</b><span>入選</span></div><div class="kpi purple"><b>${stats.deep}</b><span>深入審閱</span></div><div class="kpi blue"><b>${stats.selective}</b><span>選讀</span></div></div></section>
-<section class="about"><h2>三個內容來源・兩個網站更新流程</h2>${sourceWorkflows.map((f) => `<h3>${esc(f.title)} · ${esc(f.schedule)}</h3><p>${esc(f.role)}</p><p>${esc(f.evidence)}</p>`).join("")}</section>
+<section class="about"><h2>三個內容來源・兩個網站更新流程</h2>${sourceWorkflows.map((f) => `<h3>${esc(f.title)} · ${esc(f.schedule)}</h3><p>${esc(f.role)}</p>`).join("")}<p>排程時間代表預定分工，不代表該週已執行成功；各次執行的查核與發布狀態記錄於 public/reading-runs 收據。</p></section>
 <section><nav aria-label="本期目錄"><ol>${weekReadings.map((r) => `<li><a href="#reading-${r.id}">${esc(r.title)}</a></li>`).join("")}</ol></nav></section>
 <section class="library"><div class="reading-grid week-reading-grid">${cards}</div></section>${integrationHtml}
 <section class="about"><h2>本期略過</h2>${skippedHtml}${skipNoteHtml}</section>
 <section class="about"><h2>版本與交付辨識</h2><p>本檔為閱讀結果完成的 r${revision} 公開保存版。取得此檔表示可讀取這一版內容；GitHub commit、索引與 Pages 部署結果另由版本紀錄和部署頁確認，不能由報告完成推定網站已發布。</p></section>
 </main></body></html>`;
 
-  mkdirSync("public/reports", { recursive: true });
-  writeFileSync(`public/reports/${slug}.html`, html);
-  console.log(`Report generated: public/reports/${slug}.html`);
-  return `public/reports/${slug}.html`;
+  return html;
 }
 
-const targetArg = process.argv[2];
-if (targetArg === "--all") {
-  for (const w of allWeeks) {
-    generateReportForWeek(w);
-  }
-} else if (targetArg) {
-  const week = targetArg.includes("-") ? targetArg.replaceAll("-", ".") : targetArg;
-  generateReportForWeek(week);
-} else {
-  // Default: generate all historical reports
-  for (const w of allWeeks) {
-    generateReportForWeek(w);
-  }
+export function writeReport(week) {
+  const html = renderReport(week);
+  if (html === null) return null;
+  mkdirSync("public/reports", { recursive: true });
+  writeFileSync(reportPath(week), html);
+  console.log(`Report generated: ${reportPath(week)}`);
+  return reportPath(week);
+}
+
+// Reports are committed snapshots: the site build copies them as they are and
+// tests/reports.test.mjs fails when data or CSS changed without regenerating.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const targetArg = process.argv[2];
+  const weeks = !targetArg || targetArg === "--all" ? allWeeks : [targetArg.replaceAll("-", ".")];
+  for (const week of weeks) writeReport(week);
 }
