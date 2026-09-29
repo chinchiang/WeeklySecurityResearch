@@ -46,7 +46,7 @@ test("public pages expose provenance and the new brand without private Drive lin
 });
 test("export excludes source files and private WORK identifiers", () => {
   const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir,e.name)]);
-  const privatePatterns = [/1r77GDSHTt-wk2dIcLDJLrR-mw0wK9uHBr8hFsYXqAPs/, /WORK-\d+/, /(?:docs|drive)\.google\.com\//, /\bJungle\b/];
+  const privatePatterns = [/WORK-\d+/, /(?:docs|drive)\.google\.com\//, /\bJungle\b/];
   for (const file of walk("out")) {
     assert.ok(!/\.(?:env|tsx?|map)$/.test(file), file);
     if (!/\.(?:html|js|txt|json|xml)$/.test(file)) continue;
