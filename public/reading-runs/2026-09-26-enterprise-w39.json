@@ -19,7 +19,8 @@
   "deduplication_note": "依 main 既有 81 筆 Reading 的 URL／DOI／arXiv ID、W39 上游完整報告及網站可讀歷史去重；版本不另計。保留 chatgpt-ai 已發布的 ids 79–81 與全部舊期／更正。外部 Claude／Cowork 完整週六歷史不可得，未宣稱跨平台完全去重。",
   "evidence_note": "兩篇均已讀原始全文、方法、結果、限制與附錄；量化結果均為作者實驗，未獨立重現。Safety-Aware 另與 NIST SP 800-207 官方頁交叉核對；未取得 IEC 62443 標準全文，不宣稱條文符合性。TrustBOM 的 accepted 狀態依作者／arXiv，未另查最終 proceedings。",
   "classification_note": "Safety-Aware 同時屬 Architecture Spotlight 與 OT／ICS，跨分類只計一次；TrustBOM 屬 Product Security／SBOM。非 AI DSPM／DLP／DDR 本期從缺。上游 SAP／Windchill／Teamcenter 弱點事件屬營運告警，不列深度 Reading。",
-  "publication_status": "verified",
+  "publication_status": "pending",
+  "publication_status_note": "2026-09-29 由 verified 更正為 pending：本次只有 PR／main CI 與部署 job 成功，所有 checks 的 live_get 均為 unavailable，未取得線上內容證據，不符合 docs/source-workflow.md 的 verified 條件。",
   "publication_evidence": {
     "content_pr": "https://github.com/chinchiang/WeeklySecurityResearch/pull/42",
     "content_commit": "0b817cc0e368273e4875c46f2d85af46217bfe49",
