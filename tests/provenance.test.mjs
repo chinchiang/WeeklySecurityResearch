@@ -64,46 +64,46 @@ test("Pages paths follow repo rename and explicit local configuration", () => {
 
 test("all reading receipts conform to the source-workflow specification schema", () => {
   const receiptFiles = readdirSync("public/reading-runs").filter(f => f.endsWith(".json"));
-  assert.ok(receiptFiles.length > 0, "must have at least one receipt file");
+  assert.ok(receiptFiles.length > 0, "public/reading-runs/ 至少要有一份收據");
 
   for (const file of receiptFiles) {
     const raw = readFileSync(`public/reading-runs/${file}`, "utf8");
     const r = JSON.parse(raw);
 
-    assert.match(r.report_id, /^AISEC-ARCH-\d{4}-W\d{2}-\d{8}$/, `${file}: invalid report_id`);
-    assert.ok(typeof r.revision === "number" && r.revision >= 1, `${file}: invalid revision`);
-    assert.ok(typeof r.workflow === "string" && r.workflow.length > 0, `${file}: invalid workflow`);
+    assert.match(r.report_id, /^AISEC-ARCH-\d{4}-W\d{2}-\d{8}$/, `${file}：report_id「${r.report_id}」格式錯誤，必須是 AISEC-ARCH-<ISO 年>-W<ISO 週>-<週五日期 YYYYMMDD>（例如 AISEC-ARCH-2026-W40-20261002），兩個任務共用，企業任務也不用 ENTSEC 前綴。${RULES}`);
+    assert.ok(typeof r.revision === "number" && r.revision >= 1, `${file}：revision 必須是 1 以上的數字，等於寫入後 weeklyEditorials 該週的 revision。${RULES}`);
+    assert.ok(typeof r.workflow === "string" && r.workflow.length > 0, `${file}：workflow 不可為空，請填 chatgpt-ai 或 chatgpt-enterprise。${RULES}`);
     assert.ok(
       ["scheduled", "manual_execution_of_saved_instructions"].includes(r.execution_mode),
-      `${file}: invalid execution_mode: ${r.execution_mode}`
+      `${file}：execution_mode「${r.execution_mode}」無效，只能是 scheduled 或 manual_execution_of_saved_instructions。${RULES}`
     );
-    assert.ok(!isNaN(Date.parse(r.checked_at)), `${file}: invalid checked_at date`);
-    assert.ok(Array.isArray(r.added_reading_ids), `${file}: added_reading_ids must be array`);
-    assert.ok(Array.isArray(r.revised_reading_ids), `${file}: revised_reading_ids must be array`);
-    assert.ok(typeof r.issue_total === "number" && r.issue_total > 0, `${file}: invalid issue_total`);
-    assert.ok(typeof r.research_status === "string" && r.research_status.length > 0, `${file}: invalid research_status`);
-    assert.ok(typeof r.scheduled_trigger_verified === "boolean", `${file}: scheduled_trigger_verified must be boolean`);
+    assert.ok(!isNaN(Date.parse(r.checked_at)), `${file}：checked_at「${r.checked_at}」不是可解析的日期，請用 YYYY-MM-DD。${RULES}`);
+    assert.ok(Array.isArray(r.added_reading_ids), `${file}：added_reading_ids 必須是陣列，沒有新增時填 []。${RULES}`);
+    assert.ok(Array.isArray(r.revised_reading_ids), `${file}：revised_reading_ids 必須是陣列，沒有修改時填 []。${RULES}`);
+    assert.ok(typeof r.issue_total === "number" && r.issue_total > 0, `${file}：issue_total 必須是大於 0 的數字（本期列出的總篇數）。${RULES}`);
+    assert.ok(typeof r.research_status === "string" && r.research_status.length > 0, `${file}：research_status 不可為空（例如 completed）。${RULES}`);
+    assert.ok(typeof r.scheduled_trigger_verified === "boolean", `${file}：scheduled_trigger_verified 必須是 true 或 false，只有取得實際排程觸發證據才可填 true。${RULES}`);
     assert.ok(
       r.input_report_id === null || typeof r.input_report_id === "string",
-      `${file}: input_report_id must be string or null`
+      `${file}：input_report_id 必須是字串或 null。${RULES}`
     );
     assert.ok(
       r.input_report_modified_at === null || typeof r.input_report_modified_at === "string",
-      `${file}: input_report_modified_at must be string or null`
+      `${file}：input_report_modified_at 必須是字串或 null。${RULES}`
     );
     assert.ok(
       ["read", "background", "unavailable"].includes(r.input_status),
-      `${file}: invalid input_status: ${r.input_status}`
+      `${file}：input_status「${r.input_status}」無效，只能是 read、background 或 unavailable。${RULES}`
     );
-    assert.ok(typeof r.input_note === "string", `${file}: input_note must be string`);
+    assert.ok(typeof r.input_note === "string", `${file}：input_note 必須是字串，來源不可讀時寫明原因。${RULES}`);
     assert.ok(
       ["pending", "verified", "failed"].includes(r.publication_status),
-      `${file}: invalid publication_status: ${r.publication_status}`
+      `${file}：publication_status「${r.publication_status}」無效，只能是 pending、verified 或 failed。${RULES}`
     );
     assert.ok(
       (typeof r.publication_evidence === "string" && r.publication_evidence.length > 0) ||
       (typeof r.publication_evidence === "object" && r.publication_evidence !== null),
-      `${file}: invalid publication_evidence`
+      `${file}：publication_evidence 不可為空，填說明文字或含 PR、CI、部署連結的物件。${RULES}`
     );
   }
 });
