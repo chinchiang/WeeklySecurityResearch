@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { allWeeks, CURRENT_WEEK, currentReadings } from "../app/data/readings.ts";
+import { allWeeks, CURRENT_WEEK, currentReadings, readings } from "../app/data/readings.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
 const { base, site } = pagesConfig();
 const htmlFiles = ["index.html", "archive/index.html", ...allWeeks.map(w => `week/${w.replaceAll(".", "-")}/index.html`)];
@@ -26,6 +26,16 @@ test("current report contains every selected item and the complete Spotlight", (
     for (const s of r.spotlight ?? []) assert.ok(html.includes(s.heading));
   }
   assert.ok(!html.includes('src="http'), "self-contained report must not require remote scripts");
+});
+test("every report links only to real sources, with a PDF link only when the reading has one", () => {
+  for (const week of allWeeks) {
+    const html = readFileSync(`out/reports/${week.replaceAll(".", "-")}.html`, "utf8");
+    for (const [, url] of html.matchAll(/(?:href|src)="([^"]*)"/g)) {
+      assert.ok(url.startsWith("https://") || url.startsWith("#"), `${week}: invalid link ${url}`);
+    }
+    const withPdf = readings.filter(r => r.week === week && r.pdf).length;
+    assert.equal((html.match(/>PDF ↗</g) ?? []).length, withPdf, `${week}: PDF link count`);
+  }
 });
 
 test("public pages expose provenance and the new brand without private Drive links", () => {

@@ -302,26 +302,30 @@ export default function Home() {
           </div>
           <span>Weekly Security Reports · 私人歸檔不公開連結</span>
         </div>
-        <div className="report-grid">
-          <article className="report-source-card">
-            <Mark>本期曾讀取的報告</Mark>
-            <h3>{weeklyReportIntegration.title}</h3>
-            <p>最後修改：{weeklyReportIntegration.modifiedAt}</p>
-            <div className="report-counts">
-              <span><b>{weeklyReportIntegration.candidates}</b> 報告候選</span>
-              <span><b>{weeklyReportIntegration.selected}</b> 納入補遺</span>
-              <span><b>{currentStats.total}</b> 合併清單</span>
-            </div>
-          </article>
-          <article>
-            <Mark>採用內容</Mark>
-            <ul>{weeklyReportIntegration.adopted.map((item) => <li key={item}>{item}</li>)}</ul>
-          </article>
-          <article>
-            <Mark>查核修正</Mark>
-            <ul>{weeklyReportIntegration.corrections.map((item) => <li key={item}>{item}</li>)}</ul>
-          </article>
-        </div>
+        {weeklyReportIntegration ? (
+          <div className="report-grid">
+            <article className="report-source-card">
+              <Mark>本期曾讀取的報告</Mark>
+              <h3>{weeklyReportIntegration.title}</h3>
+              <p>最後修改：{weeklyReportIntegration.modifiedAt}</p>
+              <div className="report-counts">
+                <span><b>{weeklyReportIntegration.candidates}</b> 報告候選</span>
+                <span><b>{weeklyReportIntegration.selected}</b> 納入補遺</span>
+                <span><b>{currentStats.total}</b> 合併清單</span>
+              </div>
+            </article>
+            <article>
+              <Mark>採用內容</Mark>
+              <ul>{weeklyReportIntegration.adopted.map((item) => <li key={item}>{item}</li>)}</ul>
+            </article>
+            <article>
+              <Mark>查核修正</Mark>
+              <ul>{weeklyReportIntegration.corrections.map((item) => <li key={item}>{item}</li>)}</ul>
+            </article>
+          </div>
+        ) : (
+          <p className="method-note">本期沒有 Claude 週報整合紀錄：上游週報未取得或未讀取，本期內容僅來自公開研究查核，不虛構缺少的上游輸入。</p>
+        )}
       </section>
 
       <section className="progress-section" id="progress">
