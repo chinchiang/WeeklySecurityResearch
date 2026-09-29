@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { readings } from "../app/data/readings.ts";
-import { originsFor, matchesOrigin, provenanceText, sourceLabels, studyKey } from "../app/data/provenance.ts";
+import { originsFor, matchesOrigin, provenanceText, sourceLabels, sourceWorkflows, studyKey } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
 
 test("known import provenance matches research receipts, not article topics", () => {
@@ -116,5 +116,62 @@ test("public data, reports and receipts carry no private identifiers", () => {
   for (const file of files) {
     const text = readFileSync(file, "utf8");
     for (const pattern of PRIVATE_PATTERNS) assert.doesNotMatch(text, pattern, `${file}: ${pattern}`);
+  }
+});
+
+// Receipts and readings are written by different runs; keep the two sides pointing at each other.
+const RECEIPT_URL = /^https:\/\/github\.com\/chinchiang\/WeeklySecurityResearch\/blob\/main\/public\/reading-runs\/([\w.-]+\.json)$/;
+const PR_URL = /^https:\/\/github\.com\/chinchiang\/WeeklySecurityResearch\/pull\/\d+$/;
+const receipts = Object.fromEntries(readdirSync("public/reading-runs").filter(f => f.endsWith(".json"))
+  .map(f => [f, JSON.parse(readFileSync(`public/reading-runs/${f}`, "utf8"))]));
+// 2026-09-12 receipts predate the id format and name the workflow by its title.
+const workflowId = name => sourceWorkflows.find(f => f.id === name || f.title.endsWith(`｜${name}`))?.id;
+const isoWeek = week => {
+  const d = new Date(`${week.replaceAll(".", "-")}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  return `${d.getUTCFullYear()}-W${String(Math.ceil(((d - Date.UTC(d.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7)).padStart(2, "0")}`;
+};
+
+test("receipts only list existing readings of one week and match its report ID", () => {
+  const added = new Map();
+  for (const [file, r] of Object.entries(receipts)) {
+    const flow = workflowId(r.workflow);
+    assert.ok(["chatgpt-ai", "chatgpt-enterprise"].includes(flow), `${file}: unknown workflow ${r.workflow}`);
+    const listed = [...r.added_reading_ids, ...r.revised_reading_ids].map(id => readings.find(x => x.id === id));
+    assert.ok(listed.every(Boolean), `${file}: lists a reading id that does not exist`);
+    const weeks = new Set(listed.map(x => x.week));
+    assert.ok(weeks.size <= 1, `${file}: spans weeks ${[...weeks]}`);
+    for (const id of r.added_reading_ids) {
+      assert.ok(!added.has(id), `#${id} added by both ${added.get(id)} and ${file}`);
+      added.set(id, file);
+      assert.equal(readings.find(x => x.id === id).provenance?.reviewedBy, flow, `${file}: #${id} reviewedBy`);
+    }
+    if (r.new_research_total !== undefined) {
+      assert.equal(r.new_research_total + r.background_total, r.added_reading_ids.length, `${file}: totals`);
+    }
+    const [week] = weeks;
+    if (!week) continue;
+    const [, id, y, m, d] = r.report_id.match(/^AISEC-ARCH-(\d{4}-W\d{2})-(\d{4})(\d{2})(\d{2})$/);
+    const date = `${y}-${m}-${d}`;
+    assert.equal(id, isoWeek(week), `${file}: report_id week`);
+    const offset = (Date.parse(date) - Date.parse(week.replaceAll(".", "-"))) / 86400000;
+    assert.ok(offset >= 0 && offset < 7, `${file}: report_id date ${date} outside week ${week}`);
+    const weekTotal = readings.filter(x => x.week === week).length;
+    assert.ok(r.issue_total >= r.added_reading_ids.length && r.issue_total <= weekTotal, `${file}: issue_total ${r.issue_total}`);
+  }
+});
+
+test("provenance evidence points at a receipt that lists the reading, or at a repo PR", () => {
+  for (const x of readings.filter(x => x.provenance)) {
+    const { evidence, reviewedBy, checkedAt, inputReportId } = x.provenance;
+    if (PR_URL.test(evidence)) continue;
+    const file = evidence.match(RECEIPT_URL)?.[1];
+    assert.ok(file, `#${x.id}: evidence is neither a receipt nor a PR: ${evidence}`);
+    const r = receipts[file];
+    assert.ok(r, `#${x.id}: receipt ${file} does not exist`);
+    assert.ok([...r.added_reading_ids, ...r.revised_reading_ids].includes(x.id), `#${x.id}: not listed in ${file}`);
+    assert.equal(workflowId(r.workflow), reviewedBy, `#${x.id}: reviewedBy vs ${file}`);
+    assert.equal(checkedAt, r.checked_at.slice(0, 10), `#${x.id}: checkedAt vs ${file}`);
+    if (inputReportId) assert.equal(inputReportId, r.input_report_id, `#${x.id}: inputReportId vs ${file}`);
   }
 });
