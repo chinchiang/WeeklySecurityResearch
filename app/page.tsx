@@ -7,6 +7,7 @@ import { SourceMeta, SourceFilter, SourcesOverview } from "./components/source-m
 import { matchesOrigin } from "./data/provenance";
 import { ArchitectureReview } from "./components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
+import { useReadingProgress } from "./components/use-reading-progress";
 import {
   CURRENT_WEEK,
   TOPIC_FILTERS,
@@ -32,30 +33,9 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("priority");
   const [selected, setSelected] = useState<Reading | null>(null);
-  const [completed, setCompleted] = useState<number[]>([]);
+  const { completed, toggleComplete } = useReadingProgress();
   const modalRef = useRef<HTMLElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    const saved = window.localStorage.getItem("ai-security-reading-progress");
-    if (!saved) return;
-    const frame = window.requestAnimationFrame(() => {
-      try {
-        const parsed = JSON.parse(saved);
-        setCompleted(Array.isArray(parsed) ? parsed.filter(Number.isInteger) : []);
-      } catch {
-        setCompleted([]);
-      }
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem(
-      "ai-security-reading-progress",
-      JSON.stringify(completed),
-    );
-  }, [completed]);
 
   function openReading(reading: Reading, trigger?: HTMLElement) {
     lastTriggerRef.current = trigger ?? document.activeElement as HTMLElement;
@@ -128,14 +108,6 @@ export default function Home() {
     );
   }, [origin, decision, query, sort, topic]);
 
-  const toggleComplete = (id: number) => {
-    setCompleted((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id],
-    );
-  };
-
   const currentCompleted = completed.filter((id) =>
     currentReadings.some((reading) => reading.id === id),
   );
@@ -151,12 +123,12 @@ export default function Home() {
             <small>READING INTELLIGENCE HUB</small>
           </span>
         </a>
-        <a className="mobile-history-link" href={sitePath("/archive")} >過去必讀</a>
+        <a className="mobile-history-link" href={sitePath("/archive/")} >過去必讀</a>
         <nav aria-label="主要導覽">
           <a href="#weekly">本週精選</a>
           <a href="#index">主題索引</a><a href="#sources">來源分工</a>
           <a href="#progress">閱讀進度</a>
-          <a href={sitePath("/archive")} >歷史資料</a>
+          <a href={sitePath("/archive/")} >歷史資料</a>
         </nav>
         <a className="live-state" href="#verification"><i /> VERIFIED SOURCES · 定義</a>
       </header>
@@ -164,11 +136,11 @@ export default function Home() {
       <nav className="mobile-dock" aria-label="手機快捷導覽">
         <a href="#top"><span>⌂</span>首頁</a>
         <a href="#weekly"><span>◆</span>本週必讀</a>
-        <a href={sitePath("/archive")} ><span>▤</span>歷史清單</a>
+        <a href={sitePath("/archive/")} ><span>▤</span>歷史清單</a>
       </nav>
 
       <aside className="side-nav" aria-label="閱讀導覽">
-        <p>研究閱讀室</p><a href="#top">本期總覽</a><a href="#index">精選閱讀</a><a href="#spotlight">架構長文</a><a href={sitePath("/archive")} >歷史清單</a><a href="#progress">閱讀進度</a><a href="#verification">查核方法</a>
+        <p>研究閱讀室</p><a href="#top">本期總覽</a><a href="#index">精選閱讀</a><a href="#spotlight">架構長文</a><a href={sitePath("/archive/")} >歷史清單</a><a href="#progress">閱讀進度</a><a href="#verification">查核方法</a>
         <div className="sister-sites"><p>相關情報站</p><a href="https://chinchiang.github.io/DailySOCVitamin/">Daily SOC Vitamin ↗</a><a href="https://chinchiang.github.io/CyberRegulationWatch/">Cyber Regulation Watch ↗</a></div>
       </aside>
       <section className="hero" id="top">
@@ -235,7 +207,7 @@ export default function Home() {
             <p className="eyebrow">CURATED RESEARCH LIBRARY</p>
             <h2>完整必讀名單</h2>
           </div>
-          <p className="result-count">顯示 <b>{visibleReadings.length}</b> / {currentReadings.length} 項 · <a href={sitePath("/archive")} >查看歷史資料 →</a></p>
+          <p className="result-count">顯示 <b>{visibleReadings.length}</b> / {currentReadings.length} 項 · <a href={sitePath("/archive/")} >查看歷史資料 →</a></p>
         </div>
 
         <div className="control-panel">
@@ -406,7 +378,7 @@ export default function Home() {
                 <li key={`${reading.id}-${correction.date}-${correction.type}`}>
                   <b>{correction.type}</b>
                   <span>{correction.date}</span>
-                  <a href={`#reading-${reading.id}`}>{reading.title}</a>
+                  <a href={sitePath(`/week/${reading.week.replaceAll(".", "-")}/#reading-${reading.id}`)}>{reading.title}</a>
                   <p>{correction.note}</p>
                 </li>
               ))}
@@ -419,7 +391,7 @@ export default function Home() {
       <footer>
         <div className="brand footer-brand"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>RESEARCH · SECURITY · ARCHITECTURE</small></span></div>
         <p>本週更新：{CURRENT_WEEK} · 正體中文／臺灣慣用語</p>
-        <a href={sitePath("/archive")} >歷史資料庫 →</a>
+        <a href={sitePath("/archive/")} >歷史資料庫 →</a>
       </footer>
 
       {selected && (

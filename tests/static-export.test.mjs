@@ -28,8 +28,11 @@ test("the feed covers the most recent weeks and links each entry to its own week
 
   assert.ok(weeks.length > 1, "測試資料應涵蓋多於一週，否則此測試無法區分行為");
   assert.equal((body.match(/<entry>/g) ?? []).length, expected.length);
+  assert.match(body, /<feed[^>]*>[\s\S]*?<author><name>[^<]+<\/name>/, "Atom feed 必須有 author（RFC 4287）");
   for (const reading of expected) {
-    const permalink = `${site}/week/${slug(reading.week)}#reading-${reading.id}`;
+    const id = `<id>${site}/week/${slug(reading.week)}#reading-${reading.id}</id>`;
+    const permalink = `href="${site}/week/${slug(reading.week)}/#reading-${reading.id}"`;
+    assert.ok(body.includes(id), `feed entry id 不得變動：${id}`);
     assert.ok(body.includes(permalink), `feed 缺少 ${reading.id} 指向自身週次的連結：${permalink}`);
   }
   for (const reading of readings.filter((item) => !weeks.includes(item.week))) {
@@ -44,7 +47,11 @@ test("the feed covers the most recent weeks and links each entry to its own week
 test("robots.txt and sitemap point at the configured site and list every week", () => {
   assert.ok(read("robots.txt").includes(`Sitemap: ${site}/sitemap.xml`));
   const sitemap = read("sitemap.xml");
-  for (const loc of [site, `${site}/archive`, ...allWeeks.map((week) => `${site}/week/${slug(week)}`)]) {
-    assert.ok(sitemap.includes(`<loc>${loc}</loc>`), `sitemap 缺少 ${loc}`);
+  // Locations must equal the canonical URLs (trailing slash), not redirect to them.
+  const expected = [`${site}/`, `${site}/archive/`, ...allWeeks.map((week) => `${site}/week/${slug(week)}/`)];
+  assert.deepEqual([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]), expected);
+  for (const week of allWeeks) {
+    const lastmod = readings.filter((r) => r.week === week).map((r) => r.dateValue).sort().at(-1);
+    assert.ok(sitemap.includes(`<loc>${site}/week/${slug(week)}/</loc><lastmod>${lastmod}</lastmod>`), `${week} lastmod 應為該週最新日期`);
   }
 });

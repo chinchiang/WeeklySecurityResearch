@@ -21,7 +21,7 @@ export default function WeekPage() {
     <main>
       <header className="topbar">
         <Link className="brand" href="/" aria-label="返回最新一期"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>PERMANENT WEEKLY EDITION</small></span></Link>
-        <a className="mobile-history-link" href={sitePath("/archive")} >歷史資料</a>
+        <a className="mobile-history-link" href={sitePath("/archive/")} >歷史資料</a>
         <nav aria-label="週次頁導覽"><Link href="/">最新一期</Link><Link href="/archive">全部歷史</Link><a href={sitePath("/feed.xml")} >Atom Feed</a></nav>
       </header>
       <section className="archive-hero week-hero">
@@ -31,7 +31,7 @@ export default function WeekPage() {
           <h1>{week || "無效週次"}<span>必讀清單</span></h1>
           <p>此網址固定保存該週入選內容，適合引用、分享與稽核追溯。</p>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "12px" }}>
-            <a className="secondary-button" href={sitePath("/archive")}>← 返回歷史資料庫</a>
+            <a className="secondary-button" href={sitePath("/archive/")}>← 返回歷史資料庫</a>
             {items.length > 0 && (
               <a className="secondary-button" href={sitePath(`/reports/${rawWeek}.html`)} target="_blank" rel="noreferrer">本期完整報告 ↗</a>
             )}
@@ -89,7 +89,7 @@ export default function WeekPage() {
           <ArchitectureReview reading={reading} /><div className="card-actions"><a href={reading.source} target="_blank" rel="noreferrer">原始來源 ↗</a>{reading.pdf && <a href={reading.pdf} target="_blank" rel="noreferrer">PDF ↓</a>}<a href={`#reading-${reading.id}`} aria-label={`複製 ${reading.title} 深連結`}>單篇連結 #</a></div>
         </article>)}</div> : <div className="empty-state"><b>WEEK NOT FOUND</b><p>找不到這個週次；請回到歷史資料庫選擇有效週次。</p></div>}
       </section>
-      <footer><div className="brand footer-brand"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>VERIFIABLE WEEKLY ARCHIVE</small></span></div><p>固定週次網址 · 正體中文／臺灣慣用語</p><a href={sitePath("/archive")} >歷史資料庫 →</a></footer>
+      <footer><div className="brand footer-brand"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>VERIFIABLE WEEKLY ARCHIVE</small></span></div><p>固定週次網址 · 正體中文／臺灣慣用語</p><a href={sitePath("/archive/")} >歷史資料庫 →</a></footer>
     </main>
   );
 }
