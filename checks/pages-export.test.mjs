@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { allWeeks, CURRENT_WEEK, currentReadings, readings } from "../app/data/readings.ts";
+import { allWeeks, CURRENT_WEEK, currentReadings, readings, weeklyEditorials } from "../app/data/readings.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
 import { findPrivate } from "../scripts/private-patterns.mjs";
 const { base, site } = pagesConfig();
@@ -36,6 +36,17 @@ test("every report links only to real sources, with a PDF link only when the rea
     }
     const withPdf = readings.filter(r => r.week === week && r.pdf).length;
     assert.equal((html.match(/>PDF ↗</g) ?? []).length, withPdf, `${week}: PDF link count`);
+  }
+});
+
+test("week pages and reports show each week's presentation note, such as a missing workflow", () => {
+  for (const week of allWeeks) {
+    const note = weeklyEditorials[week]?.presentationNote;
+    if (!note) continue;
+    const slug = week.replaceAll(".", "-");
+    for (const file of [`week/${slug}/index.html`, `reports/${slug}.html`]) {
+      assert.ok(readFileSync(path.join("out", file), "utf8").includes(note), `${file}: presentation note`);
+    }
   }
 });
 
