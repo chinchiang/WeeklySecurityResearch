@@ -10,7 +10,7 @@ import { ArchitectureReview } from "../components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "../components/reading-meta";
 import { useReadingProgress } from "../components/use-reading-progress";
 import {
-  TOPIC_FILTERS,
+  archiveTopicFilters,
   allWeeks,
   archiveDateRange,
   archiveReadings,
@@ -184,7 +184,7 @@ export default function ArchivePage() {
             )}
           </label>
           <div className="filter-row" role="group" aria-label="主題篩選">
-            {TOPIC_FILTERS.map((filter) => (
+            {archiveTopicFilters.map((filter) => (
               <button
                 key={filter}
                 className={topic === filter ? "active" : ""}

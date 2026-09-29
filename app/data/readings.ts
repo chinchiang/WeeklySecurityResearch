@@ -2856,23 +2856,65 @@ export const readings: Reading[] = [
   },
 ];
 
-export const TOPIC_FILTERS = [
-  "全部",
-  "Architecture",
-  "Product Security",
-  "OT / ICS",
-  "AI Governance",
-  "Agent Security",
-  "DSPM / DLP",
-  "Data Lineage",
-  "DDR",
+/**
+ * 主題標籤詞彙表。新增讀物只能使用這裡的標籤，要用新標籤先加進來；
+ * tests/data-integrity.test.mjs 會擋下拼寫不一致的標籤（例如 "OT/ICS" 與 "OT / ICS"）。
+ * 已發佈讀物的標籤保留原樣，因此舊的近義標籤（AI Data Protection、AI System Threat Modeling）仍列在內。
+ */
+export const TOPICS = [
   "Threat Modeling",
+  "Agent Security",
+  "Data Lineage",
+  "DSPM / DLP",
+  "DDR",
+  "AI Security",
+  "Evaluation",
+  "Data Protection",
+  "OT / ICS",
+  "Product Security",
+  "Agent Authorization",
+  "Prompt Injection",
+  "RAG",
+  "Model Supply Chain",
+  "Least Privilege",
+  "Enterprise Architecture",
+  "Zero Trust",
+  "Safety",
+  "SBOM / VEX",
+  "Software Supply Chain",
+  "Benchmark Poisoning",
+  "Agent Skills",
+  "MCP",
+  "AI Platform",
+  "Remote Access",
+  "供應鏈治理",
+  "AI System Threat Modeling",
+  "Identity",
+  "AI Data Protection",
+  "Architecture",
+  "AI Governance",
 ] as const;
+
+/** 篩選列只列出在該清單中至少出現 minCount 次的主題，依出現次數排序，避免按下後沒有結果。 */
+export function topicFiltersFor(list: Reading[], minCount = 2): string[] {
+  const counts = new Map<string, number>();
+  for (const reading of list) for (const topic of reading.topics) counts.set(topic, (counts.get(topic) ?? 0) + 1);
+  const order = (topic: string) => (TOPICS as readonly string[]).indexOf(topic);
+  return [
+    "全部",
+    ...[...counts]
+      .filter(([, count]) => count >= minCount)
+      .sort(([a, x], [b, y]) => y - x || order(a) - order(b))
+      .map(([topic]) => topic),
+  ];
+}
 
 export const CURRENT_WEEK = [...new Set(readings.map((reading) => reading.week))].sort((a, b) => b.localeCompare(a))[0];
 export const currentReadings = readings.filter((reading) => reading.week === CURRENT_WEEK);
 export const archiveReadings = readings.filter((reading) => reading.week !== CURRENT_WEEK);
 export const archiveWeeks = [...new Set(archiveReadings.map((reading) => reading.week))].sort((a, b) => b.localeCompare(a));
+export const currentTopicFilters = topicFiltersFor(currentReadings);
+export const archiveTopicFilters = topicFiltersFor(archiveReadings);
 export const priorityReading = [...currentReadings].sort((a, b) => a.rank - b.rank)[0];
 export const currentStats = {
   total: currentReadings.length,

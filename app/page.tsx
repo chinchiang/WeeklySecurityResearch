@@ -10,7 +10,7 @@ import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
 import { useReadingProgress } from "./components/use-reading-progress";
 import {
   CURRENT_WEEK,
-  TOPIC_FILTERS,
+  currentTopicFilters,
   correctionLog,
   currentEditorial,
   currentReadings,
@@ -222,7 +222,7 @@ export default function Home() {
             {query && <button onClick={() => setQuery("")} aria-label="清除搜尋">×</button>}
           </label>
           <div className="filter-row" role="group" aria-label="主題篩選">
-            {TOPIC_FILTERS.map((filter) => (
+            {currentTopicFilters.map((filter) => (
               <button
                 key={filter}
                 className={topic === filter ? "active" : ""}
