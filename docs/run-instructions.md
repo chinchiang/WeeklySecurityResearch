@@ -4,7 +4,7 @@
 
 以下的「週次日期」是該週週五的日期：讀物的 `week` 欄位寫成 `YYYY.MM.DD`，報告檔名寫成 `YYYY-MM-DD`。範例一律以第 40 週（`2026.10.02`）說明。程式碼格式標示的檔名、欄位、指令與檢查名稱必須原樣使用，不可翻譯。
 
-## 區塊甲：AI Security 技術研究簡報（`chatgpt-ai`，週五 08:00）
+## Block A：AI Security 技術研究簡報（`chatgpt-ai`，週五 08:00）
 
 ```markdown
 ## 持續整合強制規則（2026-09-29 起，第 40 週起適用）
@@ -40,9 +40,9 @@
 - 公開內容不得含內部 WORK 編號、Google Drive 或 Google 文件連結、私人姓名；持續整合會掃描。
 ```
 
-## 區塊乙：企業資安綜合閱讀清單（`chatgpt-enterprise`，週六 01:00）
+## Block B：企業資安綜合閱讀清單（`chatgpt-enterprise`，週六 01:00）
 
-貼上區塊甲的全文，並做以下替換與補充：
+貼上 Block A 的全文，並做以下替換與補充：
 
 - `workflow` 與 `provenance.reviewedBy` 改為 `chatgpt-enterprise`。收據檔名例如 `2026-10-03-enterprise-w40.json`。
 - 報告編號仍使用週五的週次日期（第 40 週為 `AISEC-ARCH-2026-W40-20261002`），不是週六的執行日期。第 39 週曾誤寫為 `…20260926`，已於 2026-09-29 更正。
