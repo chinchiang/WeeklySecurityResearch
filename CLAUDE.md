@@ -38,7 +38,10 @@ npm run check:links  # 檢查原始來源可達性；CI 每週一自動跑，失
 ## 修改與合併
 
 - 每個變更開 PR，squash 合併；main 的 push 會自動建置並部署 Pages。
-- 分支自動刪除設定目前不生效，合併後 head 分支會留在遠端，需手動清。
-- GitHub 網頁上的操作（刪分支、合併、改名）今天多次第一次沒生效，做完後重新整理確認。
-- 這個 session 的 GitHub 寫入權限不含 repo 設定、分支刪除、Pages 設定；這些請使用者在 GitHub 上做。
-- 沙箱的網路 proxy 封鎖 github.io 與大多數外部網站，無法從 session 內打開正式站或執行真實的連結檢查；以 CI 結果與部署 log 為準。
+- main 有分支保護（2026-09-29 起）：一律走 PR，包含管理員；必要檢查 `Build and data integrity` 須通過，且 PR 必須與最新 main 同步（落後時用 `gh pr update-branch` 或 `@dependabot rebase`）；禁止 force push 與刪除 main。不需要 review 核准。
+- 不改寫 git 歷史（2026-09-29 決定）。舊 commit 與 PR #12／#42／#44 的 diff 仍含已移除的私人內容，只能由 GitHub Support 清除，不要用 force push 處理。
+- 防外洩規則在 `scripts/private-patterns.mjs`，私人姓名以 SHA-256 比對，不要把姓名明文寫進任何檔案。
+- repo 沒有開「合併後自動刪除分支」（`delete_branch_on_merge` 為 false），合併後要手動刪 head 分支。
+- GitHub 網頁上的操作（刪分支、合併、改名）曾發生第一次沒生效的情況，做完後重新整理確認。
+- GitHub 權限依 session 而定：本機以 `gh` 登入管理員帳號時可以刪分支、改分支保護；沙箱 session 沒有 repo 設定、分支刪除與 Pages 設定權限，這些請使用者在 GitHub 上做。
+- 沙箱 session 的網路 proxy 封鎖 github.io 與大多數外部網站，無法從 session 內打開正式站或執行真實的連結檢查；以 CI 結果與部署 log 為準。
