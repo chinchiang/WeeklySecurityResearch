@@ -45,6 +45,7 @@ export default function WeekPage() {
             <b>本期入選漏斗</b>
             <p><span>{editorial.scanned ?? "未留存"}</span> 掃描 → <span>{editorial.shortlisted ?? "未留存"}</span> 初篩 → <span>{editorial.selected}</span> 入選</p>
             <small>{editorial.note}</small>
+            {editorial.presentationNote && <small>{editorial.presentationNote}</small>}
             {editorial.skipped.length > 0 && (
               <ul className="week-skipped">
                 {editorial.skipped.map((item) => (
