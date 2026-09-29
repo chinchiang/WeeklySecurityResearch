@@ -55,7 +55,7 @@ npm run build:pages && npm run test:pages
 1. Repository Settings → Pages → Build and deployment → Source 選擇 **GitHub Actions**。
 2. main 的 CI 通過測試、lint、typecheck、安全稽核與靜態輸出檢查後，才會由 Publish GitHub Pages 發布 `out`。以實際 deployment 結果與公開網址驗證，不能把 commit 視為已發布。
 3. `npm run build` 與 `npm run build:pages` 是同一件事。Pages base path 由 CI 的 `GITHUB_REPOSITORY` 推導（`scripts/pages-config.mjs`），程式中的 fallback 只供本機使用。
-4. `public/social-content/` 只作為歷史資料保留，網站沒有入口；`npm run build:pages` 會把它從 `out/` 移除，`npm run test:pages` 會確認它沒有出現在公開輸出中。
+4. `public/social-content/` 只作為歷史資料保留，網站沒有入口；`npm run build:pages` 會把它從 `out/` 移除，`npm run test:pages` 會確認它沒有出現在公開輸出中。建置不會重新產生它；要更新時手動執行 `node scripts/generate-social-content.mjs`。
 
 GitHub Pages 是唯一正式站。原本部署在 ChatGPT Sites 的 Worker 版本已停止更新，其建置與工具鏈（vinext、wrangler、Cloudflare vite plugin，以及從未使用的 D1／drizzle 範本）已於 2026-09-13 從 repo 移除。canonical、Atom feed 與 sitemap 一律指向 GitHub Pages 網址（`app/site-config.ts` 的 `SITE_URL`）。
 
