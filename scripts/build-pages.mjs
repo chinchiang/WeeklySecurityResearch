@@ -7,7 +7,7 @@ for (const args of [["scripts/generate-social-content.mjs"], ["--experimental-st
   const run = spawnSync(process.execPath, args, { stdio: "inherit", env });
   if (run.status !== 0) process.exit(run.status ?? 1);
 }
-// public/social-content is retained as source data for the Worker build, but
-// the site no longer links to it, so it must not ship on the public Pages URL.
+// public/social-content is retained only as historical data; the site no
+// longer links to it, so it must not ship on the public Pages URL.
 rmSync("out/social-content", { recursive: true, force: true });
 writeFileSync("out/.nojekyll", "");
