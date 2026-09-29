@@ -132,6 +132,7 @@ const isoWeek = week => {
 
 test("receipts only list existing readings of one week and match its report ID", () => {
   const added = new Map();
+  const revisions = new Map();
   for (const [file, r] of Object.entries(receipts)) {
     const flow = workflowId(r.workflow);
     assert.ok(["chatgpt-ai", "chatgpt-enterprise"].includes(flow), `${file}: unknown workflow ${r.workflow}`);
@@ -149,11 +150,11 @@ test("receipts only list existing readings of one week and match its report ID",
     }
     const [week] = weeks;
     if (!week) continue;
-    const [, id, y, m, d] = r.report_id.match(/^AISEC-ARCH-(\d{4}-W\d{2})-(\d{4})(\d{2})(\d{2})$/);
-    const date = `${y}-${m}-${d}`;
-    assert.equal(id, isoWeek(week), `${file}: report_id week`);
-    const offset = (Date.parse(date) - Date.parse(week.replaceAll(".", "-"))) / 86400000;
-    assert.ok(offset >= 0 && offset < 7, `${file}: report_id date ${date} outside week ${week}`);
+    // Both workflows of a week share the week's report ID and bump its revision.
+    assert.equal(r.report_id, `AISEC-ARCH-${isoWeek(week)}-${week.replaceAll(".", "")}`, `${file}: report_id`);
+    const revision = `${r.report_id} r${r.revision}`;
+    assert.ok(!revisions.has(revision), `${file}: ${revision} also used by ${revisions.get(revision)}`);
+    revisions.set(revision, file);
     const weekTotal = readings.filter(x => x.week === week).length;
     assert.ok(r.issue_total >= r.added_reading_ids.length && r.issue_total <= weekTotal, `${file}: issue_total ${r.issue_total}`);
   }
