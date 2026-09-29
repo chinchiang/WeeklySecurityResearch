@@ -12,7 +12,9 @@ permissions:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Superseded PR runs are cancelled; main runs are not, so a deploy that has
+  # started is never interrupted by the next push.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build-and-test:
@@ -40,12 +42,23 @@ jobs:
         run: npm ci
 
       - name: Preserve published readings and weekly links
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'workflow_dispatch'
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: node --experimental-strip-types scripts/check-history.mjs "$BASE_SHA"
+          # PRs compare with their base; pushes to main compare with the commit
+          # main pointed to before, so direct pushes cannot skip this check.
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          # Only a push can legitimately lack its base (history rewrite); a PR
+          # base is always fetched, so a missing one there is an error.
+          if [ "$GITHUB_EVENT_NAME" = push ] && ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+            echo "::warning title=check-history::Base commit $BASE_SHA is not available (new branch or rewritten history); history check skipped."
+            exit 0
+          fi
+          node --experimental-strip-types scripts/check-history.mjs "$BASE_SHA"
 
-      - name: Build and run tests
+      # npm test exports the Pages site to out/ and runs tests/ and checks/
+      # against it; that out/ is the artifact deployed below.
+      - name: Build Pages export and run all tests
         run: npm test
 
       - name: Run ESLint
@@ -56,12 +69,6 @@ jobs:
 
       - name: Run Security Audit
         run: npm run audit
-
-      - name: Export GitHub Pages site and report
-        run: npm run build:pages
-
-      - name: Check Pages routes and assets
-        run: npm run test:pages
 
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main'
@@ -74,6 +81,9 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build-and-test
     runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     permissions:
       pages: write
       id-token: write

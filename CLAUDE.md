@@ -31,6 +31,7 @@ npm run check:links  # 檢查原始來源可達性；CI 每週一自動跑，失
 - 已發佈的項目不刪除、不改週次；CI 的 `scripts/check-history.mjs` 會擋。撤稿或更正用 `corrections` 欄位。
 - `decision` 必須能由 `scores` 經 `deriveDecision()` 重現，改分數要同步改判定。
 - 新文章必填 `provenance`；同一週同一研究只能有一筆（以 URL／DOI／arXiv 識別碼去重）。
+- `public/reports/*.html` 是提交進 repo 的快照，網站建置不會重寫。改了讀物、更正或 `app/globals.css` 後要跑 `npm run build:report` 並一起提交，否則 `tests/reports.test.mjs` 會擋。
 - `public/social-content/` 只是歷史資料，網站沒有入口，`build:pages` 會把它從 `out/` 移除。
 
 ## 修改與合併

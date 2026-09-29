@@ -18,7 +18,7 @@
 
 每筆資料必填 `week`、`rank`、`batch`、`evidenceLevel` 與 `scores`。評鑑 Rubric、排名邏輯、Verified Sources 定義、來源範圍、入選漏斗與略過項目也由同一資料模組驅動。
 
-每期自足 HTML 位於 `public/reports/YYYY-MM-DD.html`，由 `npm run build:report` 產生，與網頁共用資料和 CSS。原始來源優先，私人 WORK 證據不放入公開報告。
+每期自足 HTML 位於 `public/reports/YYYY-MM-DD.html`，由 `npm run build:report` 產生並提交，與網頁共用資料和 CSS。網站建置不會重寫報告；資料、更正或 CSS 改動後未重新產生並提交時，`tests/reports.test.mjs` 會失敗。原始來源優先，私人 WORK 證據不放入公開報告。
 
 ## 評鑑方法
 
