@@ -3038,8 +3038,9 @@ export const weeklyEditorials: Record<string, WeeklyEditorial> = {
       { title: "InceptionRAG", source: "https://arxiv.org/abs/2609.16818", reason: "9/15 新稿，列下次全文查核候選；本次只完成摘要與版本檢查，尚未核實方法、分母與防禦代價，不採用摘要的成功率。" },
       { title: "The Illusion of Local Privacy", source: "https://arxiv.org/abs/2609.18526", reason: "9/16 新稿，涉及 serving 隔離；尚未完成全文、受影響版本與維護者修補狀態交叉確認，不把摘要中的漏洞及成功率當成企業已受影響。" }
     ],
-    revision: 1,
+    revision: 2,
     verifiedAt: "2026-09-18",
+    presentationNote: "企業資安更新（2026-09-29 標示）：W38 週六企業資安流程沒有研究收據或發布紀錄，本期企業架構、OT／ICS、產品安全與非 AI 資料保護從缺；不事後補選，也不以 AI 條目代替。本期內容僅為週五 AI 研究。",
   },
   "2026.09.11": {
     scanned: null,
