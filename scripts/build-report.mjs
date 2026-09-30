@@ -115,5 +115,20 @@ export function writeReport(week) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const targetArg = process.argv[2];
   const weeks = !targetArg || targetArg === "--all" ? allWeeks : [targetArg.replaceAll("-", ".")];
+  // A wrong date used to write nothing and still exit 0; the run only found out when tests/reports.test.mjs failed.
+  const unknown = weeks.filter((week) => !allWeeks.includes(week));
+  if (unknown.length > 0) {
+    const [week] = unknown;
+    const date = /^\d{4}\.\d{2}\.\d{2}$/.test(week) ? new Date(`${week.replaceAll(".", "-")}T00:00:00Z`) : null;
+    // Weeks are keyed by their Friday; point a Saturday run (or any day that week) at it.
+    const friday = date && !Number.isNaN(date.getTime())
+      ? new Date(date.getTime() - (((date.getUTCDay() + 2) % 7) * 86400000)).toISOString().slice(0, 10).replaceAll("-", ".")
+      : null;
+    const hint = friday && friday !== week && allWeeks.includes(friday)
+      ? `該週的週次是週五 ${friday}，請改用 npm run build:report -- ${friday.replaceAll(".", "-")}。`
+      : "週次必須是 app/data/readings.ts 裡已有讀物的週五日期（YYYY-MM-DD），或不帶參數重新產生全部。";
+    console.error(`找不到週次「${targetArg}」的讀物，沒有產生任何報告。${hint}規則見 docs/run-instructions.md`);
+    process.exit(1);
+  }
   for (const week of weeks) writeReport(week);
 }
