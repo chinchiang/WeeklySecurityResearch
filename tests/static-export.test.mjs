@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { existsSync, readFileSync } from "node:fs";
 import { pagesConfig } from "../scripts/pages-config.mjs";
-import { FEED_WEEKS, allWeeks, readings } from "../app/data/readings.ts";
+import { FEED_WEEKS, allWeeks, readings, weeklyEditorials } from "../app/data/readings.ts";
 
 // These tests read the GitHub Pages export in out/ (npm run build:pages).
 const { site } = pagesConfig();
@@ -38,6 +38,11 @@ test("the feed covers the most recent weeks and links each entry to its own week
   for (const reading of readings.filter((item) => !weeks.includes(item.week))) {
     assert.ok(!body.includes(`#reading-${reading.id}<`), `feed 不應包含 ${FEED_WEEKS} 週以外的 ${reading.id}`);
   }
+  for (const reading of expected) {
+    const updated = [slug(reading.week), ...(reading.corrections ?? []).map((c) => slug(c.date))].sort().at(-1);
+    const entry = body.split("<entry>").find((part) => part.includes(`#reading-${reading.id}</id>`));
+    assert.equal(entry?.match(/<updated>([^<]+)<\/updated>/)?.[1], `${updated}T00:00:00+08:00`, `${reading.id}: updated`);
+  }
   for (const text of body.matchAll(/<(?:title|summary|subtitle)>([\s\S]*?)<\//g)) {
     assert.doesNotMatch(text[1], /[<>]/, "feed 文字節點含未轉義字元");
     assert.doesNotMatch(text[1], /&(?!amp;|lt;|gt;|quot;|#\d+;)/, "feed 文字節點含未轉義的 &");
@@ -50,8 +55,15 @@ test("robots.txt and sitemap point at the configured site and list every week", 
   // Locations must equal the canonical URLs (trailing slash), not redirect to them.
   const expected = [`${site}/`, `${site}/archive/`, ...allWeeks.map((week) => `${site}/week/${slug(week)}/`)];
   assert.deepEqual([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]), expected);
-  for (const week of allWeeks) {
-    const lastmod = readings.filter((r) => r.week === week).map((r) => r.dateValue).sort().at(-1);
-    assert.ok(sitemap.includes(`<loc>${site}/week/${slug(week)}/</loc><lastmod>${lastmod}</lastmod>`), `${week} lastmod 應為該週最新日期`);
-  }
+  // lastmod is when the page changed (publication, verification, correction), never
+  // the research's own date, which predates the page.
+  const lastmods = allWeeks.map((week) => [slug(week), weeklyEditorials[week]?.verifiedAt,
+    ...readings.filter((r) => r.week === week).flatMap((r) => (r.corrections ?? []).map((c) => slug(c.date)))]
+    .filter(Boolean).sort().at(-1));
+  allWeeks.forEach((week, i) => {
+    assert.ok(sitemap.includes(`<loc>${site}/week/${slug(week)}/</loc><lastmod>${lastmods[i]}</lastmod>`), `${week} lastmod 應為 ${lastmods[i]}`);
+    assert.ok(lastmods[i] >= slug(week), `${week} lastmod 不得早於週次`);
+  });
+  const latest = [...lastmods].sort().at(-1);
+  assert.ok(sitemap.includes(`<loc>${site}/</loc><lastmod>${latest}</lastmod>`), "首頁 lastmod 應為所有週次中最新的");
 });

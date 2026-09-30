@@ -3196,3 +3196,21 @@ export const weeklyReportIntegration: WeeklyReportIntegration | undefined = week
 export function readingSearchText(reading: Reading) {
   return [reading.title, reading.subtitle, reading.authors, reading.summary, reading.relevance, reading.action, reading.metric ?? "", ...reading.findings, ...reading.topics].join(" ").toLowerCase();
 }
+
+const isoDate = (date: string) => date.replaceAll(".", "-").slice(0, 10);
+
+/** When a reading last changed on the site: its week's publication, or a later correction. */
+export function readingUpdatedAt(reading: Reading): string {
+  return [reading.week, ...(reading.corrections ?? []).map((correction) => correction.date)].map(isoDate).sort().at(-1)!;
+}
+
+/**
+ * When a week page last changed: its publication, a later verification (such as
+ * the Saturday enterprise run) or a correction. The research's own date is older
+ * than all of these and says nothing about the page.
+ */
+export function weekUpdatedAt(week: string): string {
+  const verifiedAt = weeklyEditorials[week]?.verifiedAt;
+  return [isoDate(week), ...(verifiedAt ? [isoDate(verifiedAt)] : []), ...readings.filter((reading) => reading.week === week).map(readingUpdatedAt)]
+    .sort().at(-1)!;
+}

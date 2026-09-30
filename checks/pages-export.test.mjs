@@ -13,11 +13,21 @@ test("Pages export has all weekly routes, base-path-safe navigation and assets",
     const html = readFileSync(path.join("out", file), "utf8");
     const canonical = html.match(/rel="canonical" href="([^"]+)"/)?.[1];
     assert.equal(canonical, `${site}/${file.replace(/index\.html$/, "")}`);
-    for (const [, url] of html.matchAll(/(?:href|src)="([^"#]+)"/g)) {
+    // Links with a fragment are checked too, down to the element they point at.
+    const hasId = (page, id) => page.includes(` id="${decodeURIComponent(id)}"`);
+    for (const [, url] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
+      const fragment = url.split("#")[1];
+      if (url.startsWith("#")) {
+        if (fragment) assert.ok(hasId(html, fragment), `${file}: no element for ${url}`);
+        continue;
+      }
       if (!url.startsWith("/")) continue;
       assert.ok(url.startsWith(`${base}/`), `${file}: escaped project base: ${url}`);
       const target = path.join("out", decodeURIComponent(url.slice(base.length).split(/[?#]/)[0]));
       assert.ok(existsSync(target) || existsSync(path.join(target, "index.html")), `${file}: missing ${url}`);
+      if (fragment && !/\.\w+$/.test(target)) {
+        assert.ok(hasId(readFileSync(path.join(target, "index.html"), "utf8"), fragment), `${file}: no element for ${url}`);
+      }
     }
   }
 });

@@ -1,4 +1,4 @@
-import { allWeeks, feedWeeks, readings, type Reading } from "../data/readings";
+import { allWeeks, feedWeeks, readingUpdatedAt, readings, type Reading } from "../data/readings";
 
 import { SITE_URL as SITE } from "../site-config";
 import { provenanceText } from "../data/provenance";
@@ -7,18 +7,6 @@ export const dynamic = "force-static";
 const xml = (value: string) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const slug = (week: string) => week.replaceAll(".", "-");
 const stamp = (date: string) => `${date}T00:00:00+08:00`;
-
-/**
- * 修訂發生時一併更新 entry 的 updated，讓已訂閱的讀者會再次看到該筆，
- * 而不是只有回到網站的人才知道它被撤稿或更正。
- */
-function entryUpdated(reading: Reading) {
-  const latestCorrection = (reading.corrections ?? [])
-    .map((correction) => slug(correction.date))
-    .sort()
-    .at(-1);
-  return latestCorrection && latestCorrection > reading.dateValue ? latestCorrection : reading.dateValue;
-}
 
 function entrySummary(reading: Reading) {
   const corrections = reading.corrections ?? [];
@@ -37,19 +25,21 @@ export async function GET() {
     // its original form so subscribers do not see published entries as new.
     const id = `${SITE}/week/${slug(reading.week)}#reading-${reading.id}`;
     const permalink = `${SITE}/week/${slug(reading.week)}/#reading-${reading.id}`;
+    // updated is when the entry went live (its week) or a later correction, not
+    // the research date, so subscribers see a retraction or correction again.
     return `
     <entry>
       <id>${id}</id>
       <title>${xml(reading.title)}</title>
       <link href="${xml(reading.source)}" rel="alternate" />
       <link href="${permalink}" rel="related" />
-      <updated>${stamp(entryUpdated(reading))}</updated>
+      <updated>${stamp(readingUpdatedAt(reading))}</updated>
       <summary>${xml(entrySummary(reading))}</summary>
     </entry>`;
   }).join("");
 
   const updated = stamp(
-    feedReadings.map(entryUpdated).sort().at(-1) ?? slug(weeks[0] ?? allWeeks.at(-1) ?? ""),
+    feedReadings.map(readingUpdatedAt).sort().at(-1) ?? slug(weeks[0] ?? allWeeks.at(-1) ?? ""),
   );
 
   return new Response(

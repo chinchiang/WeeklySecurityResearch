@@ -1,20 +1,20 @@
-import { allWeeks, readings } from "../data/readings";
+import { allWeeks, weekUpdatedAt } from "../data/readings";
 
 import { SITE_URL as SITE } from "../site-config";
 export const dynamic = "force-static";
 
 // Locations match each page's canonical (trailingSlash export), so crawlers
-// are not sent through a redirect. Each week carries its own lastmod.
-const latestDate = (items: typeof readings) => items.map((reading) => reading.dateValue).sort().at(-1);
+// are not sent through a redirect. Each week carries the date its page last
+// changed; the homepage and archive change whenever any week does.
 
 export async function GET() {
-  const latest = latestDate(readings);
+  const latest = allWeeks.map(weekUpdatedAt).sort().at(-1);
   const pages = [
     { path: "/", lastmod: latest },
     { path: "/archive/", lastmod: latest },
     ...allWeeks.map((week) => ({
       path: `/week/${week.replaceAll(".", "-")}/`,
-      lastmod: latestDate(readings.filter((reading) => reading.week === week)),
+      lastmod: weekUpdatedAt(week),
     })),
   ];
   const body = pages.map(({ path, lastmod }) => `<url><loc>${SITE}${path}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}</url>`).join("");
