@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Source of public/og-image.png. Regenerate on Windows (fonts: Microsoft JhengHei, Segoe UI):
+       node -e 'require("sharp")("docs/assets/og-image.svg").png({compressionLevel:9}).toFile("public/og-image.png")' -->
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6d4ed9"/><stop offset="1" stop-color="#4179d1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#f7f8fc"/>
+  <rect x="0" y="0" width="16" height="630" fill="#6343cf"/>
+  <rect x="96" y="112" width="120" height="120" rx="32" fill="url(#mark)"/>
+  <text x="156" y="196" text-anchor="middle" font-family="Microsoft JhengHei, Noto Sans TC, sans-serif" font-weight="800" font-size="60" fill="#ffffff">研</text>
+  <text x="96" y="352" font-family="Microsoft JhengHei, Noto Sans TC, sans-serif" font-weight="800" font-size="84" fill="#191d32">科技・資安・架構週讀</text>
+  <text x="96" y="430" font-family="Microsoft JhengHei, Noto Sans TC, sans-serif" font-size="36" fill="#606a80">製造業科技、資安與架構每週精選與查核摘要</text>
+  <rect x="96" y="486" width="1008" height="2" fill="#e0e4ee"/>
+  <text x="96" y="546" font-family="Segoe UI, Inter, sans-serif" font-size="28" fill="#6343cf">chinchiang.github.io/WeeklySecurityResearch</text>
+</svg>
