@@ -277,6 +277,7 @@ export default function Home() {
                   className={`progress-toggle ${isDone ? "done" : ""}`}
                   onClick={() => toggleComplete(reading.id)}
                   aria-pressed={isDone}
+                  aria-label={`${isDone ? "已閱讀" : "標記為已閱讀"}：${reading.title}`}
                 >
                   <span aria-hidden="true">{isDone ? "✓" : ""}</span>{isDone ? "已閱讀" : "標記為已閱讀"}
                 </button>

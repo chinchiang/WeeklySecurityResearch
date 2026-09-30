@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { allWeeks, CURRENT_WEEK, currentReadings, readings, weeklyEditorials } from "../app/data/readings.ts";
+import { allWeeks, archiveReadings, CURRENT_WEEK, currentReadings, readings, weeklyEditorials } from "../app/data/readings.ts";
 import { provenanceText } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
 import { findPrivate } from "../scripts/private-patterns.mjs";
@@ -64,6 +64,11 @@ test("filter, week and read-progress toggles expose aria-pressed; anchors do not
     const toggles = [...html.matchAll(/<button class="progress-toggle[^"]*"[^>]*>/g)].map((m) => m[0]);
     assert.ok(toggles.length > 0, `${file}: no read-progress toggle`);
     for (const toggle of toggles) assert.match(toggle, /aria-pressed="(?:true|false)"/, `${file}: ${toggle}`);
+    // Every card has the same visible text, so the name must say which reading it marks.
+    const unescape = (text) => text.replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+    const labels = toggles.map((toggle) => unescape(toggle.match(/aria-label="([^"]*)"/)?.[1] ?? ""));
+    const expected = (file === "index.html" ? currentReadings : archiveReadings).map((r) => `標記為已閱讀：${r.title}`);
+    assert.deepEqual([...labels].sort(), [...expected].sort(), `${file}: read-progress toggle labels`);
   }
   for (const week of allWeeks) {
     const html = readFileSync(`out/week/${week.replaceAll(".", "-")}/index.html`, "utf8");
