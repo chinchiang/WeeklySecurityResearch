@@ -116,7 +116,7 @@ test("all reading receipts conform to the source-workflow specification schema",
 test("public data, docs and every public file carry no private identifiers", () => {
   const walk = (dir) => readdirSync(dir, { withFileTypes: true })
     .flatMap((e) => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]);
-  const files = [...walk("app"), ...walk("public"), ...walk("docs"), "README.md", "CLAUDE.md"]
+  const files = [...walk("app"), ...walk("public"), ...walk("docs"), "README.md", "CLAUDE.md", "AGENTS.md"]
     .filter((file) => /\.(?:tsx?|mjs|css|html|json|md|txt|xml|svg)$/.test(file));
   assert.ok(files.some((file) => file.includes("social-content")), "scan must cover public/social-content");
   for (const file of files) {

@@ -76,14 +76,7 @@ export default function ArchivePage() {
         <div className="live-state"><i /> ARCHIVE VERIFIED</div>
       </header>
 
-      <nav className="mobile-dock" aria-label="手機快捷導覽">
-        <Link href="/"><span>⌂</span>最新一期</Link>
-        <a href="#archive-index"><span>◆</span>歷史清單</a>
-        <a href="#archive-progress"><span>✓</span>閱讀進度</a>
-      </nav>
-
       <section className="archive-hero" id="top">
-        <div className="grid-noise" aria-hidden="true" />
         <div>
           <p className="eyebrow">RESEARCH ARCHIVE · SINCE {allWeeks[0]}</p>
           <h1>歷史<span>閱讀資料庫</span></h1>
