@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { allWeeks } from "../../data/readings";
+import { SITE_NAME, socialMetadata } from "../../site-metadata";
 
 type WeekLayoutProps = {
   children: React.ReactNode;
@@ -25,18 +26,14 @@ export async function generateMetadata({ params }: Omit<WeekLayoutProps, "childr
   }
   const canonicalWeek = encodeURIComponent(decodedWeek);
   const displayWeek = decodedWeek.replaceAll("-", ".");
-  const title = `${displayWeek} 必讀清單｜科技・資安・架構週讀`;
+  const title = `${displayWeek} 必讀清單｜${SITE_NAME}`;
   const description = `${displayWeek} 製造業科技、資安與架構固定週次精選、查核摘要與原始來源。`;
 
   return {
     title,
     description,
     alternates: { canonical: `/week/${canonicalWeek}` },
-    openGraph: {
-      url: `/week/${canonicalWeek}`,
-      title,
-      description,
-    },
+    ...socialMetadata({ url: `/week/${canonicalWeek}`, title, description }),
   };
 }
 
