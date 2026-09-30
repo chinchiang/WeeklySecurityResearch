@@ -16,7 +16,7 @@ npm ci
 npm test          # 先靜態匯出到 out/，再跑 tests/ 與 checks/ 全部測試
 npm run lint
 npm run typecheck # 先 next typegen 再 tsc --noEmit
-npm run audit     # high/critical 一律擋下，例外必須列在 scripts/audit-allowlist.json 並附到期日
+npm run audit     # 正式依賴的 high/critical 一律擋下，例外必須列在 scripts/audit-allowlist.json 並附到期日；只在 devDependencies 的只出 warning
 npm run build:pages && npm run test:pages
 npm run check:links  # 檢查原始來源可達性；CI 每週一自動跑，失效只出 warning
 ```
