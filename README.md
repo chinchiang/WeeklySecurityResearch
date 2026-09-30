@@ -64,6 +64,6 @@ GitHub Pages 是唯一正式站。原本部署在 ChatGPT Sites 的 Worker 版�
 - repository 為 public：repo 內所有檔案與 git 歷史都等同公開內容，私人 Drive 連結、WORK 證據與個人資訊一律不得提交。
 - 網站是 GitHub Pages 靜態輸出，無法設定自訂 HTTP 回應標頭（CSP、HSTS 等由 GitHub 決定）。安全性依賴內容本身：公開輸出不含私人 Drive 連結與 WORK 證據、不含原始碼與 source map（`checks/pages-export.test.mjs` 與 `tests/provenance.test.mjs` 守護）。
 - 靜態匯出只產生 `app/data/readings.ts` 既有週次的頁面；未知週次由 `app/week/[week]/layout.tsx` 擋下，其他路徑由 Pages 回 `app/not-found.tsx` 產生的 `404.html`，該頁 `noindex` 且不宣告 canonical（`tests/static-export.test.mjs` 守護），避免任意字串被搜尋引擎收錄。
-- 依賴漏洞以 `npm run audit`（`scripts/audit-gate.mjs`）把關：high／critical 一律擋下，除非列在 `scripts/audit-allowlist.json` 並附理由與 `reviewBy` 到期日（目前無例外）。`package.json` 以 override 將 sharp（next 的選用依賴）固定在修補版 0.35.4，來源：https://github.com/advisories/GHSA-rgj7-g3m4-5g8c 。
+- 依賴漏洞以 `npm run audit`（`scripts/audit-gate.mjs`）把關：`dependencies`（會打包進網站的 next、react）的 high／critical 一律擋下，除非列在 `scripts/audit-allowlist.json` 並附理由與 `reviewBy` 到期日（目前無例外）。只出現在 `devDependencies`（eslint、typescript 等只在建置機器上執行的工具）的漏洞只在 CI 標示 warning，不阻擋內容發布，但仍應另開 PR 升級。`package.json` 以 override 將 sharp（next 的選用依賴）固定在修補版 0.35.4，來源：https://github.com/advisories/GHSA-rgj7-g3m4-5g8c 。
 
 閱讀進度只儲存在使用者瀏覽器的 Local Storage，不會傳送至外部服務。
