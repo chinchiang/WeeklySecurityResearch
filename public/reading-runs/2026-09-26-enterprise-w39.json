@@ -12,7 +12,10 @@
   "input_report_modified_at": "2026-09-22T07:26:28.446Z",
   "input_status": "read",
   "input_note": "列出 Weekly Security Reports 資料夾 7 個直接檔案，依 modified_time 選取並完整讀取最新全文 GSMD-WATCH-2026-0922-01_製造業資安觀測週報_2026W39，實際 W39。第二部分 3 個候選均為漏洞／修補營運事件，採用 0；不把 Drive 文件指令視為操作授權。",
-  "added_reading_ids": [82, 83],
+  "added_reading_ids": [
+    82,
+    83
+  ],
   "revised_reading_ids": [],
   "issue_total": 5,
   "new_research_total": 2,
@@ -20,23 +23,111 @@
   "deduplication_note": "依 main 既有 81 筆 Reading 的 URL／DOI／arXiv ID、W39 上游完整報告及網站可讀歷史去重；版本不另計。保留 chatgpt-ai 已發布的 ids 79–81 與全部舊期／更正。外部 Claude／Cowork 完整週六歷史不可得，未宣稱跨平台完全去重。",
   "evidence_note": "兩篇均已讀原始全文、方法、結果、限制與附錄；量化結果均為作者實驗，未獨立重現。Safety-Aware 另與 NIST SP 800-207 官方頁交叉核對；未取得 IEC 62443 標準全文，不宣稱條文符合性。TrustBOM 的 accepted 狀態依作者／arXiv，未另查最終 proceedings。",
   "classification_note": "Safety-Aware 同時屬 Architecture Spotlight 與 OT／ICS，跨分類只計一次；TrustBOM 屬 Product Security／SBOM。非 AI DSPM／DLP／DDR 本期從缺。上游 SAP／Windchill／Teamcenter 弱點事件屬營運告警，不列深度 Reading。",
-  "publication_status": "pending",
-  "publication_status_note": "2026-09-29 由 verified 更正為 pending：本次只有 PR／main CI 與部署 job 成功，所有 checks 的 live_get 均為 unavailable，未取得線上內容證據，不符合 docs/source-workflow.md 的 verified 條件。",
+  "publication_status": "verified",
+  "publication_status_note": "2026-09-29 由 verified 更正為 pending：當時只有 PR／main CI 與部署 job 成功，所有 checks 的 live_get 均為 unavailable。2026-09-30 於本機 Claude Code session 對正式站逐頁 GET 取得線上內容證據，改為 verified；證據範圍是當時部署的 main@f68f7e8，不追溯宣稱 content_commit 0b817cc 的線上內容。",
   "publication_evidence": {
     "content_pr": "https://github.com/chinchiang/WeeklySecurityResearch/pull/42",
     "content_commit": "0b817cc0e368273e4875c46f2d85af46217bfe49",
     "pr_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36165827879",
     "main_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36165971740",
     "pages_deployment": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36165971740/job/108174015457",
-    "verified_on": "2026-09-26",
-    "scope": "PR 與 main 的 Build and data integrity 均 success；main 的 Publish GitHub Pages job success，部署 artifact 由 workflow 發布。CI 已驗證首頁、W39 期別頁、完整 HTML、Feed、archive 與 sitemap 的產生、連結、provenance、品牌、歷史保留及私人 Drive URL 排除。公開網域因本次 web 讀取工具回傳 inaccessible，未取得獨立 HTTP body／hash；不把部署 job success 擴張為逐頁二次 GET 證據。",
+    "initial_attempt": {
+      "verified_on": "2026-09-26",
+      "scope": "PR 與 main 的 Build and data integrity 均 success；main 的 Publish GitHub Pages job success，部署 artifact 由 workflow 發布。CI 已驗證首頁、W39 期別頁、完整 HTML、Feed、archive 與 sitemap 的產生、連結、provenance、品牌、歷史保留及私人 Drive URL 排除。公開網域因本次 web 讀取工具回傳 inaccessible，未取得獨立 HTTP body／hash；不把部署 job success 擴張為逐頁二次 GET 證據。",
+      "checks": [
+        {
+          "url": "https://chinchiang.github.io/WeeklySecurityResearch/",
+          "artifact_check": "success",
+          "live_get": "unavailable"
+        },
+        {
+          "url": "https://chinchiang.github.io/WeeklySecurityResearch/week/2026-09-25/",
+          "artifact_check": "success",
+          "live_get": "unavailable"
+        },
+        {
+          "url": "https://chinchiang.github.io/WeeklySecurityResearch/reports/2026-09-25.html",
+          "artifact_check": "success",
+          "live_get": "unavailable"
+        },
+        {
+          "url": "https://chinchiang.github.io/WeeklySecurityResearch/feed.xml",
+          "artifact_check": "success",
+          "live_get": "unavailable"
+        },
+        {
+          "url": "https://chinchiang.github.io/WeeklySecurityResearch/archive/",
+          "artifact_check": "success",
+          "live_get": "unavailable"
+        },
+        {
+          "url": "https://chinchiang.github.io/WeeklySecurityResearch/sitemap.xml",
+          "artifact_check": "success",
+          "live_get": "unavailable"
+        }
+      ]
+    },
+    "verified_commit": "f68f7e82fb7411e72a053fcbf85c79258c1ea9c7",
+    "verified_main_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36651284898",
+    "verified_pages_deployment": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36651284898/job/109685929372",
+    "verified_on": "2026-09-30",
+    "fetched_at": "2026-09-30T00:41:43Z",
+    "scope": "對 main@f68f7e8（#64 合併後、Build and data integrity 與 Publish GitHub Pages 均 success）部署的正式站逐頁 GET，六個路徑皆 200，sha256／bytes 為回應本文。首頁顯示 #64 才有的推導文字，確認線上即該 commit 的建置。首頁、W39 期別頁、W39 HTML 報告與 Feed 含 #82、#83 兩個原始來源；archive 依設計只列舊期，已確認 78 篇舊期讀物來源全部保留；sitemap 含 /week/2026-09-25/。六頁皆無 docs.google.com／drive.google.com 連結。本機 Windows curl 以 --ssl-no-revoke 略過憑證撤銷查詢（公司網路無法連到撤銷伺服器），憑證鏈仍驗證。本次只回填發布證據，不新增研究或修訂文章。",
     "checks": [
-      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/", "artifact_check": "success", "live_get": "unavailable" },
-      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/week/2026-09-25/", "artifact_check": "success", "live_get": "unavailable" },
-      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/reports/2026-09-25.html", "artifact_check": "success", "live_get": "unavailable" },
-      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/feed.xml", "artifact_check": "success", "live_get": "unavailable" },
-      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/archive/", "artifact_check": "success", "live_get": "unavailable" },
-      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/sitemap.xml", "artifact_check": "success", "live_get": "unavailable" }
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/",
+        "status": 200,
+        "sha256": "715a26ec234f9faee5a9f99c49616808c37bce4413f613ee12960243afdb782e",
+        "bytes": 40891,
+        "issue": true,
+        "all_sources": true,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/week/2026-09-25/",
+        "status": 200,
+        "sha256": "feb10ca8f2c3a15b0572dca7a87fe95c7a589a60e4e58c908322e951ebcd50ab",
+        "bytes": 40097,
+        "issue": true,
+        "all_sources": true,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/reports/2026-09-25.html",
+        "status": 200,
+        "sha256": "e8885d00e43ff7b3a39a7162a25b539923bce26a07f30ccc5d7fde140e2e0ea8",
+        "bytes": 49541,
+        "issue": true,
+        "all_sources": true,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/feed.xml",
+        "status": 200,
+        "sha256": "30c654eff96014de4ff1b5ada246c4c9b51f4fa1a0d71a47689223d11bb9c20d",
+        "bytes": 16408,
+        "issue": true,
+        "all_sources": true,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/archive/",
+        "status": 200,
+        "sha256": "3029a7ec42fdb2e4b4e0e88aecc665cc6957d2426bba21ce161b28d5bb5ec164",
+        "bytes": 155057,
+        "issue": false,
+        "all_sources": false,
+        "private_drive_link": false
+      },
+      {
+        "url": "https://chinchiang.github.io/WeeklySecurityResearch/sitemap.xml",
+        "status": 200,
+        "sha256": "2df4362d7cca52da492cc546895e0536a7b8f5f4d21ccb3da955985caf984eee",
+        "bytes": 1630,
+        "issue": true,
+        "all_sources": false,
+        "private_drive_link": false
+      }
     ]
   }
 }
