@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import { allWeeks } from "../app/data/readings.ts";
@@ -33,4 +34,17 @@ test("reports do not carry run evidence that belongs to another week", () => {
       assert.ok(!next || date < next.replaceAll(".", "-"), `${week} report cites run receipt ${date} of a later week`);
     }
   }
+});
+
+// A Saturday run date (or any date without readings) used to write nothing and exit 0.
+test("build:report rejects a week without readings and points at its Friday", () => {
+  const run = (arg) => spawnSync(process.execPath, ["--experimental-strip-types", "scripts/build-report.mjs", arg], { encoding: "utf8" });
+  const friday = allWeeks[0];
+  const saturday = new Date(Date.parse(`${friday.replaceAll(".", "-")}T00:00:00Z`) + 86400000).toISOString().slice(0, 10);
+  const wrongDay = run(saturday);
+  assert.equal(wrongDay.status, 1);
+  assert.match(wrongDay.stderr, new RegExp(`build:report -- ${friday.replaceAll(".", "-")}`));
+  const unknown = run("1999-01-01");
+  assert.equal(unknown.status, 1);
+  assert.match(unknown.stderr, /找不到週次「1999-01-01」/);
 });
