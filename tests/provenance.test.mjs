@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 import { CURRENT_WEEK, currentReadings, readings, weeklyEditorials, weeklyReportIntegration } from "../app/data/readings.ts";
 import { originsFor, matchesOrigin, provenanceText, sourceLabels, sourceWorkflows, studyKey, workflowEvidence } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
@@ -109,13 +111,31 @@ test("all reading receipts conform to the source-workflow specification schema",
 });
 
 
-test("public data, reports and receipts carry no private identifiers", () => {
-  const files = ["app/data/readings.ts", "app/data/provenance.ts",
-    ...readdirSync("public/reports").map(f => `public/reports/${f}`),
-    ...readdirSync("public/reading-runs").map(f => `public/reading-runs/${f}`)];
+// Everything a reader or a scheduled run can see: site data and components, every
+// public file (reports, receipts, historical social content), docs and the repo guides.
+test("public data, docs and every public file carry no private identifiers", () => {
+  const walk = (dir) => readdirSync(dir, { withFileTypes: true })
+    .flatMap((e) => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]);
+  const files = [...walk("app"), ...walk("public"), ...walk("docs"), "README.md", "CLAUDE.md"]
+    .filter((file) => /\.(?:tsx?|mjs|css|html|json|md|txt|xml|svg)$/.test(file));
+  assert.ok(files.some((file) => file.includes("social-content")), "scan must cover public/social-content");
   for (const file of files) {
     const text = readFileSync(file, "utf8");
     assert.equal(findPrivate(text), null, file);
+  }
+});
+
+test("private-name matching ignores case and finds CJK names without word boundaries", () => {
+  const sha256 = (text) => createHash("sha256").update(text).digest("hex");
+  const nameHashes = new Set([sha256("alice")]);
+  const cjkNameHashes = new Set([sha256("王小明")]);
+  for (const text of ["Alice", "ALICE", "by alice."]) assert.equal(findPrivate(text, { nameHashes }), "private name", text);
+  assert.equal(findPrivate("Malice", { nameHashes }), null);
+  assert.equal(findPrivate("本週由王小明整理", { cjkNameHashes }), "private name");
+  assert.equal(findPrivate("本週由王小整理", { cjkNameHashes }), null);
+  for (const text of ["work-12", "https://DRIVE.google.com/x", "https://drive.usercontent.google.com/download?id=1",
+    "https://sites.google.com/view/x", "https://mail.google.com/mail/u/0", "https://forms.gle/abc"]) {
+    assert.notEqual(findPrivate(text), null, text);
   }
 });
 
