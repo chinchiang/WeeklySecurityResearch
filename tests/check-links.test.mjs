@@ -121,7 +121,9 @@ test("HEAD 404 falls back to GET before declaring a source unreachable", async (
       assert.equal(run.status, 0, run.stderr);
       assert.deepEqual(JSON.parse(readFileSync(path.join(context.dir, "links.json"), "utf8")), { checked: 2, failures: [] });
       assert.equal(readFileSync(context.env.GITHUB_OUTPUT, "utf8"), "outcome=pass\n");
-      const calls = readFileSync(path.join(context.dir, "fetch-calls.jsonl"), "utf8").trim().split("\n").map(JSON.parse);
+      // URLs are checked concurrently; each URL's own requests stay in order (stable sort).
+      const calls = readFileSync(path.join(context.dir, "fetch-calls.jsonl"), "utf8").trim().split("\n").map(JSON.parse)
+        .sort((a, b) => a.url.localeCompare(b.url));
       assert.deepEqual(calls, ["one", "two"].flatMap(name => [
         { url: `https://source.example/${name}`, method: "HEAD" },
         { url: `https://source.example/${name}`, method: "GET", range: "bytes=0-1024" },
@@ -145,7 +147,8 @@ test("HEAD 404 followed by GET 404 remains an unreachable source", (t) => {
     failures: ["one", "two"].map(name => ({ url: `https://source.example/${name}`, status: 404 })),
   });
   assert.equal(readFileSync(context.env.GITHUB_OUTPUT, "utf8"), "outcome=unreachable\n");
-  const calls = readFileSync(path.join(context.dir, "fetch-calls.jsonl"), "utf8").trim().split("\n").map(JSON.parse);
+  const calls = readFileSync(path.join(context.dir, "fetch-calls.jsonl"), "utf8").trim().split("\n").map(JSON.parse)
+    .sort((a, b) => a.url.localeCompare(b.url));
   assert.deepEqual(calls, ["one", "two"].flatMap(name => [
     { url: `https://source.example/${name}`, method: "HEAD" },
     { url: `https://source.example/${name}`, method: "GET" },
@@ -181,6 +184,52 @@ test("source network exceptions remain unreachable, not checker crashes", (t) =>
   const result = JSON.parse(readFileSync(path.join(context.dir, "links-result.json"), "utf8"));
   assert.equal(result.outcome, "unreachable");
   assert.equal(result.failures[0].error, "fetch failed");
+});
+
+test("URLs are checked concurrently and failures keep the URL list order", (t) => {
+  const context = fixture(t, `
+    let inFlight = 0;
+    globalThis.fetch = async (url) => {
+      inFlight++;
+      process.stderr.write("in-flight " + inFlight + "\\n");
+      await new Promise((resolve) => setTimeout(resolve, url.endsWith("one") ? 200 : 0));
+      inFlight--;
+      return new Response(null, { status: 410 });
+    };
+  `);
+  const run = runStep("Check source and PDF links", context);
+  assert.equal(run.status, 0, run.stderr);
+  assert.match(readFileSync(path.join(context.dir, "links.stderr.log"), "utf8"), /in-flight 2/);
+  assert.deepEqual(JSON.parse(readFileSync(path.join(context.dir, "links.json"), "utf8")).failures.map((f) => f.url),
+    ["https://source.example/one", "https://source.example/two"]);
+});
+
+test("the overall time budget aborts hung requests and reports them as unreachable", (t) => {
+  const context = fixture(t, `
+    globalThis.fetch = (url, options) => new Promise((_, reject) => {
+      options.signal.addEventListener("abort", () => reject(options.signal.reason));
+    });
+  `);
+  const started = Date.now();
+  const run = runStep("Check source and PDF links", context, { LINK_CHECK_BUDGET_MS: "300" });
+  assert.equal(run.status, 0, run.stderr);
+  assert.ok(Date.now() - started < 10_000, "budget must end the run long before the 12-second request timeout");
+  const result = JSON.parse(readFileSync(path.join(context.dir, "links-result.json"), "utf8"));
+  assert.equal(result.outcome, "unreachable");
+  assert.equal(result.failures.length, 2);
+});
+
+test("URLs not started before the budget runs out are reported as unchecked", (t) => {
+  const context = fixture(t, `
+    globalThis.fetch = (url, options) => new Promise((_, reject) => {
+      options.signal.addEventListener("abort", () => reject(options.signal.reason));
+    });
+  `);
+  const run = runStep("Check source and PDF links", context, { LINK_CHECK_BUDGET_MS: "300", LINK_CHECK_CONCURRENCY: "1" });
+  assert.equal(run.status, 0, run.stderr);
+  const { failures } = JSON.parse(readFileSync(path.join(context.dir, "links.json"), "utf8"));
+  assert.deepEqual(failures[1], { url: "https://source.example/two", error: "not checked: link check time budget exceeded" });
+  assert.equal(readFileSync(context.env.GITHUB_OUTPUT, "utf8"), "outcome=unreachable\n");
 });
 
 test("checker startup crash and stdout contamination fail the independent gate", async (t) => {
