@@ -34,8 +34,7 @@ export function canonicalItems(editions) {
 
 /**
  * Locate the embedded `const ITEMS=[...],LATEST="..."` block. Returns the
- * parsed items plus the slice bounds so the generator can rewrite it and the
- * test can compare it without duplicating this parsing.
+ * parsed items plus the slice bounds so the generator can rewrite it.
  */
 export function findEmbeddedItems(html) {
   const start = html.indexOf(ITEMS_MARKER);
