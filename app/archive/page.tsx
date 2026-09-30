@@ -189,6 +189,7 @@ export default function ArchivePage() {
                 key={filter}
                 className={topic === filter ? "active" : ""}
                 onClick={() => setTopic(filter)}
+                aria-pressed={topic === filter}
               >
                 {filter}
               </button>
@@ -285,8 +286,9 @@ export default function ArchivePage() {
                 <button
                   className={`progress-toggle ${isDone ? "done" : ""}`}
                   onClick={() => toggleComplete(reading.id)}
+                  aria-pressed={isDone}
                 >
-                  <span>{isDone ? "✓" : ""}</span>
+                  <span aria-hidden="true">{isDone ? "✓" : ""}</span>
                   {isDone ? "已閱讀" : "標記為已閱讀"}
                 </button>
               </article>
