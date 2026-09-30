@@ -30,6 +30,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          # Nothing in this job pushes; do not leave the token in .git/config
+          # where npm lifecycle scripts of dependencies could read it.
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -42,12 +45,18 @@ jobs:
         run: npm ci
 
       - name: Preserve published readings and weekly links
-        if: github.event_name != 'workflow_dispatch'
         env:
           # PRs compare with their base; pushes to main compare with the commit
           # main pointed to before, so direct pushes cannot skip this check.
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
+          # A manual run has no base but still deploys when run on main, so it
+          # is checked too: a branch against where it left main, main itself
+          # against its previous commit.
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            BASE_SHA=$(git merge-base origin/main HEAD)
+            if [ "$BASE_SHA" = "$(git rev-parse HEAD)" ]; then BASE_SHA=$(git rev-parse HEAD^); fi
+          fi
           # Only a push can legitimately lack its base (history rewrite); a PR
           # base is always fetched, so a missing one there is an error.
           if [ "$GITHUB_EVENT_NAME" = push ] && ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
