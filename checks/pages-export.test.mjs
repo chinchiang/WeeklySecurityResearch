@@ -21,6 +21,24 @@ test("Pages export has all weekly routes, base-path-safe navigation and assets",
     }
   }
 });
+// Next.js replaces a parent's openGraph/twitter object instead of merging it, so a
+// sub-page that sets its own title silently loses the share image and site name.
+test("every page carries complete Open Graph and Twitter metadata with the share image", () => {
+  const meta = (html, key) => html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]*)"`))?.[1];
+  assert.ok(existsSync("out/og-image.png"));
+  for (const file of htmlFiles) {
+    const html = readFileSync(path.join("out", file), "utf8");
+    const url = `${site}/${file.replace(/index\.html$/, "")}`;
+    assert.equal(meta(html, "og:url"), url, file);
+    assert.equal(meta(html, "og:image"), `${site}/og-image.png`, file);
+    for (const [key, value] of [["og:type", "website"], ["og:locale", "zh_TW"], ["og:site_name", "科技・資安・架構週讀"], ["twitter:card", "summary_large_image"], ["twitter:image", `${site}/og-image.png`]]) {
+      assert.equal(meta(html, key), value, `${file}: ${key}`);
+    }
+    const title = html.match(/<title>([^<]*)<\/title>/)?.[1];
+    assert.equal(meta(html, "og:title"), title, `${file}: og:title`);
+    assert.equal(meta(html, "twitter:title"), title, `${file}: twitter:title`);
+  }
+});
 test("current report contains every selected item and the complete Spotlight", () => {
   const html = readFileSync(`out/reports/${CURRENT_WEEK.replaceAll(".", "-")}.html`, "utf8");
   for (const r of currentReadings) {
