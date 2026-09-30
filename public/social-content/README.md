@@ -13,9 +13,9 @@
 ## 新增一期
 
 1. 新增 `data/<週次>.json` 與 `posts/<週次>/`。
-2. 執行 `node scripts/generate-social-content.mjs`（`npm run build` 會自動執行）。
+2. 手動執行 `node scripts/generate-social-content.mjs`（2026-09-29 #57 起 `npm run build` 不再自動執行，社群內容已凍結為歷史資料）。
 
-兩個頁面把選題清單內嵌在 HTML 裡，以維持單檔即可直接開啟；但內嵌內容由上述腳本從 JSON 寫入，**不要手動編輯頁面裡的 `ITEMS`**——下次建置會覆蓋，而且 `tests/site-structure.test.mjs` 會比對內嵌內容與 `data/` 是否完全相同，不一致即測試失敗。
+兩個頁面把選題清單內嵌在 HTML 裡，以維持單檔即可直接開啟；但內嵌內容由上述腳本從 JSON 寫入，**不要手動編輯頁面裡的 `ITEMS`**——下次執行上述腳本會覆蓋，而且 `tests/site-structure.test.mjs` 會比對內嵌內容與 `data/` 是否完全相同，不一致即測試失敗。
 
 每一期都必須同時具備 `data/<週次>.json` 與 `posts/<週次>/`，由 `tests/site-structure.test.mjs` 檢查兩者集合相等。
 
