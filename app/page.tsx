@@ -2,12 +2,12 @@
 
 import { sitePath } from "./site-config";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { SourceMeta, SourceFilter, SourcesOverview } from "./components/source-meta";
 import { matchesOrigin } from "./data/provenance";
-import { ArchitectureReview } from "./components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
 import { useReadingProgress } from "./components/use-reading-progress";
+import { ReadingDialog, useReadingDialog } from "./components/reading-dialog";
 import {
   CURRENT_WEEK,
   currentArchitectureReading,
@@ -21,7 +21,6 @@ import {
   priorityReading,
   readingSearchText,
   weeklyReportIntegration,
-  type Reading,
 } from "./data/readings";
 function Mark({ children }: { children: React.ReactNode }) {
   return <span className="mark">{children}</span>;
@@ -33,64 +32,8 @@ export default function Home() {
   const [decision, setDecision] = useState("全部判定");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("priority");
-  const [selected, setSelected] = useState<Reading | null>(null);
   const { completed, toggleComplete } = useReadingProgress();
-  const modalRef = useRef<HTMLElement>(null);
-  const lastTriggerRef = useRef<HTMLElement | null>(null);
-
-  function openReading(reading: Reading, trigger?: HTMLElement) {
-    lastTriggerRef.current = trigger ?? document.activeElement as HTMLElement;
-    setSelected(reading);
-    window.history.replaceState(null, "", `#reading-${reading.id}`);
-  }
-
-  function closeReading() {
-    setSelected(null);
-    if (window.location.hash.startsWith("#reading-")) {
-      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-    }
-    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
-  }
-
-  useEffect(() => {
-    const syncFromHash = () => {
-      const match = window.location.hash.match(/^#reading-(\d+)$/);
-      if (!match) return;
-      const reading = currentReadings.find((item) => item.id === Number(match[1]));
-      if (reading) setSelected(reading);
-    };
-    syncFromHash();
-    window.addEventListener("hashchange", syncFromHash);
-    return () => window.removeEventListener("hashchange", syncFromHash);
-  }, []);
-
-  useEffect(() => {
-    if (!selected || !modalRef.current) return;
-    const dialog = modalRef.current;
-    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((element) => !element.hasAttribute("disabled"));
-    focusable()[0]?.focus();
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.setProperty("overflow", "hidden");
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closeReading();
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const items = focusable();
-      if (!items.length) return;
-      const first = items[0];
-      const last = items.at(-1)!;
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    dialog.addEventListener("keydown", onKeyDown);
-    return () => {
-      dialog.removeEventListener("keydown", onKeyDown);
-      document.body.style.setProperty("overflow", previousOverflow);
-    };
-  }, [selected]);
+  const { selected, openReading, closeReading } = useReadingDialog(currentReadings);
 
   const visibleReadings = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -405,46 +348,15 @@ export default function Home() {
       </footer>
 
       {selected && (
-        <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && closeReading()}>
-          <section ref={modalRef} className="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title">
-            <button className="modal-close" onClick={closeReading} aria-label="關閉摘要">×</button>
-            <div className="modal-rank">#{String(selected.rank).padStart(2, "0")} · {selected.kind} · {selected.batch}</div>
-            <h2 id="detail-title">{selected.title}</h2>
-            <p className="modal-subtitle">{selected.subtitle}</p>
-            <div className="modal-meta"><span>{selected.date}</span><i />{selected.authors}</div>
-            <div className="modal-tags">
-              <span className={selected.decision === "深入審閱" ? "deep" : "select"}>{selected.decision}</span>
-              <span className={`evidence-badge evidence-${selected.evidenceLevel}`}>{selected.evidenceLevel}</span>
-              {selected.topics.map((item) => <span key={item}>{item}</span>)}
-            </div>
-            <SourceMeta reading={selected} /><CorrectionNotice reading={selected} />
-            <div className="detail-section">
-              <h3>判定依據</h3>
-              <ScoreBreakdown reading={selected} />
-              <p className="score-note">{editorialMethod.decisionRule}</p>
-            </div>
-            <div className="detail-section">
-              <h3>核心摘要</h3><p>{selected.summary}</p>
-            </div>
-            <div className="detail-section">
-              <h3>主要發現</h3>
-              <ul>{selected.findings.map((finding) => <li key={finding}>{finding}</li>)}</ul>
-            </div>
-            <div className="detail-grid">
-              <article><h3>製造業實務關聯</h3><p>{selected.relevance}</p></article>
-              <article><h3>建議控制／行動</h3><p>{selected.action}</p></article>
-            </div>
-            {selected.crossCheck && <div className="cross-check"><b>交叉核實</b><p>{selected.crossCheck}</p></div>}
-            <div className="caveat"><b>查核注意事項</b><p>{selected.caveat}</p></div>
-            <ArchitectureReview reading={selected} /><div className="modal-actions">
-              <a className="primary-button" href={selected.source} target="_blank" rel="noreferrer">開啟原始來源 ↗</a>
-              {selected.pdf && <a className="secondary-button" href={selected.pdf} target="_blank" rel="noreferrer">下載／開啟 PDF ↓</a>}
-              <button className={`reading-button ${completed.includes(selected.id) ? "done" : ""}`} onClick={() => toggleComplete(selected.id)}>
-                {completed.includes(selected.id) ? "✓ 已完成閱讀" : "標記為已閱讀"}
-              </button>
-            </div>
-          </section>
-        </div>
+        <ReadingDialog
+          reading={selected}
+          titleId="detail-title"
+          context={selected.batch}
+          scoreNote={editorialMethod.decisionRule}
+          isDone={completed.includes(selected.id)}
+          onToggleComplete={() => toggleComplete(selected.id)}
+          onClose={closeReading}
+        />
       )}
     </main>
   );
