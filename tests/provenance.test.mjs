@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
-import { CURRENT_WEEK, currentReadings, readings, weeklyReportIntegration } from "../app/data/readings.ts";
+import { CURRENT_WEEK, currentReadings, readings, weeklyEditorials, weeklyReportIntegration } from "../app/data/readings.ts";
 import { originsFor, matchesOrigin, provenanceText, sourceLabels, sourceWorkflows, studyKey, workflowEvidence } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
 import { findPrivate } from "../scripts/private-patterns.mjs";
@@ -185,6 +185,23 @@ test("homepage workflow evidence is derived from the current week, not hard-code
     assert.ok(text.includes(CURRENT_WEEK), `${flow.id}：來源分工證據沒有指向本期 ${CURRENT_WEEK}：${text}`);
     for (const file of Object.keys(receipts)) {
       if (text.includes(file)) assert.ok(currentReceipts.has(file), `${flow.id}：來源分工證據引用了非本期的收據 ${file}。`);
+    }
+  }
+});
+
+test("each week's editorial revision accounts for its latest receipt", () => {
+  const latest = new Map();
+  for (const [file, r] of Object.entries(receipts)) {
+    const week = readings.find(x => [...r.added_reading_ids, ...r.revised_reading_ids].includes(x.id))?.week;
+    if (week && (latest.get(week)?.revision ?? 0) < r.revision) latest.set(week, { file, revision: r.revision });
+  }
+  for (const [week, { file, revision }] of latest) {
+    const editorial = weeklyEditorials[week];
+    assert.ok(editorial?.revision, `${week}：有收據 ${file}，但 weeklyEditorials["${week}"] 沒有 revision。${RULES}`);
+    assert.ok(editorial.revision >= revision, `${week}：收據 ${file} 是 r${revision}，但 weeklyEditorials["${week}"].revision 只有 ${editorial.revision}；寫入收據時要一起把 editorial 的 revision 加到相同值。${RULES}`);
+    // Revisions without a research run (a rename, marking a workflow as missing) have no receipt; the week must say why.
+    if (editorial.revision > revision) {
+      assert.ok(editorial.presentationNote, `${week}：editorial 是 r${editorial.revision}，最新收據 ${file} 只到 r${revision}；沒有研究收據的修訂必須在 presentationNote 說明原因。${RULES}`);
     }
   }
 });

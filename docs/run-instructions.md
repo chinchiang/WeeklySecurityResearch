@@ -18,7 +18,7 @@
 
 ### 二、報告編號與版次
 - 同一週的兩個任務共用一個報告編號（`report_id`），格式為 `AISEC-ARCH-<ISO 年>-W<ISO 週>-<週次日期 YYYYMMDD>`。日期取讀物的 `week`（週五），不可使用執行當天的日期。範例：`week` 為 `2026.10.02`，報告編號為 `AISEC-ARCH-2026-W40-20261002`。
-- 版次以 `weeklyEditorials[<週次>].revision` 為準：本週第一個寫入的任務設為 1；若另一個任務已先寫入，就在現值上加 1。收據的 `revision` 必須等於寫入後的值，同一報告編號的版次不可重複。
+- 版次以 `weeklyEditorials[<週次>].revision` 為準：本週第一個寫入的任務設為 1；若另一個任務已先寫入，就在現值上加 1。收據的 `revision` 必須等於寫入後的值，同一報告編號的版次不可重複。沒有研究收據的修訂（例如標示某流程從缺）也要加 1，並在 `presentationNote` 寫明原因；editorial 的 revision 不可小於該週最新收據。
 - 收據的 `workflow` 填 `chatgpt-ai`（識別碼，不是中文標題）。收據檔名可以使用執行日期，例如 `2026-10-02-ai-w40.json`；只有報告編號綁定週五的週次日期。
 - 收據與讀物必須互相對應：
   - `added_reading_ids` 與 `revised_reading_ids` 列出的讀物都必須存在，而且同屬一週。
