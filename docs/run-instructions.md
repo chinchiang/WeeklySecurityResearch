@@ -36,7 +36,7 @@
 - 未重新產生時，`tests/reports.test.mjs` 會失敗，並要求重新產生報告後提交。
 
 ### 提交前
-- 依序執行 `npm ci`、`npm test`、`npm run lint`、`npm run typecheck`，全部通過才開拉取請求。
+- 依序執行 `npm ci`、`npm test`、`npm run lint`、`npm run typecheck`、`npm run audit`，全部通過才開拉取請求（CI 也會跑這五項）。
 - 公開內容不得含內部 WORK 編號、Google Drive 或 Google 文件連結、私人姓名；持續整合會掃描。
 ```
 

@@ -1,6 +1,6 @@
 # 科技・資安・架構週讀：供稿與發布契約
 
-正式 repo：`chinchiang/WeeklySecurityResearch`（2026-09-13 由拼字錯誤的 `WeeklySecurityReseach` 更正，GitHub 端已完成改名，舊名會自動轉址）。正式站：https://chinchiang.github.io/WeeklySecurityResearch/ 。Pages base path 由 `GITHUB_REPOSITORY` 推導，程式中的 fallback 只供本機使用；歷史 provenance 證據連結仍可帶舊名，GitHub 會轉址。
+正式 repo：`chinchiang/WeeklySecurityResearch`（2026-09-13 由 EveryWeekAIRead 改名；中途曾誤拼為 `WeeklySecurityReaseach`／`WeeklySecurityReseach`。GitHub 端已完成改名，舊名會自動轉址）。正式站：https://chinchiang.github.io/WeeklySecurityResearch/ 。Pages base path 由 `GITHUB_REPOSITORY` 推導，程式中的 fallback 只供本機使用；歷史 provenance 證據連結仍可帶舊名，GitHub 會轉址。
 
 ## 三來源、兩個寫入者
 
@@ -22,9 +22,9 @@ Claude 是兩類候選的上游，不是第三個 GitHub 寫入者。原始文�
 
 每次讀取最新 main 與同目的開啟 PR，先以 URL／DOI／arXiv 識別碼去重（版本屬修訂），合併同週內容。保持既有 ID、week、歷史、更正與其他任務資料；不用整期取代。重大更新寫入更正與版本差異；重跑無變更不建重複文章／PR。從最新 main 合併，head 或 main 改變須重新整合並跑檢查，不以 force push 解決。CI 驗證同週來源唯一、新文章 provenance 及 PR 對既有 ID／週次的保存。
 
-每次寫入 `public/reading-runs/<日期>-<ai|enterprise>-<run識別>.json`。收據含 report_id、workflow、execution_mode（scheduled 或 manual_execution_of_saved_instructions）、checked_at、added_reading_ids、revised_reading_ids、issue_total、research_status、scheduled_trigger_verified；以及 input_report_id、input_report_modified_at、input_status（read/background/unavailable）、input_note、publication_status（pending/verified/failed）、publication_evidence。來源檔不可讀須記錄原因；零新增時兩 ID 陣列可空，但保留成功查核與從缺原因，不建立空期。只有實際排程 run 證據才可標 scheduled_trigger_verified=true。publication_status=verified 需取得線上內容（逐頁 GET）證據；只有 CI 與部署 job 成功、線上無法讀取時維持 pending 並寫明缺口。2026-09-12 兩份收據早於本格式（檔名無 run 識別、workflow 為中文標題），因 provenance 證據連結指向它們，保留原檔名不改。`tests/provenance.test.mjs` 交叉比對收據與讀物：收據列出的 ID 必須存在且同屬一週，report_id 必須是該週唯一的 `AISEC-ARCH-<ISO 週次>-<週次日期>`（同週兩個流程共用，以 revision 區分且不重複）；新增的讀物 `reviewedBy` 與收據 workflow 一致；`provenance.evidence` 必須指向列出該篇的收據（或本 repo 的 PR），`checkedAt`、`inputReportId` 與收據相符。
+每次寫入 `public/reading-runs/<日期>-<ai|enterprise>-<run識別>.json`。收據含 report_id、revision（≥1）、workflow、execution_mode（scheduled 或 manual_execution_of_saved_instructions）、checked_at、added_reading_ids、revised_reading_ids、issue_total、new_research_total 與 background_total（兩者相加等於 added_reading_ids 篇數）、research_status、scheduled_trigger_verified；以及 input_report_id、input_report_modified_at、input_status（read/background/unavailable）、input_note、publication_status（pending/verified/failed）、publication_evidence。來源檔不可讀須記錄原因；零新增時兩 ID 陣列可空，但保留成功查核與從缺原因，不建立空期。只有實際排程 run 證據才可標 scheduled_trigger_verified=true。publication_status=verified 需取得線上內容（逐頁 GET）證據；只有 CI 與部署 job 成功、線上無法讀取時維持 pending 並寫明缺口。2026-09-12 兩份收據早於本格式（檔名無 run 識別、workflow 為中文標題），因 provenance 證據連結指向它們，保留原檔名不改。`tests/provenance.test.mjs` 交叉比對收據與讀物：收據列出的 ID 必須存在且同屬一週，report_id 必須是該週唯一的 `AISEC-ARCH-<ISO 週次>-<週次日期>`（同週兩個流程共用，以 revision 區分且不重複）；新增的讀物 `reviewedBy` 與收據 workflow 一致；`provenance.evidence` 必須指向列出該篇的收據（或本 repo 的 PR），`checkedAt`、`inputReportId` 與收據相符。
 
-以 `npm run build:report` 重新產生並提交 HTML 報告（建置不會代勞），生成索引、Feed，執行資料、來源、歷史保存、建置、lint、型別、安全稽核與 Pages 檢查。必要 review/CI 通過再合併；核實 main CI、部署及線上內容後，通知研究／GitHub 寫入／發布各自狀態。失敗保留已完成內容與確切缺口。公開版不含 Drive 原文、私人連結或 WORK 證據，不寄信、不修改 Drive 或分享權限。
+以 `npm run build:report` 重新產生並提交 HTML 報告（建置不會代勞），生成索引、Feed，執行資料、來源、歷史保存、建置、lint、型別、安全稽核與 Pages 檢查。必要 CI 檢查（`Build and data integrity`）通過再合併（不需要 review 核准）；核實 main CI、部署及線上內容後，通知研究／GitHub 寫入／發布各自狀態。失敗保留已完成內容與確切缺口。公開版不含 Drive 原文、私人連結或 WORK 證據，不寄信、不修改 Drive 或分享權限。
 
 兩個 ChatGPT 排程任務須遵守的持續整合規則（主題標籤、報告編號與版次、報告快照）整理在 `docs/run-instructions.md`，可直接貼入已儲存指示。
 
