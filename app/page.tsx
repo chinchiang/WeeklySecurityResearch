@@ -228,6 +228,7 @@ export default function Home() {
                 key={filter}
                 className={topic === filter ? "active" : ""}
                 onClick={() => setTopic(filter)}
+                aria-pressed={topic === filter}
               >
                 {filter}
               </button>
@@ -275,8 +276,9 @@ export default function Home() {
                 <button
                   className={`progress-toggle ${isDone ? "done" : ""}`}
                   onClick={() => toggleComplete(reading.id)}
+                  aria-pressed={isDone}
                 >
-                  <span>{isDone ? "✓" : ""}</span>{isDone ? "已閱讀" : "標記為已閱讀"}
+                  <span aria-hidden="true">{isDone ? "✓" : ""}</span>{isDone ? "已閱讀" : "標記為已閱讀"}
                 </button>
               </article>
             );

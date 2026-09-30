@@ -49,6 +49,28 @@ test("every page carries complete Open Graph and Twitter metadata with the share
     assert.equal(meta(html, "twitter:title"), title, `${file}: twitter:title`);
   }
 });
+// Toggle buttons must expose their state to assistive technology, not only by colour.
+test("filter, week and read-progress toggles expose aria-pressed; anchors do not claim to copy", () => {
+  for (const file of ["index.html", "archive/index.html"]) {
+    const html = readFileSync(path.join("out", file), "utf8");
+    const groups = [...html.matchAll(/<div class="(?:filter-row|week-selector)"[^>]*>([\s\S]*?)<\/div>/g)].map((m) => m[1]);
+    assert.ok(groups.length > 0, `${file}: no filter group`);
+    for (const group of groups) {
+      const buttons = [...group.matchAll(/<button[^>]*>/g)].map((m) => m[0]);
+      assert.ok(buttons.length > 1, `${file}: filter group without buttons`);
+      for (const button of buttons) assert.match(button, /aria-pressed="(?:true|false)"/, `${file}: ${button}`);
+      assert.equal(buttons.filter((button) => button.includes('aria-pressed="true"')).length, 1, `${file}: exactly one active filter`);
+    }
+    const toggles = [...html.matchAll(/<button class="progress-toggle[^"]*"[^>]*>/g)].map((m) => m[0]);
+    assert.ok(toggles.length > 0, `${file}: no read-progress toggle`);
+    for (const toggle of toggles) assert.match(toggle, /aria-pressed="(?:true|false)"/, `${file}: ${toggle}`);
+  }
+  for (const week of allWeeks) {
+    const html = readFileSync(`out/week/${week.replaceAll(".", "-")}/index.html`, "utf8");
+    assert.doesNotMatch(html, /aria-label="複製/, `${week}: a plain anchor must not be labelled as copying`);
+  }
+});
+
 test("current report contains every selected item and the complete Spotlight", () => {
   const html = readFileSync(`out/reports/${CURRENT_WEEK.replaceAll(".", "-")}.html`, "utf8");
   for (const r of currentReadings) {

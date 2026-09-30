@@ -87,7 +87,7 @@ export default function WeekPage() {
           <div className="detail-section compact-detail"><h4>主要發現</h4><ul>{reading.findings.map((finding) => <li key={finding}>{finding}</li>)}</ul></div>
           <div className="detail-grid compact-detail"><article><h4>製造業實務關聯</h4><p>{reading.relevance}</p></article><article><h4>建議行動</h4><p>{reading.action}</p></article></div>
           <div className="caveat compact-detail"><b>查核注意事項</b><p>{reading.caveat}</p></div>
-          <ArchitectureReview reading={reading} /><div className="card-actions"><a href={reading.source} target="_blank" rel="noreferrer">原始來源 ↗</a>{reading.pdf && <a href={reading.pdf} target="_blank" rel="noreferrer">PDF ↓</a>}<a href={`#reading-${reading.id}`} aria-label={`複製 ${reading.title} 深連結`}>單篇連結 #</a></div>
+          <ArchitectureReview reading={reading} /><div className="card-actions"><a href={reading.source} target="_blank" rel="noreferrer">原始來源 ↗</a>{reading.pdf && <a href={reading.pdf} target="_blank" rel="noreferrer">PDF ↓</a>}<a href={`#reading-${reading.id}`} aria-label={`單篇連結：${reading.title}`}>單篇連結 #</a></div>
         </article>)}</div>
       </section>
       <footer><div className="brand footer-brand"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>VERIFIABLE WEEKLY ARCHIVE</small></span></div><p>固定週次網址 · 正體中文／臺灣慣用語</p><a href={sitePath("/archive/")} >歷史資料庫 →</a></footer>
