@@ -23,6 +23,7 @@ npm run check:links  # 檢查原始來源可達性；CI 每週一自動跑，失
 
 - Node 版本以 `.nvmrc` 為準，CI 也讀同一個檔。本機版本不同時，型別剝除等預設差異會在本機測不出來。
 - 所有讀 `.ts` 的腳本都要 `node --experimental-strip-types`，否則在 CI 的 Node 22.13 會直接崩潰。
+- `checks/dialog.test.mjs` 需要 Chrome（`CHROME_PATH` 可指定），沒有就跳過；只有在 GitHub Actions 上缺少才失敗，ChatGPT 排程任務的沙箱不受影響。
 - `npm run build` 與 `npm run build:pages` 是同一件事。Pages base path 由 CI 的 `GITHUB_REPOSITORY` 推導（`scripts/pages-config.mjs`），程式裡的 fallback 只供本機使用。
 
 ## 資料模型
