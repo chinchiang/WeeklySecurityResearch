@@ -1,8 +1,8 @@
-# CLAUDE.md
+# AGENTS.md
 
-給在這個 repo 工作的 Claude Code session 的入門摘要。細節以 README.md 與 docs/source-workflow.md 為準；這裡只放每次都會用到、而且容易弄錯的事。
+給在這個 repo 工作的 Codex session 的入門摘要。細節以 README.md 與 docs/source-workflow.md 為準；這裡只放每次都會用到、而且容易弄錯的事。
 
-`AGENTS.md` 是給 Codex 的同一份內容，只有標題與這段開頭不同；改這份時要一起改它，`tests/site-structure.test.mjs` 會比對。
+`CLAUDE.md` 是給 Claude Code 的同一份內容，只有標題與這段開頭不同；改這份時要一起改它，`tests/site-structure.test.mjs` 會比對。
 
 ## 這個 repo 是什麼
 

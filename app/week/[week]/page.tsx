@@ -25,7 +25,6 @@ export default function WeekPage() {
         <nav aria-label="週次頁導覽"><Link href="/">最新一期</Link><Link href="/archive">全部歷史</Link><a href={sitePath("/feed.xml")} >Atom Feed</a></nav>
       </header>
       <section className="archive-hero week-hero">
-        <div className="grid-noise" aria-hidden="true" />
         <div>
           <p className="eyebrow">PERMANENT WEEKLY EDITION</p>
           <h1>{week || "無效週次"}<span>必讀清單</span></h1>

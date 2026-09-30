@@ -45,3 +45,18 @@ test("canonical metadata is route-specific", () => {
   assert.match(archiveLayout, /canonical:\s*["']\/archive["']/);
   assert.match(weekLayout, /canonical:\s*`\/week\/\$\{canonicalWeek\}`/);
 });
+
+// CLAUDE.md and AGENTS.md are the same guide for two agents; only the title and the
+// opening paragraph that names the agent and points at the other file may differ.
+test("AGENTS.md stays in sync with CLAUDE.md", () => {
+  const normalize = (text, name, agent, other) => text
+    .replace(`# ${name}`, "# GUIDE")
+    .replace(`給在這個 repo 工作的 ${agent} session`, "給在這個 repo 工作的 AGENT session")
+    .replace(`\`${other}\` 是給`, "`OTHER` 是給")
+    .replace(/是給 (?:Claude Code|Codex) 的同一份內容/, "是給 OTHER-AGENT 的同一份內容");
+  assert.equal(
+    normalize(readFileSync(path.join(root, "AGENTS.md"), "utf8"), "AGENTS.md", "Codex", "CLAUDE.md"),
+    normalize(readFileSync(path.join(root, "CLAUDE.md"), "utf8"), "CLAUDE.md", "Claude Code", "AGENTS.md"),
+    "CLAUDE.md 改了就要同步改 AGENTS.md",
+  );
+});

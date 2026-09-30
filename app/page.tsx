@@ -77,12 +77,6 @@ export default function Home() {
         <a className="live-state" href="#verification"><i /> VERIFIED SOURCES · 定義</a>
       </header>
 
-      <nav className="mobile-dock" aria-label="手機快捷導覽">
-        <a href="#top"><span>⌂</span>首頁</a>
-        <a href="#weekly"><span>◆</span>本週必讀</a>
-        <a href={sitePath("/archive/")} ><span>▤</span>歷史清單</a>
-      </nav>
-
       <aside className="side-nav" aria-label="閱讀導覽">
         <p>研究閱讀室</p><a href="#top">本期總覽</a><a href="#index">精選閱讀</a>{currentArchitectureReading && <a href="#spotlight">架構長文</a>}<a href={sitePath("/archive/")} >歷史清單</a><a href="#progress">閱讀進度</a><a href="#verification">查核方法</a>
         <div className="sister-sites"><p>相關情報站</p><a href="https://chinchiang.github.io/DailySOCVitamin/">Daily SOC Vitamin ↗</a><a href="https://chinchiang.github.io/CyberRegulationWatch/">Cyber Regulation Watch ↗</a></div>
@@ -128,20 +122,6 @@ export default function Home() {
               {priorityReading.pdf && <a className="text-link" href={priorityReading.pdf} target="_blank" rel="noreferrer">PDF ↓</a>}
             </div>
           </div>
-          {priorityReading.lifecycle && (
-            <div className="lifecycle-map" aria-label={priorityReading.lifecycle.label}>
-              <div className="risk-core"><span>!</span><small>RISK</small></div>
-              <div className="stage-row">
-                {priorityReading.lifecycle.stages.map((label, index, stages) => (
-                  <div className="stage" key={label}>
-                    <span>{String(index + 1).padStart(2, "0")}</span><small>{label}</small>
-                    {index < stages.length - 1 && <i>→</i>}
-                  </div>
-                ))}
-              </div>
-              <div className="map-caption">{priorityReading.lifecycle.caption}</div>
-            </div>
-          )}
         </article>
       </section>
 
