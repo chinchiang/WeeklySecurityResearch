@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
-import { readings } from "../app/data/readings.ts";
-import { originsFor, matchesOrigin, provenanceText, sourceLabels, sourceWorkflows, studyKey } from "../app/data/provenance.ts";
+import { CURRENT_WEEK, currentReadings, readings, weeklyReportIntegration } from "../app/data/readings.ts";
+import { originsFor, matchesOrigin, provenanceText, sourceLabels, sourceWorkflows, studyKey, workflowEvidence } from "../app/data/provenance.ts";
 import { pagesConfig } from "../scripts/pages-config.mjs";
 import { findPrivate } from "../scripts/private-patterns.mjs";
 // Messages are read by the scheduled ChatGPT runs; say what to fix and where the rule lives.
@@ -174,5 +174,17 @@ test("provenance evidence points at a receipt that lists the reading, or at a re
     assert.equal(workflowId(r.workflow), reviewedBy, `#${x.id}：provenance.reviewedBy 必須等於收據 ${file} 的 workflow。${RULES}`);
     assert.equal(checkedAt, r.checked_at.slice(0, 10), `#${x.id}：provenance.checkedAt 必須等於收據 ${file} 的 checked_at 日期。${RULES}`);
     if (inputReportId) assert.equal(inputReportId, r.input_report_id, `#${x.id}：provenance.inputReportId 必須等於收據 ${file} 的 input_report_id。${RULES}`);
+  }
+});
+
+test("homepage workflow evidence is derived from the current week, not hard-coded", () => {
+  const currentReceipts = new Set(currentReadings.map(r => r.provenance?.evidence.match(RECEIPT_URL)?.[1]).filter(Boolean));
+  for (const flow of sourceWorkflows) {
+    assert.equal("evidence" in flow, false, `sourceWorkflows.${flow.id} 不可再寫死 evidence；本期證據由 workflowEvidence() 從讀物與整合紀錄推導。`);
+    const text = workflowEvidence(flow.id, CURRENT_WEEK, currentReadings, weeklyReportIntegration);
+    assert.ok(text.includes(CURRENT_WEEK), `${flow.id}：來源分工證據沒有指向本期 ${CURRENT_WEEK}：${text}`);
+    for (const file of Object.keys(receipts)) {
+      if (text.includes(file)) assert.ok(currentReceipts.has(file), `${flow.id}：來源分工證據引用了非本期的收據 ${file}。`);
+    }
   }
 });
