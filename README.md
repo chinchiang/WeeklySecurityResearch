@@ -45,6 +45,7 @@ npm run build:pages && npm run test:pages
 - Node 版本以 `.nvmrc` 為準（CI 兩個 workflow 都讀同一個檔）。本機版本不同時，CI 才會表現出的差異（例如 22.18 之前不會預設剝除 TypeScript 型別）會在本機測不出來。
 - `npm run test:data`：只跑資料完整性（ID、排名、必填欄位、HTTPS URL、合法枚舉及 KPI 一致性），不需建置。
 - `npm test`：資料完整性、來源與歷史保存、私人識別碼（WORK 編號、Drive／Docs 連結）排除、各路由 canonical 與 base path、feed 涵蓋週數與連結、404 頁不索引且無 canonical、robots 與 sitemap 指向正式站。
+- `checks/dialog.test.mjs` 以 headless Chrome 操作匯出站，檢查摘要視窗（hash 開啟、焦點鎖定、Esc／點背景關閉、焦點回到觸發按鈕、捲動鎖定）。找不到 Chrome 時跳過（可用 `CHROME_PATH` 指定）；在 GitHub Actions 上找不到則失敗。
 - `npm run typecheck`：先執行 `next typegen` 重新產生 `.next/types`，再跑 `tsc --noEmit`。
 - `npm run audit`：依賴漏洞稽核（`.npmrc` 關閉了安裝時的自動稽核，因此需要明確執行）。
 - `npm run check:links`：檢查原始來源與 PDF 是否仍可達。`.github/workflows/check-links.yml` 每週一 09:00（台北）自動執行並把結果寫入 job summary；失效連結只以 warning 標示，不會讓 workflow 轉紅；但腳本本身無法執行時會轉紅，避免工具壞掉被誤判為連結全部正常。也可用 workflow_dispatch 手動觸發。
