@@ -19,8 +19,23 @@
   "deduplication_note": "依 main 既有 83 筆 Reading 的 URL／DOI／arXiv ID、W40 上游完整報告及網站可讀歷史去重；版本不另計。OpenAI 事件報告與既有 #62 對讀，僅納入 9/30 新的真實 campaign 觀測與供應商回應，不重複原論文樣本。網站外另一任務與外部平台的完整推薦歷史不可得，未宣稱跨平台完全去重。",
   "evidence_note": "AISI 技術報告已讀 v1 全文、方法、結果、限制與附錄；作者模擬未獨立重現。AISI 控制更新、OpenShell 文件／程式庫／release notes 與 OpenAI 事件揭露均已讀原始來源；其中控制效果、採用情境、事件規模、歸因與緩解效果依證據性質維持官方或廠商主張，未升格為獨立驗證。所有 demo 僅提案，未執行。",
   "classification_note": "本次專注 AI Security：agent scope／supply-chain evaluation、evaluation sandbox controls、agent runtime controls 與 reasoning-artifact／model-IP protection。一般企業架構、OT／ICS、PSIRT、SBOM／VEX 與非 AI 資安交由週六流程，不重複選件。",
-  "publication_status": "pending",
+  "publication_status": "verified",
   "publication_evidence": {
-    "status": "內容已在本地完成並待 PR、必要 CI、合併與正式 Pages 逐頁驗證；在取得證據前不標為已發布。"
+    "content_pr": "https://github.com/chinchiang/WeeklySecurityResearch/pull/82",
+    "content_commit": "c93c6e6976d9063d6fb72ab7cee35942d2f67693",
+    "pr_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36945164792",
+    "main_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36945305973",
+    "pages_deployment": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/36945305973/job/110646199393",
+    "verified_on": "2026-10-02",
+    "fetched_at": "2026-10-02T00:21:53Z",
+    "scope": "PR 與 main 的 Build and data integrity 及 main 的 Publish GitHub Pages 均 success。部署後對正式站六個路徑逐頁 GET，皆回傳 200；首頁、W40 期別頁、W40 HTML 報告與 Feed 均含四個原始來源，archive 依設計列舊期且保留 W39 內容，sitemap 含 W40 固定網址。六頁皆無私人 Drive／Docs URL。sha256 與 bytes 為實際 HTTP 回應本文；本次只回填發布證據，不新增研究或修訂文章。",
+    "checks": [
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/", "status": 200, "sha256": "6275c8118c3eb969357990a47f773bbd83bae38cd23664797c9467999aa7d4a4", "bytes": 37028, "issue": true, "all_sources": true, "private_drive_link": false },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/week/2026-10-02/", "status": 200, "sha256": "460c470ef1bb51c98a7e86e5b1dd84d56ac4150f8ea1784e350f7c4d23d5239f", "bytes": 35791, "issue": true, "all_sources": true, "private_drive_link": false },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/reports/2026-10-02.html", "status": 200, "sha256": "aaf5a7faad7217e612672c3696d5c4862d42531781c5d05a8d9ea9d462c7f797", "bytes": 43803, "issue": true, "all_sources": true, "private_drive_link": false },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/feed.xml", "status": 200, "sha256": "7106d78205f935186e25e56784abf68551cff5a665b229f88a1fc45a0ea3136e", "bytes": 13031, "issue": true, "all_sources": true, "private_drive_link": false },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/archive/", "status": 200, "sha256": "dd5d4debe83d46a05ca02dd92b7fb2a6d9d197c0709c001be63b17b9dfd0cecf", "bytes": 177717, "issue": false, "all_sources": false, "private_drive_link": false },
+      { "url": "https://chinchiang.github.io/WeeklySecurityResearch/sitemap.xml", "status": 200, "sha256": "79f3ade4b6b1b94c7ce66585d6e1b86bfb4e0f1b072f3d8409c1e3c5f3b49380", "bytes": 1749, "issue": true, "all_sources": false, "private_drive_link": false }
+    ]
   }
 }
