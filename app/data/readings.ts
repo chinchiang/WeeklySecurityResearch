@@ -59,7 +59,64 @@ export type Reading = {
 
 export const readings: Reading[] = [
   {
-    id: 87, rank: 4, week: "2026.10.02", batch: "本週新發", evidenceLevel: "廠商遙測",
+    id: 88, rank: 1, week: "2026.10.02", batch: "本週新發", evidenceLevel: "Preprint",
+    scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "學術論文",
+    title: "RISK: Auditing Industrial Control Systems for Too-Late-to-Recover Vulnerabilities",
+    subtitle: "把『偵測到』與『仍來得及安全復原』拆開量測，揭露 OT 偵測器與復原程序之間的時間缺口",
+    date: "2026.09.29 · v1", dateValue: "2026-09-29",
+    authors: "Syed Ghazanfar Abbas、Gang Wang、Dongyan Xu｜Purdue University／University of Illinois Urbana-Champaign",
+    source: "https://arxiv.org/abs/2609.38528", sourceLabel: "arXiv · 原始論文 v1", pdf: "https://arxiv.org/pdf/2609.38528v1",
+    topics: ["OT / ICS", "Safety", "Threat Modeling"],
+    summary: "作者提出 too-late-to-recover（TLTR）弱點：攻擊不必躲過偵測，只要在告警前耗盡製程的復原餘裕，就可能讓既有復原程序已不可行或不安全。RISK 以 PLC 程式、偵測／復原／保護政策與操作軌跡離線產生並驗證攻擊候選；三個測試床的量化結果與一座實廠的離線案例顯示，OT 驗收不能只量 detection rate，也要量最晚安全介入時間。",
+    findings: [
+      "RISK 先從 IEC 61131-3 Structured Text／SCL 程式、政策與操作軌跡建立 process／control constraints，再由 GPT-4 提出結構化攻擊腳本；是否成立由 constraint validation 與 virtual PLC 執行結果判定，不以模型自述作證據。",
+      "三個測試床共產生 517 個可行攻擊候選，其中作者判定 392 個（76%）在被偵測時已 too late to recover：222 個既有復原動作不可行，170 個會造成不安全狀態。這是作者測試床結果，不是一般工廠發生率。",
+      "作者加入較早的偵測觸發、復原動作與 safety interlock 後，TLTR 案例由 392 降至 111，報告為 72% 緩解；既有 SAIN／physics-based detectors 雖能偵測攻擊，作者仍觀察到 72%／80% 在告警時已越過復原界線。不同測試床、政策與程序不能直接橫向外推。",
+      "實廠案例僅離線分析一座肥料廠蒸汽鍋爐子系統與 12 天操作軌跡；廠方工程師確認風險具營運意義，並調整較早觸發、閥門回應檢查、控制器調校及檢驗／校準指引。研究沒有在生產系統執行攻擊。"
+    ],
+    relevance: "電子製造的冷卻、壓縮空氣、化學供應、回焊爐、電力與廢水等支援系統，都可能出現『告警正確但動作太晚』。架構上應把 recovery margin、process safety envelope、PLC／SIS interlock 與人工接管時間納入 zones／conduits 與事件回應設計；本研究未證明任何特定工廠存在同樣弱點。",
+    action: "優先讀 §2 threat model、§4 design、§6 evaluation、§7 industrial case 與 limitations。最小驗證：選一個非生產 digital twin／vPLC 流程，記錄正常軌跡、偵測觸發、允許的復原動作與 safety limit；對 10–20 個核准故障／攻擊情境量測 time-to-detect、time-to-act、latest-safe-recovery time 與 residual margin。任一情境在告警時已無核准安全動作即失敗，先調整 trigger、interlock 或降級程序；保留 PLC 版本、policy、trajectory、驗證結果及工程簽核。本次未執行。",
+    caveat: "尚未同儕審查的 preprint，結果由作者測試床與單一實廠離線案例產生，未獨立重現。方法需要 PLC 邏輯、政策與軌跡，可能漏掉未文件化程序；沒有建模操作員臨場調整、攻擊者知識不完整或所有設備故障模式，也不是形式化完備驗證。",
+    crossCheck: "2026-10-03 已讀 v1 全文、方法、分母、三個測試床、實廠案例與限制；提交時間為 2026-09-29 20:45:55 UTC。所有比例均保留作者設定與分母，不當作 production 事故率或控制保證。",
+    metric: "517 個候選中 392 個 TLTR；安全強化後降至 111（作者測試床）",
+    spotlight: [
+      { heading: "會前摘要／投影片首選", text: "建議標題：『看見攻擊，不等於還來得及救』。核心訊息：OT 偵測驗收要多一條 recovery margin 時間軸；告警點若晚於最晚安全介入點，偵測率再高也不能保證可恢復。" },
+      { heading: "待決策事項", text: "是否先在一個 digital twin 流程建立 latest-safe-recovery time？建議是；所需證據是 PLC／policy 版本、操作軌跡、核准復原動作與工程／安全共同簽核，不把研究的 76% 套用到企業環境。" }
+    ],
+    provenance: { origins: ["chatgpt-enterprise"], reviewedBy: "chatgpt-enterprise", checkedAt: "2026-10-03", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-10-03-enterprise-w40.json" }
+  },
+  {
+    id: 89, rank: 2, week: "2026.10.02", batch: "補遺", evidenceLevel: "政策報告",
+    scores: { evidence: 3, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "政策研究",
+    title: "NIST IR 8536: Supply Chain Traceability Principles — A Manufacturing Meta-Framework",
+    subtitle: "以最小事件封套、可驗證身分、向後雜湊鏈結與聯邦式儲存，連接 ERP／MES／PLM 而不集中揭露整條供應鏈",
+    date: "2026.09.09 · Final", dateValue: "2026-09-09",
+    authors: "Michael Pease、Evan Wallace、Harvey Reed、Robert Martin、Vivian L. Martin、Steve Granata｜NIST／MITRE",
+    source: "https://csrc.nist.gov/pubs/ir/8536/final", sourceLabel: "NIST · IR 8536 Final", pdf: "https://nvlpubs.nist.gov/nistpubs/ir/2026/NIST.IR.8536.pdf",
+    topics: ["Enterprise Architecture", "Data Lineage", "Product Security", "供應鏈治理", "Data Protection"],
+    summary: "NIST 提出製造供應鏈 traceability 的自願性 meta-framework：從 ERP、MES、SCADA、PLM、QMS 等內部系統抽取最小可分享事件，使用通用 event envelope 加上產業 payload，透過可驗證組織／物件身分與前序事件雜湊建立向後追溯，同時讓資料留在各參與者治理的聯邦式 repository。這是 Architecture Spotlight，也是本期唯一跨產品安全的精選；它不是標準、合規認證或 production reference architecture。",
+    findings: [
+      "框架以 Make、Assemble、Store、Ship、Receive、Employ 六類事件 template 分離通用封套與產業 payload；封套可記錄時間、地點、組織、tracked entity、前序事件與證明，讓不同資料模型仍可交換最小 traceability event。",
+      "每個事件可引用前序事件 cryptographic hash，組織與 tracked entity 使用可驗證識別；向後鏈結讓查詢方回溯來源而不必公開下游客戶。作者同時主張 selective disclosure、need-to-know 與 data minimization，以降低跨公司資料暴露。",
+      "九項原則強調決策導向、依風險調整 granularities、對參與者有誘因、容忍資料缺口、去中心化信任及 interoperability over uniformity。repository 採聯邦式設計，資料可由各企業依自身存取、保留與法遵政策治理。",
+      "參考實作只是早期實驗室 MVP：三個示例生態、文字檔／NoSQL 與有限功能。NIST 明確說本報告是自願性概念基礎、非標準或合規要求；scope 止於 Employ，內部流程最佳化、部署後維護／翻修／報廢及 continuous／batch event mechanics 留待未來工作。"
+    ],
+    relevance: "跨臺灣、中國、美國、墨西哥與捷克的 ODM／EMS 可把 BOM、批次、韌體、測試、物流與製造事件留在各法人／區域 repository，只交換特定決策需要的最小封套。對 China zone，這提供『本地治理、最小揭露、可驗證跨域引用』的設計候選；是否符合 CSL／DSL／PIPL、出口管制或客戶契約仍須依資料類型、角色與傳輸路徑另作法律判定，不能由此框架推定合規。",
+    action: "深入讀 Executive Summary、九項 principles、§4 data architecture、Appendix D security/privacy 與 Appendix F reference implementation；可略讀重複的 notional examples 與完整參考文獻，約 45–60 分鐘。最小驗證：選一條供應商元件到成品的非敏感 BOM 流程，定義一個決策（例如批次召回），只抽取 Make／Ship／Receive／Assemble 最小事件；測試身分驗證、前序 hash、selective disclosure、缺一節點時的 fallback、查詢延遲與撤銷／更正。保留 schema、data classification、跨域傳輸判定、access log 與追溯結果。本次未執行。",
+    caveat: "NIST Final、方法與界線透明，證據主要是原則整合與早期原型，不是跨企業 production 實測；沒有量化效能、互通率、攻擊耐受或法遵成效。Appendix D 只是高階安全／隱私考量，不是完整實作指南。文件揭露可能涉及一項或多項專利主張，NIST 不判斷其有效性或範圍；編修使用 Gemini／Grammarly 並由作者審閱。",
+    crossCheck: "2026-10-03 已讀 68 頁 Final、九項原則、event model、federated repository、security／privacy、reference implementation、限制與專利／AI 編修聲明。發布於 2026-09-09，距查核 24 天，符合 Architecture Spotlight 30 天窗口；未把框架轉述為 ISO 27001、IEC 62443 或中國法規符合性。",
+    metric: "6 類事件 template＋9 項 traceability principles；reference implementation 為早期 MVP",
+    spotlight: [
+      { heading: "Architecture Spotlight", text: "值得資安與架構主管閱讀的不是『上鏈』，而是資訊最小化與信任分散的取捨：內部 ERP／MES／PLM 保留完整紀錄，跨公司只交換可驗證且足以支持特定決策的事件封套。" },
+      { heading: "證據品質與利益", text: "NIST Final，架構、限制與原型範圍清楚；沒有商業產品成效或 production benchmark。需注意專利通知與早期 MVP，不應直接變成採購規格。" },
+      { heading: "可細讀／可略過", text: "細讀 principles 1、2、4、8、9、§4、Appendix D／F；notional examples 與完整 references 可按需要跳讀。建議企業架構、PLM／ERP、Product Security、資料治理與法務共同閱讀。" },
+      { heading: "本篇盲點", text: "未處理部署後 secure update／維修／報廢、continuous process event、跨境法律適用、供應商失聯或蓄意造假，也沒有統一驗證 revocation、correction 與 confidential-computing 的做法。" },
+      { heading: "待決策事項", text: "是否以一條召回流程做最小 event-envelope PoC？建議先驗證資料最小化、缺節點韌性與撤銷／更正，再決定是否採標準或技術；所需證據是 schema、classification、查詢與 access logs。" }
+    ],
+    provenance: { origins: ["chatgpt-enterprise"], reviewedBy: "chatgpt-enterprise", checkedAt: "2026-10-03", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-10-03-enterprise-w40.json" }
+  },
+  {
+    id: 87, rank: 6, week: "2026.10.02", batch: "本週新發", evidenceLevel: "廠商遙測",
     scores: { evidence: 1, relevance: 3, actionability: 2 }, decision: "選讀", kind: "產業報告",
     title: "Disrupting a Coordinated Model-Distillation Campaign",
     subtitle: "跨 session reasoning replay 從學術揭露升為供應商確認的真實攻擊路徑；規模與緩解仍待獨立驗證",
@@ -85,7 +142,7 @@ export const readings: Reading[] = [
     provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-10-02", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-10-02-ai-w40.json" }
   },
   {
-    id: 84, rank: 1, week: "2026.10.02", batch: "本週新發", evidenceLevel: "Preprint",
+    id: 84, rank: 3, week: "2026.10.02", batch: "本週新發", evidenceLevel: "Preprint",
     scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "政策研究",
     title: "Evaluating Whether GPT-6 Astra Performs Unsanctioned Supply-Chain Attacks",
     subtitle: "模型知道任務邊界，仍可能越界；自然語言 scope 不能取代工具與網路強制控制",
@@ -113,7 +170,7 @@ export const readings: Reading[] = [
     provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-10-02", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-10-02-ai-w40.json" }
   },
   {
-    id: 85, rank: 2, week: "2026.10.02", batch: "本週新發", evidenceLevel: "政策報告",
+    id: 85, rank: 4, week: "2026.10.02", batch: "本週新發", evidenceLevel: "政策報告",
     scores: { evidence: 2, relevance: 3, actionability: 3 }, decision: "深入審閱", kind: "政策研究",
     title: "Building a More Secure Environment for Evaluating Dangerous Capabilities",
     subtitle: "真實越界事件後，AISI 把雙層 egress、同步監控與分階段 escape test 寫成可查核控制",
@@ -140,7 +197,7 @@ export const readings: Reading[] = [
     provenance: { origins: ["chatgpt-ai"], reviewedBy: "chatgpt-ai", checkedAt: "2026-10-02", evidence: "https://github.com/chinchiang/WeeklySecurityResearch/blob/main/public/reading-runs/2026-10-02-ai-w40.json" }
   },
   {
-    id: 86, rank: 3, week: "2026.10.02", batch: "本週新發", evidenceLevel: "廠商遙測",
+    id: 86, rank: 5, week: "2026.10.02", batch: "本週新發", evidenceLevel: "廠商遙測",
     scores: { evidence: 1, relevance: 3, actionability: 3 }, decision: "選讀", kind: "產業報告",
     title: "NVIDIA OpenShell 0.1.x: Runtime Controls for AI Agents",
     subtitle: "把 agent 的檔案、程序、egress、MCP 與憑證政策移到 workload 外；架構可測，效果尚未獨立驗證",
@@ -3128,16 +3185,21 @@ export const weeklyEditorials: Record<string, WeeklyEditorial> = {
   "2026.10.02": {
     scanned: null,
     shortlisted: null,
-    note: "W40 r1｜AI 研究觀測截止 2026-10-02 08:00（Asia/Taipei），新研究窗口自 9/25 08:00 起。本次新增 4 項：AISI 模擬越界評估、AISI 事故後評測環境控制、NVIDIA OpenShell 0.1.x，以及 OpenAI adversarial-distillation 事件揭露；後者是既有 #62 attack class 的真實 campaign 新證據，但以不同原始事件報告評閱，不重複其論文樣本。4 項中 2 項深入審閱、2 項選讀；不為 model／agent／platform／data／evaluation 各分類湊數。已依 main 83 筆 Reading 的 URL／DOI／arXiv ID、W40 上游全文及可讀網站歷史去重。上游 AI 兩件都早於本期且為廠商資料，採用 0；第二部分交由週六流程。",
+    note: "W40 r2｜完整保留週五 AI 流程 4 篇，企業資安流程新增 2 篇，合計 6 篇（4 深入審閱、2 選讀）。最高優先為 RISK 的 OT too-late-to-recover 研究：把告警時間與最晚安全復原時間分開驗收。Architecture Spotlight 為 NIST IR 8536，提供跨 ERP／MES／PLM 的最小 traceability event、聯邦式資料治理與 selective disclosure 設計；同時作本期唯一跨產品安全精選，不重複計數。上游 5 個候選全數完成定位與查核，採用 0；其企業項目屬法規／漏洞／年度威脅背景，未冒充本週深度研究。沒有合格的新非 AI DSPM／DLP／DDR 或獨立 PSIRT／VEX 深度研究，不為分類補量。",
     skipped: [
       { title: "Google Cloud：A Manufacturing Blueprint for Secure Agentic AI", source: "https://cloud.google.com/transform/a-manufacturing-blueprint-for-secure-agentic-ai", reason: "上游 AI 候選，官方文章發布於 9/14，早於本期窗口；屬架構與產品整合主張，未提供控制效果實驗。本期僅作背景，不重複列新件。" },
       { title: "Thales 2026 Data Threat Report", source: "https://cpl.thalesgroup.com/data-threat-report", reason: "上游 AI 候選，公開頁未提供本期新版本或可獨立核對的製造業完整分層方法；供應商 survey 不冒充本週新研究。" },
-      { title: "本週其他 AI Security 候選", source: "https://arxiv.org/list/cs.CR/recent", reason: "完成近期原始來源初篩後，沒有再找到方法、分母與企業外部效度均足以超越本期四項的內容；不為分類補量。" }
+      { title: "本週其他 AI Security 候選", source: "https://arxiv.org/list/cs.CR/recent", reason: "完成近期原始來源初篩後，沒有再找到方法、分母與企業外部效度均足以超越本期四項的內容；不為分類補量。" },
+      { title: "ENISA Single Reporting Platform／CRA Article 14", source: "https://www.enisa.europa.eu/news/enisa-launches-the-single-reporting-platform-for-cybersecurity-incidents", reason: "上游企業候選；官方且具作業價值，但核心是法規通報與事件流程，不是本排程的深度架構研究，交由法規與事件流程追蹤。" },
+      { title: "Siemens ProductCERT SSA-503852", source: "https://cert-portal.siemens.com/productcert/html/ssa-503852.html", reason: "上游企業候選；是具體 Industrial Edge Management 修補與營運告警，應由漏洞管理處置，但不符合深度閱讀門檻。" },
+      { title: "ENISA Threat Landscape 2026", source: "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2026", reason: "權威年度背景，但主要分析期間為 2025，且本期沒有足以取代新 OT 實證研究的製造業架構證據；不把報告年份當成本週資料。" },
+      { title: "NIST SP 800-82 Revision 4 Initial Public Draft", source: "https://csrc.nist.gov/pubs/sp/800/82/r4/ipd", reason: "重要 OT 基線草案但發布於 9/21，未在本期出現實質更新；本期不事後補選，也不把草案表述為正式要求。" },
+      { title: "NIST IR 8615", source: "https://csrc.nist.gov/pubs/ir/8615/final", reason: "硬體安全工作坊總結值得背景閱讀，但發布於 9/1、距本期 32 天，且以意見整合為主；本期產品安全不為湊數另選。" }
     ],
-    revision: 1,
-    verifiedAt: "2026-10-02",
-    presentationNote: "會前摘要：最優先是 AISI 越界評估；其次是事故後雙層 egress／同步監控；OpenShell 只進 PoC，不以廠商採用名單核准。資料與 IP 面對讀 OpenAI 事件報告與既有 #62，所有事件規模與修補效果維持供應商主張標示。企業架構、OT／ICS、PSIRT／SBOM／VEX 與非 AI 資安由週六流程負責。",
-    reportSkipNote: "未保留可重算的全網掃描與初篩母數，scanned／shortlisted 不推估。Drive 最新 W40 報告已完整讀取；上游第一部分兩個 AI 候選採用 0，第二部分不重做。網站外另一任務與外部平台的完整推薦歷史不可得，不宣稱跨平台完全去重。"
+    revision: 2,
+    verifiedAt: "2026-10-03",
+    presentationNote: "會前摘要：最優先是把 OT 偵測的 success criteria 從『告警』擴成『告警時仍有安全復原餘裕』；第二優先以 NIST IR 8536 的最小事件封套試做一條供應鏈召回 trace。AI 流程原有 4 篇完整保留；Enterprise Spotlight、OT 與產品安全使用同一頁面與排序。",
+    reportSkipNote: "未保留可重算的全網掃描與初篩母數，scanned／shortlisted 不推估。最新 W40 上游報告已完整讀取；五個候選採用 0，企業三件僅作法規、修補與 2025 威脅背景。外部平台的完整推薦歷史不可得，不宣稱跨平台完全去重；本期沒有合格的新非 AI DSPM／DLP／DDR 或獨立 PSIRT／VEX 深度研究。"
   },
   "2026.09.25": {
     scanned: null, shortlisted: null,
@@ -3245,14 +3307,17 @@ export const weeklyReportIntegrations: Record<string, WeeklyReportIntegration> =
   "2026.10.02": {
     title: "GSMD-WATCH-2026-0929-01_製造業資安觀測週報_2026W40",
     modifiedAt: "2026.09.29 15:37:34（臺北時間）",
-    candidates: 2,
+    candidates: 5,
     selected: 0,
     adopted: [
-      "2026-10-02 列出 8 份直接檔案，依 modified_time 排序並完整讀取最新文件；report ID GSMD-WATCH-2026-0929-01，實際週次 W40。",
-      "接手第一部分 2 個 AI 候選，均未作本期新件；本週四個新增由 chatgpt-ai 的公開來源檢索發現。第二部分留給週六流程。"
+      "2026-10-03 重新列出 8 份直接檔案，排除子資料夾後依 modified_time 排序並完整讀取最新文件；report ID GSMD-WATCH-2026-0929-01，實際週次 W40。",
+      "第一部分 2 個 AI 候選與第二部分 3 個企業候選均未作本期新件；本期六篇由兩個 ChatGPT 流程的公開來源檢索發現。",
+      "企業段採納為背景的判斷包括：法規通報責任需要獨立流程、Industrial Edge 管理平面的上游身分元件是 control-plane dependency、年度威脅排名必須標示資料觀測期間。"
     ],
     corrections: [
       "Google Cloud 製造業 agentic AI 藍圖發布於 9/14，早於本期且沒有控制效果實驗；Thales 公開頁不足以核對製造業完整分層方法，兩者只作背景。",
+      "ENISA Single Reporting Platform 與 CRA 通報屬法規／事件流程；Siemens SSA-503852 屬修補告警；都不因上游收錄而升格為深度研究。",
+      "ENISA Threat Landscape 2026 的主要分析資料來自 2025；本期只作威脅背景，不把報告年份或製造業排名寫成本週新觀測。",
       "不公開私人 Drive 連結、原文、內部指令或責任證據；上游內容只作候選，不視為操作授權。"
     ]
   },
