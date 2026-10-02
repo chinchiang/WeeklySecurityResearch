@@ -19,6 +19,25 @@
   "deduplication_note": "依最新 main 既有讀物、W40 上游完整報告、網站可讀歷史與本期 AI 流程收據，以 URL／DOI／arXiv ID 去重；版本不另計。NIST IR 8536 在 30 天 Architecture Spotlight 窗口內列為背景補遺，RISK 為本週新研究。外部平台的完整推薦歷史不可得，未宣稱跨平台完全去重。",
   "evidence_note": "RISK v1 已讀全文、方法、分母、三個測試床、實廠離線案例與限制；作者結果未獨立重現，不外推為工廠事故率。NIST IR 8536 Final 已讀 68 頁全文、九項原則、事件模型、聯邦式 repository、security/privacy、早期 reference implementation、限制及專利通知；不表述為標準、法遵或 production 成效。所有最小驗證均為提案，本次未執行。",
   "classification_note": "本次只新增非 AI 主責內容：RISK 歸 OT／ICS；NIST IR 8536 歸企業架構／Data Lineage，並作唯一跨產品安全精選。沒有合格的新非 AI DSPM／DLP／DDR 或獨立 PSIRT／VEX 深度研究；週五 4 篇 AI 內容完整保留，不重複評閱。",
-  "publication_status": "pending",
-  "publication_evidence": "內容 PR、必要檢查、合併與 GitHub Pages 驗證尚待完成；不可把研究完成視為已發布。"
+  "publication_status": "verified",
+  "publication_evidence": {
+    "content_pr": "https://github.com/chinchiang/WeeklySecurityResearch/pull/84",
+    "content_commit": "c63597b698084a7615679c2216b8c86ffca212e1",
+    "pr_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/37039299013",
+    "main_ci": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/37039505351",
+    "pages_deployment": "https://github.com/chinchiang/WeeklySecurityResearch/actions/runs/37039505351/job/110946306251",
+    "pages_artifact_id": 11241975520,
+    "pages_artifact_digest": "sha256:aad0b3d7cc30af203afe3f8b907dfeb7136f5943d83cbdb930f7640918080cd1",
+    "verified_on": "2026-10-03",
+    "fetched_at": "2026-10-02T17:18:47Z",
+    "scope": "PR 的 Build and data integrity 成功後，head 與 main 無並行變更，以 squash 合併。main 的 Build and data integrity 與 Publish GitHub Pages 均 success；下載該 run 唯一的 github-pages artifact，首頁、W40 期別頁、W40 HTML 報告與 Feed 均含兩篇新增原始來源與 W40 上游整合紀錄，archive 與 sitemap 均存在，六個公開檔案未含私人 Drive／Docs URL 或內部 WORK 編號。受目前公開網域讀取工具限制，本次沒有另作 Pages 網址 live GET；發布判定依成功 deployment job 與其確切 artifact 內容，不把 artifact 檢查表述為獨立 HTTP 回應。",
+    "checks": [
+      { "path": "index.html", "sha256": "c144590a1dce5d270b55528a48963948e74649f027349273924428d0795d78f1", "bytes": 46219, "issue": true, "all_enterprise_sources": true, "private_drive_link": false },
+      { "path": "week/2026-10-02/index.html", "sha256": "dcfe98fb9c4eb78538ccb84988da845c392163b2fd36a9c9c438651f2aee8b2a", "bytes": 50090, "issue": true, "all_enterprise_sources": true, "private_drive_link": false },
+      { "path": "reports/2026-10-02.html", "sha256": "3cc50e3b43b8c77e6a0df7add67381041f4b3412a36a765291dce1a53964266a", "bytes": 57458, "issue": true, "all_enterprise_sources": true, "private_drive_link": false },
+      { "path": "feed.xml", "sha256": "22be53292d1e05c935b3c4aad21dfa267c9a816ebbdb86eb125980039b90f39a", "bytes": 15191, "issue": true, "all_enterprise_sources": true, "private_drive_link": false },
+      { "path": "archive/index.html", "sha256": "9f2da79d040e3e04a52d791659fc76ca31c9c501fdea54911de9e7e4c14091e4", "bytes": 177717, "issue": false, "all_enterprise_sources": false, "private_drive_link": false },
+      { "path": "sitemap.xml", "sha256": "bc622527b54c2013cd7f89ae19f4d731e7e4b235a98c4519f1a992d53504a7c4", "bytes": 1749, "issue": true, "all_enterprise_sources": false, "private_drive_link": false }
+    ]
+  }
 }
