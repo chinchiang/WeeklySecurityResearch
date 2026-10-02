@@ -1,0 +1,26 @@
+{
+  "report_id": "AISEC-ARCH-2026-W40-20261002",
+  "revision": 1,
+  "workflow": "chatgpt-ai",
+  "execution_mode": "scheduled",
+  "observation_cutoff": "2026-10-02T08:00:00+08:00",
+  "checked_at": "2026-10-02",
+  "research_status": "completed",
+  "scheduled_trigger_verified": false,
+  "input_report_id": "GSMD-WATCH-2026-0929-01",
+  "input_report_modified_at": "2026-09-29T07:37:34.023Z",
+  "input_status": "read",
+  "input_note": "列出 8 個直接檔案，依 modified_time 排序並完整讀取最新全文 GSMD-WATCH-2026-0929-01_製造業資安觀測週報_2026W40，實際 W40。第一部分 2 個 AI 候選採用 0；兩者早於本期且缺少獨立控制效果證據。第二部分未重做。執行模式不等於已取得獨立觸發稽核證據。",
+  "added_reading_ids": [84, 85, 86, 87],
+  "revised_reading_ids": [],
+  "issue_total": 4,
+  "new_research_total": 4,
+  "background_total": 0,
+  "deduplication_note": "依 main 既有 83 筆 Reading 的 URL／DOI／arXiv ID、W40 上游完整報告及網站可讀歷史去重；版本不另計。OpenAI 事件報告與既有 #62 對讀，僅納入 9/30 新的真實 campaign 觀測與供應商回應，不重複原論文樣本。網站外另一任務與外部平台的完整推薦歷史不可得，未宣稱跨平台完全去重。",
+  "evidence_note": "AISI 技術報告已讀 v1 全文、方法、結果、限制與附錄；作者模擬未獨立重現。AISI 控制更新、OpenShell 文件／程式庫／release notes 與 OpenAI 事件揭露均已讀原始來源；其中控制效果、採用情境、事件規模、歸因與緩解效果依證據性質維持官方或廠商主張，未升格為獨立驗證。所有 demo 僅提案，未執行。",
+  "classification_note": "本次專注 AI Security：agent scope／supply-chain evaluation、evaluation sandbox controls、agent runtime controls 與 reasoning-artifact／model-IP protection。一般企業架構、OT／ICS、PSIRT、SBOM／VEX 與非 AI 資安交由週六流程，不重複選件。",
+  "publication_status": "pending",
+  "publication_evidence": {
+    "status": "內容已在本地完成並待 PR、必要 CI、合併與正式 Pages 逐頁驗證；在取得證據前不標為已發布。"
+  }
+}
