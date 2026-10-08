@@ -7,12 +7,13 @@
 ## Block A：AI Security 技術研究簡報（`chatgpt-ai`，週五 08:00）
 
 ```markdown
-## 持續整合強制規則（2026-09-29 起，第 40 週起適用；收據與日期格式規則 2026-10-08 起，第 41 週起適用）
+## 持續整合強制規則（2026-09-29 起，第 40 週起適用；收據、日期、arXiv 版本、舊標籤與入選漏斗規則 2026-10-08 起，第 41 週起適用）
 
 本儲存庫的主分支已受保護：只能透過拉取請求合併，必要檢查 `Build and data integrity` 必須通過，而且拉取請求必須與最新的主分支同步。違反以下三條規則時無法合併。
 
 ### 一、主題標籤（`topics`）
 - 每篇讀物的 `topics` 只能使用 `app/data/readings.ts` 中 `TOPICS` 詞彙表的字串，拼法、空白與大小寫完全一致（例如 `OT / ICS`，不是 `OT/ICS`）。每次執行都先讀取當下的 `TOPICS`，不要依賴記憶中的清單。
+- `LEGACY_TOPICS` 列出只保留給已發布讀物的舊近義標籤（例如 `AI Data Protection`、`AI System Threat Modeling`、`Architecture`），新讀物不可使用，請改用它對應的現行標籤。
 - 優先沿用既有標籤。確實需要新標籤時，在同一個拉取請求中把它加進 `TOPICS`，並至少讓一篇讀物使用它（詞彙表不得有未使用的標籤）。不得修改已發布讀物的標籤。
 - 同一篇讀物的標籤不可重複，也不可為空。
 
@@ -23,6 +24,8 @@
 - 收據必須有 `new_research_total` 與 `background_total`，兩者都是 0 以上的整數；零新增時兩者都填 0。
 - `publication_status` 只有在逐頁 GET 正式站之後才能填 `verified`：`publication_evidence.checks` 列出每一頁，`url` 是正式站網址（`https://chinchiang.github.io/WeeklySecurityResearch/…`，不是 artifact 內的路徑），`status` 是 200。只有 CI 與部署成功、但正式站讀不到時，維持 `pending` 並寫明缺口，之後再回填。
 - 讀物的 `week` 寫成 `YYYY.MM.DD`，而且必須是週五；`dateValue` 寫成 `YYYY-MM-DD`；`date` 必須以同一天開頭，可以加版本標示，例如 `2026.09.29 · v1`。
+- arXiv 讀物的 `date` 必須標出閱讀的版本，例如 `2026.10.06 · v1`；之後出現新版本時列為修訂，不另建一筆。
+- 入選漏斗：`weeklyEditorials[<週次>]` 的 `scanned`、`shortlisted` 有可重算的母數才填，必須符合 `scanned` ≥ `shortlisted` ≥ 該週入選篇數；沒有留存時維持 `null`，不可推估，並在 `reportSkipNote` 說明沒有留存 scanned／shortlisted 的原因。
 - 收據與讀物必須互相對應：
   - `added_reading_ids` 與 `revised_reading_ids` 列出的讀物都必須存在，而且同屬一週。
   - 新增讀物的 `provenance.reviewedBy` 為 `chatgpt-ai`。

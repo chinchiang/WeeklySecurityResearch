@@ -35,7 +35,7 @@ npm run check:links  # 檢查原始來源可達性；CI 每週一自動跑，失
 - 已發佈的項目不刪除、不改週次，也不可拿掉 provenance 或既有的 corrections；各週的 `weeklyEditorials`／`weeklyReportIntegrations`、`public/reading-runs/` 收據與 `public/reports/` 快照也不可刪除（收據可修改，例如回填發布證據）。CI 的 `scripts/check-history.mjs` 會擋。撤稿或更正用 `corrections` 欄位。
 - `decision` 必須能由 `scores` 經 `deriveDecision()` 重現，改分數要同步改判定。
 - 新文章必填 `provenance`；同一週同一研究只能有一筆（以 URL／DOI／arXiv 識別碼去重）。
-- `topics` 只能用 `TOPICS` 詞彙表裡的標籤（新標籤先加進詞彙表）；首頁與歸檔的主題篩選由資料推導，不要再寫死清單。
+- `topics` 只能用 `TOPICS` 詞彙表裡的標籤（新標籤先加進詞彙表），`LEGACY_TOPICS` 的舊近義標籤只留給已發佈讀物；首頁與歸檔的主題篩選由資料推導，不要再寫死清單。
 - `public/reports/*.html` 是提交進 repo 的快照，網站建置不會重寫。改了讀物、更正或 `app/globals.css` 後要跑 `npm run build:report` 並一起提交，否則 `tests/reports.test.mjs` 會擋。
 - `public/social-content/` 只是歷史資料，網站沒有入口，`build:pages` 會把它從 `out/` 移除，也不會重新產生它。
 

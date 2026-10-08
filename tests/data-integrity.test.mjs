@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   ARCHITECTURE_TOPICS,
   CURRENT_WEEK,
+  LEGACY_TOPICS,
   TOPICS,
   archiveReadings,
   archiveTopicFilters,
@@ -28,6 +29,9 @@ import {
 const RULES = "規則見 docs/run-instructions.md";
 
 const decisions = new Set(["深入審閱", "選讀"]);
+// Rules added on 2026-10-08 apply from week 41 on; published weeks keep what they had.
+const STRICT_FROM = "2026.10.09";
+const strictReadings = readings.filter((reading) => reading.week >= STRICT_FROM);
 const kinds = new Set(["學術論文", "政策研究", "產業報告"]);
 const batches = new Set(["本週新發", "補遺"]);
 const requiredText = ["week", "title", "subtitle", "date", "dateValue", "authors", "source", "sourceLabel", "decision", "kind", "summary", "relevance", "action", "caveat", "evidenceLevel"];
@@ -178,6 +182,37 @@ test("every reading uses topics from the shared vocabulary", () => {
     for (const t of r.topics) assert.ok(TOPICS.includes(t), `#${r.id}：標籤「${t}」不在 app/data/readings.ts 的 TOPICS；請改用詞彙表中的拼法，確實是新主題才加進 TOPICS。${RULES}`);
   }
   for (const t of TOPICS) assert.ok(readings.some(r => r.topics.includes(t)), `TOPICS 中的「${t}」沒有任何讀物使用；新增標籤時要同時用在讀物上。${RULES}`);
+});
+
+test("new readings use the preferred topic instead of a legacy synonym", () => {
+  for (const [legacy, preferred] of Object.entries(LEGACY_TOPICS)) {
+    assert.ok(TOPICS.includes(legacy), `LEGACY_TOPICS 的「${legacy}」不在 TOPICS。`);
+    for (const t of preferred) assert.ok(TOPICS.includes(t) && !(t in LEGACY_TOPICS), `「${legacy}」的替代標籤「${t}」必須是 TOPICS 中的現行標籤。`);
+  }
+  for (const r of strictReadings) {
+    for (const t of r.topics) {
+      assert.ok(!(t in LEGACY_TOPICS), `#${r.id}：「${t}」是只保留給舊讀物的近義標籤，請改用 ${LEGACY_TOPICS[t]?.join("、")}。${RULES}`);
+    }
+  }
+});
+
+// Readings from W38 on already carry the version; new ones must keep doing so, since a later vN is a revision.
+test("new arXiv readings state the version they were read at", () => {
+  for (const r of strictReadings.filter((x) => /arxiv\.org\//.test(x.source))) {
+    assert.match(r.date, / · v\d+$/, `#${r.id}：arXiv 讀物的 date 必須標出閱讀的版本，例如「2026.10.06 · v1」。${RULES}`);
+  }
+});
+
+test("selection funnels are consistent, or say why the counts were not kept", () => {
+  for (const [week, e] of Object.entries(weeklyEditorials)) {
+    const selected = readings.filter((r) => r.week === week).length;
+    if (e.scanned !== null && e.shortlisted !== null) {
+      assert.ok(e.scanned >= e.shortlisted && e.shortlisted >= selected, `${week}：入選漏斗必須是 scanned（${e.scanned}）≥ shortlisted（${e.shortlisted}）≥ 入選篇數（${selected}）。${RULES}`);
+    } else if (week >= STRICT_FROM) {
+      // Unknown counts stay null rather than being estimated, but the week must say so.
+      assert.match(e.reportSkipNote ?? "", /scanned|shortlisted|掃描|初篩/, `${week}：scanned／shortlisted 未填時，reportSkipNote 必須說明為什麼沒有留存（不要推估數字）。${RULES}`);
+    }
+  }
 });
 
 test("topic filters only offer topics that return readings on that page", () => {
