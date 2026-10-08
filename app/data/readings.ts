@@ -3071,6 +3071,16 @@ export const TOPICS = [
   "AI Governance",
 ] as const;
 
+/**
+ * 只保留給已發佈讀物的舊近義標籤，以及新讀物應改用的標籤。
+ * 第 41 週（2026.10.09）起的新讀物不可再使用，tests/data-integrity.test.mjs 會擋。
+ */
+export const LEGACY_TOPICS: Readonly<Record<string, readonly string[]>> = {
+  "AI Data Protection": ["Data Protection", "AI Security"],
+  "AI System Threat Modeling": ["Threat Modeling", "AI Security"],
+  "Architecture": ["Enterprise Architecture"],
+};
+
 /** 篩選列只列出在該清單中至少出現 minCount 次的主題，依出現次數排序，避免按下後沒有結果。 */
 export function topicFiltersFor(list: Reading[], minCount = 2): string[] {
   const counts = new Map<string, number>();

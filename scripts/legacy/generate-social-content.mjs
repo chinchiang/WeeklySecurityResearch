@@ -6,7 +6,7 @@
  *
  * The pages keep their item list inline so they still open directly from disk,
  * but the inline copy is written from the JSON here: edit the JSON and rerun
- * `node scripts/generate-social-content.mjs`. The site build does not run it;
+ * `node scripts/legacy/generate-social-content.mjs`. The site build does not run it;
  * this is frozen historical data with no entry point on the site.
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -14,7 +14,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOCIAL_PAGES, canonicalItems, embedItems, readEditions } from "./social-content-lib.mjs";
 
-const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const socialDir = path.join(projectRoot, "public", "social-content");
 const dataDir = path.join(socialDir, "data");
 

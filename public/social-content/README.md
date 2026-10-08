@@ -13,7 +13,7 @@
 ## 新增一期
 
 1. 新增 `data/<週次>.json` 與 `posts/<週次>/`。
-2. 手動執行 `node scripts/generate-social-content.mjs`（2026-09-29 #57 起 `npm run build` 不再自動執行，社群內容已凍結為歷史資料）。
+2. 手動執行 `node scripts/legacy/generate-social-content.mjs`（2026-09-29 #57 起 `npm run build` 不再自動執行，社群內容已凍結為歷史資料）。
 
 兩個頁面把選題清單內嵌在 HTML 裡，以維持單檔即可直接開啟；但內嵌內容由上述腳本從 JSON 寫入，**不要手動編輯頁面裡的 `ITEMS`**——下次執行上述腳本會覆蓋。
 
@@ -34,7 +34,7 @@
 
 `sources` 一律是物件陣列，`url` 與 `publisher` 必填。`title` 與 `date` 只在該期原本就記錄了才會出現——不以推論回填，以免替連結加上未經查核的出處。早期期別改版前的欄位（例如單語草稿、`verification`、`file` 指標）原樣保留在 `legacy`，不刪除。
 
-`scripts/normalize-social-data.mjs` 是把歷史期別轉成此格式的一次性遷移腳本，保留備查。首頁 CTA 的週次與 Ready 數量由 `scripts/generate-social-content.mjs` 掃描 `data/` 後自動推導，不需修改首頁程式碼。
+`scripts/legacy/normalize-social-data.mjs` 是把歷史期別轉成此格式的一次性遷移腳本，保留備查。首頁 CTA 的週次與 Ready 數量由 `scripts/legacy/generate-social-content.mjs` 掃描 `data/` 後自動推導，不需修改首頁程式碼。
 
 主持人輪值採 `data/hosts.json` 的 `iso-week-round-robin`：以 `anchorIsoWeek` 與 `anchorHostId` 為基準，按 ISO 週次差值對主持人陣列取餘數。
 
