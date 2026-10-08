@@ -60,3 +60,16 @@ test("AGENTS.md stays in sync with CLAUDE.md", () => {
     "CLAUDE.md 改了就要同步改 AGENTS.md",
   );
 });
+
+// Anything a "use client" module imports ends up in the browser bundle. readings.ts holds every
+// reading, so client components take readings as props and import helpers from app/data/rubric.ts.
+test("client components do not import the reading data module", () => {
+  const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]);
+  const clientFiles = walk(path.join(root, "app")).filter((file) => /\.tsx?$/.test(file) && /^\s*["']use client["']/.test(readFileSync(file, "utf8")));
+  assert.ok(clientFiles.length > 0);
+  for (const file of clientFiles) {
+    for (const [statement] of readFileSync(file, "utf8").matchAll(/^import\s+(?!type\b)[^;]*?from\s+["'][^"']*data\/readings(?:\.ts)?["']/gm)) {
+      assert.fail(`${path.relative(root, file)}：${statement} 會把全部讀物打包進 JavaScript；請改用 import type，或從 app/data/rubric.ts 引用工具函式。`);
+    }
+  }
+});

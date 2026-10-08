@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_URL, sitePath } from "./site-config";
-import { SITE_NAME, socialMetadata } from "./site-metadata";
+import { FEED_TYPES, SITE_NAME, socialMetadata } from "./site-metadata";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   // override these; the values here apply to the homepage.
   alternates: {
     canonical: "/",
-    types: { "application/atom+xml": "/feed.xml" },
+    types: FEED_TYPES,
   },
   ...socialMetadata({
     url: "/",

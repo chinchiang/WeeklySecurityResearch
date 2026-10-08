@@ -7,6 +7,10 @@ export const SITE_NAME = "科技・資安・架構週讀";
 // share image. The image path resolves against metadataBase (the Pages base).
 const OG_IMAGE = { url: "/og-image.png", width: 1200, height: 630, alt: SITE_NAME };
 
+// alternates is replaced, not merged, by each route that sets a canonical, so
+// every page repeats the feed link for readers to discover from any page.
+export const FEED_TYPES = { "application/atom+xml": "/feed.xml" };
+
 export function socialMetadata({ url, title, description }: { url: string; title: string; description: string }): Pick<Metadata, "openGraph" | "twitter"> {
   return {
     openGraph: { type: "website", locale: "zh_TW", siteName: SITE_NAME, url, title, description, images: [OG_IMAGE] },

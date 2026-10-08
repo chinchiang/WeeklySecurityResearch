@@ -44,6 +44,7 @@ export async function GET() {
 
   return new Response(
     `<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><id>${SITE}/</id><title>科技・資安・架構週讀</title><author><name>科技・資安・架構週讀</name><uri>${SITE}/</uri></author><link href="${SITE}/feed.xml" rel="self"/><link href="${SITE}/"/><updated>${updated}</updated><subtitle>製造業科技、資安與架構每週精選與查核摘要（最近 ${weeks.length} 期）</subtitle>${entries}</feed>`,
-    { headers: { "content-type": "application/atom+xml; charset=utf-8", "cache-control": "public, max-age=3600" } },
+    // Pages serves the exported file with its own headers; only the content type matters at build time.
+    { headers: { "content-type": "application/atom+xml; charset=utf-8" } },
   );
 }

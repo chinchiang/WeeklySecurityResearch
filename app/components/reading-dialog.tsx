@@ -10,14 +10,18 @@ const FOCUSABLE = 'button, a[href], input, select, textarea, [tabindex]:not([tab
 
 /**
  * 摘要視窗的開關狀態，與網址的 #reading-<id> 同步：開啟時寫入，關閉時移除，
- * 直接帶 hash 進站或 hash 改變時開啟對應讀物。關閉後焦點回到開啟它的按鈕。
+ * 直接帶 hash 進站或 hash 改變時開啟對應讀物。關閉後焦點回到開啟它的按鈕；
+ * 以網址開啟、沒有觸發按鈕時回到該篇卡片（id 為 reading-<id>-card）。
+ * `elsewhere` 對應不在本頁的讀物 ID 與其所在頁面，讓換期後的舊分享連結仍能開到該篇。
  */
-export function useReadingDialog(readings: readonly Reading[]) {
+export function useReadingDialog(readings: readonly Reading[], elsewhere?: Readonly<Record<number, string>>) {
   const [selected, setSelected] = useState<Reading | null>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
+  const selectedIdRef = useRef<number | null>(null);
 
   const openReading = useCallback((reading: Reading, trigger?: HTMLElement) => {
     lastTriggerRef.current = trigger ?? document.activeElement as HTMLElement;
+    selectedIdRef.current = reading.id;
     setSelected(reading);
     window.history.replaceState(null, "", `#reading-${reading.id}`);
   }, []);
@@ -27,20 +31,30 @@ export function useReadingDialog(readings: readonly Reading[]) {
     if (window.location.hash.startsWith("#reading-")) {
       window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
     }
-    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+    const trigger = lastTriggerRef.current;
+    const card = document.getElementById(`reading-${selectedIdRef.current}-card`);
+    window.requestAnimationFrame(() => (trigger?.isConnected ? trigger : card?.querySelector<HTMLElement>("button"))?.focus());
   }, []);
 
   useEffect(() => {
     const syncFromHash = () => {
       const match = window.location.hash.match(/^#reading-(\d+)$/);
       if (!match) return;
-      const reading = readings.find((item) => item.id === Number(match[1]));
-      if (reading) setSelected(reading);
+      const id = Number(match[1]);
+      const reading = readings.find((item) => item.id === id);
+      if (reading) {
+        lastTriggerRef.current = null;
+        selectedIdRef.current = id;
+        setSelected(reading);
+        return;
+      }
+      const target = elsewhere?.[id];
+      if (target) window.location.replace(target);
     };
     syncFromHash();
     window.addEventListener("hashchange", syncFromHash);
     return () => window.removeEventListener("hashchange", syncFromHash);
-  }, [readings]);
+  }, [readings, elsewhere]);
 
   return { selected, openReading, closeReading };
 }
@@ -73,6 +87,8 @@ export function ReadingDialog({
     focusable()[0]?.focus();
     const previousOverflow = document.body.style.overflow;
     document.body.style.setProperty("overflow", "hidden");
+    // Listen on the document: clicking the dialog's text moves focus to <body>,
+    // and keys pressed then never pass through the dialog element.
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -84,19 +100,20 @@ export function ReadingDialog({
       if (!items.length) return;
       const first = items[0];
       const last = items.at(-1)!;
+      if (!dialog.contains(document.activeElement)) { event.preventDefault(); (event.shiftKey ? last : first).focus(); return; }
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     };
-    dialog.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKeyDown);
     return () => {
-      dialog.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keydown", onKeyDown);
       document.body.style.setProperty("overflow", previousOverflow);
     };
   }, [reading, onClose]);
 
   return (
     <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <section ref={dialogRef} className="detail-modal" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+      <section ref={dialogRef} className="detail-modal" role="dialog" aria-modal="true" tabIndex={-1} aria-labelledby={titleId}>
         <button className="modal-close" onClick={onClose} aria-label="關閉摘要">×</button>
         <div className="modal-rank">#{String(reading.rank).padStart(2, "0")} · {reading.kind} · {context}</div>
         <h2 id={titleId}>{reading.title}</h2>

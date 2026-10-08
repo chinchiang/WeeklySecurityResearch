@@ -31,6 +31,7 @@ npm run check:links  # 檢查原始來源可達性；CI 每週一自動跑，失
 ## 資料模型
 
 - 所有讀物在 `app/data/readings.ts`，來源標示在 `app/data/provenance.ts`。新增一期只需加 `Reading` 資料，週次、KPI、feed、sitemap 全部自動推導。
+- 評分規則與單筆工具函式在 `app/data/rubric.ts`（`readings.ts` 原樣轉出）。頁面是 server component，`"use client"` 元件只能 `import type` readings.ts、工具函式從 rubric.ts 取，否則全部讀物會被打包進每一頁的 JavaScript；`tests/site-structure.test.mjs` 與 `checks/pages-export.test.mjs` 會擋。
 - 已發佈的項目不刪除、不改週次，也不可拿掉 provenance 或既有的 corrections；各週的 `weeklyEditorials`／`weeklyReportIntegrations`、`public/reading-runs/` 收據與 `public/reports/` 快照也不可刪除（收據可修改，例如回填發布證據）。CI 的 `scripts/check-history.mjs` 會擋。撤稿或更正用 `corrections` 欄位。
 - `decision` 必須能由 `scores` 經 `deriveDecision()` 重現，改分數要同步改判定。
 - 新文章必填 `provenance`；同一週同一研究只能有一筆（以 URL／DOI／arXiv 識別碼去重）。

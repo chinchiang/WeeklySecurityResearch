@@ -1,42 +1,41 @@
-"use client";
-
 import { sitePath } from "../../site-config";
 
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import { SourceMeta } from "../../components/source-meta";
 import { ArchitectureReview } from "../../components/architecture-review";
 import { CorrectionNotice, ScoreBreakdown } from "../../components/reading-meta";
-import { editorialFor, readings, weeklyReportIntegrations } from "../../data/readings";
+import { editorialFor, isRetracted, readings, weeklyReportIntegrations } from "../../data/readings";
 
-export default function WeekPage() {
-  const params = useParams<{ week: string }>();
-  const rawWeek = decodeURIComponent(params.week ?? "");
+// Unknown weeks never reach this page: app/week/[week]/layout.tsx returns 404 first.
+export default async function WeekPage({ params }: { params: Promise<{ week: string }> }) {
+  const rawWeek = decodeURIComponent((await params).week);
   const week = rawWeek.replaceAll("-", ".");
   const items = readings.filter((reading) => reading.week === week).sort((a, b) => a.rank - b.rank);
   const editorial = editorialFor(week);
   const integration = weeklyReportIntegrations[week];
 
   return (
-    <main>
+    <div className="site">
+      <a className="skip-link" href="#main">跳到主要內容</a>
       <header className="topbar">
         <Link className="brand" href="/" aria-label="返回最新一期"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>PERMANENT WEEKLY EDITION</small></span></Link>
         <a className="mobile-history-link" href={sitePath("/archive/")} >歷史資料</a>
         <nav aria-label="週次頁導覽"><Link href="/">最新一期</Link><Link href="/archive">全部歷史</Link><a href={sitePath("/feed.xml")} >Atom Feed</a></nav>
       </header>
+      <main id="main">
       <section className="archive-hero week-hero">
         <div>
           <p className="eyebrow">PERMANENT WEEKLY EDITION</p>
-          <h1>{week || "無效週次"}<span>必讀清單</span></h1>
+          <h1>{week}<span>必讀清單</span></h1>
           <p>此網址固定保存該週入選內容，適合引用、分享與稽核追溯。</p>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "12px" }}>
             <a className="secondary-button" href={sitePath("/archive/")}>← 返回歷史資料庫</a>
             {items.length > 0 && (
-              <a className="secondary-button" href={sitePath(`/reports/${rawWeek}.html`)} target="_blank" rel="noreferrer">本期完整報告 ↗</a>
+              <a className="secondary-button" href={sitePath(`/reports/${rawWeek}.html`)}>本期完整報告／下載保存 ↗</a>
             )}
           </div>
         </div>
-        <div className="archive-stat"><b>{String(items.length).padStart(2, "0")}</b><span>READINGS</span><p>{week}</p></div>
+        <div className="archive-stat" role="group" aria-label="本期統計"><b>{String(items.length).padStart(2, "0")}</b><span>READINGS</span><p>{week}</p></div>
       </section>
       <section className="library archive-library">
         {items.length > 0 && (
@@ -75,7 +74,8 @@ export default function WeekPage() {
             )}
           </div>
         )}
-        <div className="reading-grid week-reading-grid">{items.map((reading) => <article className="reading-card" id={`reading-${reading.id}`} key={reading.id}>
+        <h2 className="visually-hidden">本期讀物</h2>
+        <div className="reading-grid week-reading-grid">{items.map((reading) => <article className={`reading-card ${isRetracted(reading) ? "retracted" : ""}`} id={`reading-${reading.id}`} key={reading.id}>
           <div className="card-topline"><span className="card-rank">#{String(reading.rank).padStart(2, "0")}</span><span className={`decision ${reading.decision === "深入審閱" ? "deep" : "select"}`}>{reading.decision}</span></div>
           <div className="card-kind"><span>{reading.kind}</span><i />{reading.date}<i />{reading.batch}</div>
           <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
@@ -83,13 +83,17 @@ export default function WeekPage() {
           <SourceMeta reading={reading} /><CorrectionNotice reading={reading} />
           <p className="card-summary">{reading.summary}</p>
           <ScoreBreakdown reading={reading} />
+          {reading.metric && <div className="metric">{reading.metric}</div>}
+          <div className="topic-list">{reading.topics.map((item) => <span key={item}>{item}</span>)}</div>
           <div className="detail-section compact-detail"><h4>主要發現</h4><ul>{reading.findings.map((finding) => <li key={finding}>{finding}</li>)}</ul></div>
           <div className="detail-grid compact-detail"><article><h4>製造業實務關聯</h4><p>{reading.relevance}</p></article><article><h4>建議行動</h4><p>{reading.action}</p></article></div>
+          {reading.crossCheck && <div className="cross-check compact-detail"><b>交叉核實</b><p>{reading.crossCheck}</p></div>}
           <div className="caveat compact-detail"><b>查核注意事項</b><p>{reading.caveat}</p></div>
           <ArchitectureReview reading={reading} /><div className="card-actions"><a href={reading.source} target="_blank" rel="noreferrer">原始來源 ↗</a>{reading.pdf && <a href={reading.pdf} target="_blank" rel="noreferrer">PDF ↓</a>}<a href={`#reading-${reading.id}`} aria-label={`單篇連結：${reading.title}`}>單篇連結 #</a></div>
         </article>)}</div>
       </section>
+      </main>
       <footer><div className="brand footer-brand"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>VERIFIABLE WEEKLY ARCHIVE</small></span></div><p>固定週次網址 · 正體中文／臺灣慣用語</p><a href={sitePath("/archive/")} >歷史資料庫 →</a></footer>
-    </main>
+    </div>
   );
 }

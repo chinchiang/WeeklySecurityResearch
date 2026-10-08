@@ -58,6 +58,8 @@ npm run build:pages && npm run test:pages
 3. `npm run build` 與 `npm run build:pages` 是同一件事。Pages base path 由 CI 的 `GITHUB_REPOSITORY` 推導（`scripts/pages-config.mjs`），程式中的 fallback 只供本機使用。
 4. `public/social-content/` 只作為歷史資料保留，網站沒有入口；`npm run build:pages` 會把它從 `out/` 移除，`npm run test:pages` 會確認它沒有出現在公開輸出中。建置不會重新產生它；要更新時手動執行 `node scripts/generate-social-content.mjs`。
 
+5. 這是專案站（網址在 `/WeeklySecurityResearch/` 之下），搜尋引擎只讀網域根目錄的 `robots.txt`，因此 `out/robots.txt` 裡的 `Sitemap:` 不會被自動發現；要讓搜尋引擎收錄 sitemap，請在 Google Search Console 等工具手動提交 `https://chinchiang.github.io/WeeklySecurityResearch/sitemap.xml`。每期 HTML 報告以 `<link rel="canonical">` 指回該週固定網址，避免兩者被當成重複內容。
+
 GitHub Pages 是唯一正式站。原本部署在 ChatGPT Sites 的 Worker 版本已停止更新，其建置與工具鏈（vinext、wrangler、Cloudflare vite plugin，以及從未使用的 D1／drizzle 範本）已於 2026-09-13 從 repo 移除。canonical、Atom feed 與 sitemap 一律指向 GitHub Pages 網址（`app/site-config.ts` 的 `SITE_URL`）。
 
 ## 安全基準

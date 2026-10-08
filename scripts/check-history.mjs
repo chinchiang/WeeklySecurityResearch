@@ -6,9 +6,9 @@
  * record and report integration; committed receipts and report snapshots
  * are not deleted (receipts may be edited, e.g. to backfill evidence).
  *
- * The base readings.ts is imported from a temp copy, which works because it
- * only has `import type` imports. If it ever needs a value import from a
- * sibling module, extract the whole app/data directory instead.
+ * The base app/data directory is extracted to a temp folder and its
+ * readings.ts imported from there, so value imports between the data modules
+ * (readings.ts re-exports rubric.ts) resolve against the same commit.
  */
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, writeFileSync, rmSync, existsSync } from "node:fs";
@@ -23,8 +23,8 @@ const filesAt = (tree, dir) => git("ls-tree", "--name-only", `${tree}:${dir}`).s
 const errors = [];
 const dir = mkdtempSync(join(tmpdir(), "reading-history-"));
 try {
-  const file = join(dir, "baseline.mts");
-  writeFileSync(file, git("show", `${ref}:app/data/readings.ts`));
+  for (const name of filesAt(ref, "app/data")) writeFileSync(join(dir, name), git("show", `${ref}:app/data/${name}`));
+  const file = join(dir, "readings.ts");
   const base = await import(pathToFileURL(file).href);
   const current = new Map(readings.map(r => [r.id, r]));
   for (const r of base.readings) {
