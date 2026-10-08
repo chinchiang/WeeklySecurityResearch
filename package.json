@@ -19,7 +19,7 @@
     "build:report": "node --experimental-strip-types scripts/build-report.mjs"
   },
   "dependencies": {
-    "next": "16.3.6",
+    "next": "16.3.8",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -29,13 +29,13 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.3.6",
+    "eslint-config-next": "16.3.8",
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3"
   },
   "type": "module",
   "displayName": "科技・資安・架構週讀",
   "overrides": {
-    "sharp": "0.35.4"
+    "sharp": "0.35.5"
   }
 }
