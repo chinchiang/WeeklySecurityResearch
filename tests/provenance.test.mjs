@@ -9,6 +9,9 @@ import { pagesConfig } from "../scripts/pages-config.mjs";
 import { findPrivate } from "../scripts/private-patterns.mjs";
 // Messages are read by the scheduled ChatGPT runs; say what to fix and where the rule lives.
 const RULES = "規則見 docs/run-instructions.md";
+// Written before the receipt format existed (docs/source-workflow.md); provenance links point at these names.
+const LEGACY_RECEIPTS = new Set(["2026-09-12-ai.json", "2026-09-12-enterprise.json"]);
+const SITE_URL = pagesConfig({}).site;
 
 test("known import provenance matches research receipts, not article topics", () => {
   for (const flow of ["ai", "enterprise"]) {
@@ -42,11 +45,8 @@ test("new readings require attributable provenance; all supplied records are val
     for (const origin of p.origins) assert.ok(origin in sourceLabels && origin !== "legacy-unknown");
     assert.ok(["chatgpt-ai","chatgpt-enterprise"].includes(p.reviewedBy));
     assert.match(p.checkedAt,/^\d{4}-\d{2}-\d{2}$/);
-    // Canonical name is WeeklySecurityResearch. Receipts written before the
-    // 2026-09-13 rename may still carry the old GitHub name (WeeklySecurityReseach)
-    // or the earlier README misspelling (WeeklySecurityReaseach); GitHub redirects
-    // former repository names, so all three spellings are accepted as evidence.
-    assert.match(p.evidence,/^https:\/\/github.com\/chinchiang\/WeeklySecurity(?:Research|Reseach|Reaseach)\//);
+    // The exact receipt or PR URL is checked in "provenance evidence points at a receipt…" below.
+    assert.match(p.evidence,/^https:\/\/github\.com\/chinchiang\/WeeklySecurityResearch\//);
     if (p.origins.includes("claude-report")) assert.ok(p.inputReportId);
   }
 });
@@ -107,6 +107,23 @@ test("all reading receipts conform to the source-workflow specification schema",
       (typeof r.publication_evidence === "object" && r.publication_evidence !== null),
       `${file}：publication_evidence 不可為空，填說明文字或含 PR、CI、部署連結的物件。${RULES}`
     );
+    if (LEGACY_RECEIPTS.has(file)) continue;
+
+    // Everything below was introduced after the 2026-09-12 receipts, which keep their original form.
+    assert.match(file, /^\d{4}-\d{2}-\d{2}-(ai|enterprise)-[\w-]+\.json$/, `${file}：收據檔名必須是 <執行日期 YYYY-MM-DD>-<ai|enterprise>-<run 識別>.json，例如 2026-10-02-ai-w40.json。${RULES}`);
+    assert.equal(`chatgpt-${file.split("-")[3]}`, r.workflow, `${file}：檔名的 ai／enterprise 必須與 workflow（${r.workflow}）一致。${RULES}`);
+    for (const field of ["new_research_total", "background_total"]) {
+      assert.ok(Number.isInteger(r[field]) && r[field] >= 0, `${file}：${field} 必須是 0 以上的整數，兩者相加等於 added_reading_ids 的篇數。${RULES}`);
+    }
+    if (r.publication_status === "verified") {
+      // verified means the live site was fetched page by page; CI and a successful deployment alone stay pending.
+      const checks = r.publication_evidence?.checks;
+      assert.ok(Array.isArray(checks) && checks.length > 0, `${file}：publication_status 為 verified 時，publication_evidence.checks 必須列出正式站逐頁 GET 的結果；只有 CI 與部署成功、線上無法讀取時維持 pending。${RULES}`);
+      for (const check of checks) {
+        assert.ok(typeof check.url === "string" && check.url.startsWith(`${SITE_URL}/`), `${file}：checks 的 url 必須是正式站網址（${SITE_URL}/…），不是 artifact 內的路徑。${RULES}`);
+        assert.equal(check.status, 200, `${file}：${check.url} 的 GET 狀態不是 200，不能標 verified。${RULES}`);
+      }
+    }
   }
 });
 

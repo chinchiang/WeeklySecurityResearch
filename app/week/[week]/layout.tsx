@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { allWeeks } from "../../data/readings";
-import { SITE_NAME, socialMetadata } from "../../site-metadata";
+import { FEED_TYPES, SITE_NAME, socialMetadata } from "../../site-metadata";
 
 type WeekLayoutProps = {
   children: React.ReactNode;
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Omit<WeekLayoutProps, "childr
   return {
     title,
     description,
-    alternates: { canonical: `/week/${canonicalWeek}` },
+    alternates: { canonical: `/week/${canonicalWeek}`, types: FEED_TYPES },
     ...socialMetadata({ url: `/week/${canonicalWeek}`, title, description }),
   };
 }

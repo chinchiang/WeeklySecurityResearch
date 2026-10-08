@@ -7,6 +7,10 @@ import {
   weeklyReportIntegrations,
 } from "../app/data/readings.ts";
 import { provenanceText, sourceWorkflows } from "../app/data/provenance.ts";
+import { pagesConfig } from "./pages-config.mjs";
+
+// The report repeats its week page; point search engines at that page as the one to index.
+const SITE = pagesConfig({}).site;
 
 const esc = (value) =>
   String(value)
@@ -66,7 +70,7 @@ export function renderReport(week) {
   <p class="card-kind">${esc(r.dateValue)} · ${esc(r.authors)} · ${esc(r.evidenceLevel)}</p>
   <p class="source-meta">${esc(provenanceText(r))}</p>
   <div class="topic-list">${r.topics.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
-  ${(r.corrections ?? []).map((c) => `<p class="correction-notice"><b>${esc(c.date)} 更正</b> ${esc(c.note)}</p>`).join("")}
+  ${(r.corrections ?? []).map((c) => `<p class="correction-notice${c.type === "撤稿" ? " retracted" : ""}"><b>${esc(c.date)} ${esc(c.type)}</b> ${esc(c.note)}${c.source ? ` <a href="${esc(c.source)}">說明 ↗</a>` : ""}</p>`).join("")}
   <div class="detail-section"><h4>核心發現</h4><p>${esc(r.summary)}</p>${list(r.findings)}</div>
   <div class="detail-grid"><article><h4>製造業實務關聯</h4><p>${esc(r.relevance)}</p></article><article><h4>最小驗證行動</h4><p>${esc(r.action)}</p></article></div>
   <div class="cross-check"><b>查核與判定</b><p>${esc(r.crossCheck ?? "")}</p><p>證據 ${r.scores.evidence}/3；關聯 ${r.scores.relevance}/3；可行動 ${r.scores.actionability}/3。${esc(r.decision)}。</p></div>
@@ -89,7 +93,7 @@ export function renderReport(week) {
 
   const skipNoteHtml = reportSkipNote ? `<p>${esc(reportSkipNote)}</p>` : "";
 
-  const html = `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${slug} 科技・資安・架構週讀 · r${revision}</title><meta name="description" content="本期完整研究評述、查核限制與製造業行動建議"><style>${css}</style></head><body><main>
+  const html = `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${slug} 科技・資安・架構週讀 · r${revision}</title><link rel="canonical" href="${SITE}/week/${slug}/"><meta name="description" content="本期完整研究評述、查核限制與製造業行動建議"><style>${css}</style></head><body><main>
 <section class="hero"><p class="eyebrow">WEEKLY RESEARCH · REVISION ${revision}</p><h1>${slug}<br>科技・資安・架構週讀</h1><p class="hero-subtitle">${esc(editorial.note)}</p><p class="edition-note">${reportId} · 研究查核日期 ${verifiedAt}</p>${presentationNote ? `<p class="edition-note">${esc(presentationNote)}</p>` : ""}<div class="kpi-row"><div class="kpi"><b>${stats.total}</b><span>入選</span></div><div class="kpi purple"><b>${stats.deep}</b><span>深入審閱</span></div><div class="kpi blue"><b>${stats.selective}</b><span>選讀</span></div></div></section>
 <section class="about"><h2>三個內容來源・兩個網站更新流程</h2>${sourceWorkflows.map((f) => `<h3>${esc(f.title)} · ${esc(f.schedule)}</h3><p>${esc(f.role)}</p>`).join("")}<p>排程時間代表預定分工，不代表該週已執行成功；各次執行的查核與發布狀態記錄於 public/reading-runs 收據。</p></section>
 <section><nav aria-label="本期目錄"><ol>${weekReadings.map((r) => `<li><a href="#reading-${r.id}">${esc(r.title)}</a></li>`).join("")}</ol></nav></section>

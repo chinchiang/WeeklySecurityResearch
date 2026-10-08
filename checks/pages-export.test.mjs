@@ -138,3 +138,55 @@ test("export excludes source files and private WORK identifiers", () => {
   assert.ok(!existsSync("out/social-content"), "social content must not ship on the public Pages site");
   for (const file of htmlFiles) assert.ok(!readFileSync(path.join("out", file), "utf8").includes("/social-content/"), `${file}: links to unpublished social content`);
 });
+
+const unescapeHtml = (text) => text.replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+
+// Each route that sets its own canonical replaces the root alternates, so the feed link must be repeated.
+test("every page advertises the Atom feed for autodiscovery", () => {
+  for (const file of htmlFiles) {
+    const html = readFileSync(path.join("out", file), "utf8");
+    assert.match(html, new RegExp(`<link rel="alternate" type="application/atom\\+xml" href="${site}/feed.xml"/>`), `${file}: feed alternate link`);
+  }
+});
+
+test("week pages show each reading's cross-check, metric and topics", () => {
+  for (const week of allWeeks) {
+    const html = unescapeHtml(readFileSync(`out/week/${week.replaceAll(".", "-")}/index.html`, "utf8"));
+    for (const r of readings.filter((x) => x.week === week)) {
+      if (r.crossCheck) assert.ok(html.includes(r.crossCheck), `${week} #${r.id}: crossCheck`);
+      if (r.metric) assert.ok(html.includes(r.metric), `${week} #${r.id}: metric`);
+      for (const topic of r.topics) assert.ok(html.includes(`<span>${topic}</span>`), `${week} #${r.id}: topic ${topic}`);
+    }
+  }
+});
+
+// Pages are server components that hand each interactive part only the readings it shows;
+// reading text in a JavaScript chunk means a client component imported app/data/readings.ts.
+test("JavaScript bundles do not carry reading data", () => {
+  const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]);
+  const chunks = walk("out/_next/static").filter((file) => file.endsWith(".js")).map((file) => [file, readFileSync(file, "utf8")]);
+  assert.ok(chunks.length > 0, "no JavaScript chunks found");
+  for (const r of readings) {
+    for (const [file, text] of chunks) assert.ok(!text.includes(r.summary), `${file} 含有 #${r.id} 的摘要；互動元件不可 import app/data/readings.ts`);
+  }
+});
+
+test("pages have one main landmark with banner, footer and a skip link outside it", () => {
+  for (const file of htmlFiles) {
+    const html = readFileSync(path.join("out", file), "utf8");
+    const body = html.slice(html.indexOf("<body"));
+    assert.equal((body.match(/<main\b/g) ?? []).length, 1, `${file}: exactly one <main>`);
+    assert.match(body, /<a class="skip-link" href="#main">/, `${file}: skip link`);
+    assert.match(body, /<main id="main"/, `${file}: skip link target`);
+    const main = body.slice(body.indexOf("<main"), body.indexOf("</main>"));
+    assert.doesNotMatch(main, /<header\b|<footer\b/, `${file}: header and footer must sit outside <main> to keep their landmark roles`);
+  }
+});
+
+test("reports name their week page as canonical", () => {
+  for (const week of allWeeks) {
+    const slug = week.replaceAll(".", "-");
+    const html = readFileSync(`out/reports/${slug}.html`, "utf8");
+    assert.ok(html.includes(`<link rel="canonical" href="https://chinchiang.github.io/WeeklySecurityResearch/week/${slug}/">`), `${slug}: report canonical`);
+  }
+});

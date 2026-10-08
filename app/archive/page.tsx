@@ -1,64 +1,23 @@
-"use client";
-
-import { sitePath } from "../site-config";
-
-import { useMemo, useState } from "react";
 import Link from "next/link";
-import { SourceMeta, SourceFilter } from "../components/source-meta";
-import { matchesOrigin } from "../data/provenance";
-import { CorrectionNotice, ScoreBreakdown } from "../components/reading-meta";
-import { useReadingProgress } from "../components/use-reading-progress";
-import { ReadingDialog, useReadingDialog } from "../components/reading-dialog";
+import { sitePath } from "../site-config";
+import { ProgressConsole, ReadingRoom } from "../components/reading-room";
+import { ReadingLibrary } from "../components/reading-library";
 import {
   archiveTopicFilters,
   allWeeks,
   archiveDateRange,
   archiveReadings,
   archiveWeeks,
-  readingSearchText,
+  currentReadings,
 } from "../data/readings";
 
+// The current issue is not part of the archive; its /archive/#reading-<id> links open on the homepage.
+const elsewhere = Object.fromEntries(currentReadings.map((reading) => [reading.id, sitePath(`/#reading-${reading.id}`)]));
+
 export default function ArchivePage() {
-  const [week, setWeek] = useState("全部週次");
-  const [origin, setOrigin] = useState("all");
-  const [topic, setTopic] = useState("全部");
-  const [decision, setDecision] = useState("全部判定");
-  const [query, setQuery] = useState("");
-  const [sort, setSort] = useState("newest");
-  const { completed, toggleComplete } = useReadingProgress();
-  const { selected, openReading, closeReading } = useReadingDialog(archiveReadings);
-
-  const visibleReadings = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    return archiveReadings
-      .filter((reading) => {
-        const matchesWeek = week === "全部週次" || reading.week === week;
-        const matchesSource = matchesOrigin(reading, origin);
-      const matchesTopic =
-          topic === "全部" || reading.topics.includes(topic);
-        const matchesDecision =
-          decision === "全部判定" || reading.decision === decision;
-        return (
-          matchesSource && matchesWeek &&
-          matchesTopic &&
-          matchesDecision &&
-          readingSearchText(reading).includes(normalized)
-        );
-      })
-      .sort((a, b) =>
-        sort === "newest"
-          ? b.dateValue.localeCompare(a.dateValue)
-          : b.week.localeCompare(a.week) || a.rank - b.rank,
-      );
-  }, [origin, decision, query, sort, topic, week]);
-
-  const archiveCompleted = completed.filter((id) =>
-    archiveReadings.some((reading) => reading.id === id),
-  );
-  const progress = archiveReadings.length ? Math.round((archiveCompleted.length / archiveReadings.length) * 100) : 0;
-
   return (
-    <main>
+    <div className="site">
+      <a className="skip-link" href="#main">跳到主要內容</a>
       <header className="topbar">
         <Link className="brand" href="/" aria-label="返回最新一期">
           <span className="brand-mark">研</span>
@@ -76,6 +35,8 @@ export default function ArchivePage() {
         <div className="live-state"><i /> ARCHIVE VERIFIED</div>
       </header>
 
+      <ReadingRoom readings={archiveReadings} elsewhere={elsewhere} titleId="archive-detail-title" dialogContext="week">
+      <main id="main">
       <section className="archive-hero" id="top">
         <div>
           <p className="eyebrow">RESEARCH ARCHIVE · SINCE {allWeeks[0]}</p>
@@ -86,7 +47,7 @@ export default function ArchivePage() {
           </p>
           <Link className="secondary-button" href="/">← 返回最新一期</Link>
         </div>
-        <div className="archive-stat" aria-label="歷史資料統計">
+        <div className="archive-stat" role="group" aria-label="歷史資料統計">
           <b>{String(archiveReadings.length).padStart(2, "0")}</b>
           <span>ARCHIVED READINGS</span>
           <p>{archiveDateRange}</p>
@@ -94,158 +55,7 @@ export default function ArchivePage() {
       </section>
 
       <section className="library archive-library" id="archive-index">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">HISTORICAL RESEARCH LIBRARY</p>
-            <h2>歷史必讀名單</h2>
-          </div>
-          <p className="result-count">
-            顯示 <b>{visibleReadings.length}</b> / {archiveReadings.length} 項
-          </p>
-        </div>
-
-        <div className="week-selector" role="group" aria-label="選擇歷史週次">
-          <button className={week === "全部週次" ? "active" : ""} onClick={() => setWeek("全部週次")} aria-pressed={week === "全部週次"}>全部週次</button>
-          {archiveWeeks.map((archiveWeek) => (
-            <span className="week-choice" key={archiveWeek}><button className={week === archiveWeek ? "active" : ""} onClick={() => setWeek(archiveWeek)} aria-pressed={week === archiveWeek}>{archiveWeek}</button><a href={sitePath(`/week/${archiveWeek.replaceAll(".", "-")}/`)} aria-label={`開啟 ${archiveWeek} 固定網址`}>↗</a></span>
-          ))}
-        </div>
-
-        <div className="control-panel archive-controls">
-          <label className="search-box">
-            <span>⌕</span>
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="搜尋歷史論文、作者、控制或風險…"
-              aria-label="搜尋歷史閱讀資料"
-            />
-            {query && (
-              <button onClick={() => setQuery("")} aria-label="清除搜尋">
-                ×
-              </button>
-            )}
-          </label>
-          <div className="filter-row" role="group" aria-label="主題篩選">
-            {archiveTopicFilters.map((filter) => (
-              <button
-                key={filter}
-                className={topic === filter ? "active" : ""}
-                onClick={() => setTopic(filter)}
-                aria-pressed={topic === filter}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-          <SourceFilter value={origin} onChange={setOrigin} />
-          <select
-            value={decision}
-            onChange={(event) => setDecision(event.target.value)}
-            aria-label="判定篩選"
-          >
-            <option>全部判定</option>
-            <option>深入審閱</option>
-            <option>選讀</option>
-          </select>
-          <select
-            value={sort}
-            onChange={(event) => setSort(event.target.value)}
-            aria-label="排序方式"
-          >
-            <option value="newest">依發布日期</option>
-            <option value="priority">依原始優先順序</option>
-          </select>
-        </div>
-
-        <div className="archive-period">
-          <span>週次</span>
-          <b>{week === "全部週次" ? archiveDateRange : week}</b>
-          <i />
-          <small>{visibleReadings.length} 項符合條件</small>
-        </div>
-
-        <div className="reading-grid">
-          {visibleReadings.map((reading) => {
-            const isDone = completed.includes(reading.id);
-            return (
-              <article
-                className={`reading-card ${isDone ? "completed" : ""}`}
-                key={reading.id}
-              >
-                <div className="card-topline">
-                  <span className="card-rank">
-                    #{String(reading.rank).padStart(2, "0")}
-                  </span>
-                  <span
-                    className={`decision ${
-                      reading.decision === "深入審閱" ? "deep" : "select"
-                    }`}
-                  >
-                    {reading.decision === "深入審閱" ? "◇" : "▢"}{" "}
-                    {reading.decision}
-                  </span>
-                </div>
-                <div className="card-kind">
-                  <span>{reading.kind}</span><i />{reading.date}<i />週次 {reading.week}
-                </div>
-                <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
-                <h3>{reading.title}</h3>
-                <p className="card-subtitle">{reading.subtitle}</p>
-                <SourceMeta reading={reading} /><CorrectionNotice reading={reading} />
-                <p className="card-summary">{reading.summary}</p>
-                <ScoreBreakdown reading={reading} />
-                {reading.metric && (
-                  <div className="metric">{reading.metric}</div>
-                )}
-                <div className="topic-list">
-                  {reading.topics.map((item) => (
-                    <span key={item}>{item}</span>
-                  ))}
-                </div>
-                <div className="card-actions">
-                  <button onClick={(event) => openReading(reading, event.currentTarget)}>
-                    摘要與查核 <span>→</span>
-                  </button>
-                  <a
-                    href={reading.source}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`開啟 ${reading.title} 原始來源`}
-                  >
-                    來源 ↗
-                  </a>
-                  {reading.pdf && (
-                    <a
-                      href={reading.pdf}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`下載 ${reading.title} PDF`}
-                    >
-                      PDF ↓
-                    </a>
-                  )}
-                </div>
-                <button
-                  className={`progress-toggle ${isDone ? "done" : ""}`}
-                  onClick={() => toggleComplete(reading.id)}
-                  aria-pressed={isDone}
-                  aria-label={`${isDone ? "已閱讀" : "標記為已閱讀"}：${reading.title}`}
-                >
-                  <span aria-hidden="true">{isDone ? "✓" : ""}</span>
-                  {isDone ? "已閱讀" : "標記為已閱讀"}
-                </button>
-              </article>
-            );
-          })}
-        </div>
-
-        {visibleReadings.length === 0 && (
-          <div className="empty-state">
-            <b>NO MATCHING ARCHIVE</b>
-            <p>沒有符合目前條件的歷史資料，請調整搜尋或篩選條件。</p>
-          </div>
-        )}
+        <ReadingLibrary variant="archive" topicFilters={archiveTopicFilters} weeks={archiveWeeks} dateRange={archiveDateRange} />
       </section>
 
       <section className="archive-progress" id="archive-progress">
@@ -254,22 +64,10 @@ export default function ArchivePage() {
           <h2>歷史資料閱讀進度</h2>
           <p>閱讀狀態與最新一期共用，僅儲存在目前瀏覽器。</p>
         </div>
-        <div className="progress-console">
-          <div className="progress-value">
-            <b>{progress}%</b>
-            <span>
-              {archiveCompleted.length} / {archiveReadings.length} 已完成
-            </span>
-          </div>
-          <div className="progress-track">
-            <i style={{ width: `${progress}%` }} />
-          </div>
-          <div className="progress-labels">
-            <span>0%</span><span>歷史清單閱讀目標</span><span>100%</span>
-          </div>
-        </div>
+        <ProgressConsole goalLabel="歷史清單閱讀目標" />
       </section>
-
+      </main>
+      </ReadingRoom>
       <footer>
         <div className="brand footer-brand">
           <span className="brand-mark">研</span>
@@ -281,17 +79,6 @@ export default function ArchivePage() {
         <p>歷史資料獨立保存 · 正體中文／臺灣慣用語</p>
         <Link href="/">返回最新一期 →</Link>
       </footer>
-
-      {selected && (
-        <ReadingDialog
-          reading={selected}
-          titleId="archive-detail-title"
-          context={selected.week}
-          isDone={completed.includes(selected.id)}
-          onToggleComplete={() => toggleComplete(selected.id)}
-          onClose={closeReading}
-        />
-      )}
-    </main>
+    </div>
   );
 }

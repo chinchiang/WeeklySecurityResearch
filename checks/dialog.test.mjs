@@ -70,6 +70,15 @@ async function press(key, { shift = false } = {}) {
   }
 }
 
+// A real pointer click: on non-focusable text it moves focus to <body>, which a
+// keydown listener on the dialog element would no longer hear.
+async function clickOn(selector) {
+  const { x, y } = await evaluate(`(() => { const r = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect(); return { x: r.left + 5, y: r.top + 5 }; })()`);
+  for (const type of ["mousePressed", "mouseReleased"]) {
+    await send("Input.dispatchMouseEvent", { type, x, y, button: "left", clickCount: 1 });
+  }
+}
+
 async function open(page, hash = "") {
   await send("Page.navigate", { url: `${origin}${base}${page}${hash}` });
   // The buttons are already in the static HTML; clicks only work once React has hydrated them.
@@ -164,4 +173,32 @@ for (const [page, list, titleId] of [["/", currentReadings, "detail-title"], ["/
     await evaluate(`location.hash = "#reading-${reading.id}"`);
     await waitFor(`${title} === ${JSON.stringify(reading.title)}`, "hash 改變時應開啟該篇");
   });
+
+  test(`${page}: after clicking the dialog text, Tab stays inside and Esc still closes`, { skip }, async () => {
+    await open(page, `#reading-${reading.id}`);
+    await waitFor(`${title} === ${JSON.stringify(reading.title)}`, "帶 hash 進站應開啟該篇");
+    await clickOn(".detail-modal .detail-section p");
+    await press("Tab");
+    assert.ok(await evaluate(`!!document.activeElement?.closest(".detail-modal")`), "點內文後按 Tab，焦點仍應留在視窗內");
+    await clickOn(".detail-modal .detail-section p");
+    await press("Escape");
+    await waitFor(closed, "點內文後按 Esc 仍應關閉視窗");
+    // Opened from the URL there is no trigger button; focus goes to that reading's card instead of being lost.
+    await waitFor(`!!document.activeElement?.closest("#reading-${reading.id}-card")`, "以網址開啟的視窗關閉後，焦點應回到該篇卡片");
+  });
 }
+
+// Shared /#reading-<id> links outlive the week they were shared in.
+test("a homepage link to an archived reading opens it on that week's page", { skip }, async () => {
+  const old = archiveReadings[0];
+  const slug = old.week.replaceAll(".", "-");
+  await send("Page.navigate", { url: `${origin}${base}/#reading-${old.id}` });
+  await waitFor(`location.pathname === ${JSON.stringify(`${base}/week/${slug}/`)} && location.hash === "#reading-${old.id}"`, "舊期的首頁分享連結應轉到該週固定網址");
+  await waitFor(`!!document.getElementById("reading-${old.id}")`, "週次頁應有該篇");
+});
+
+test("an archive link to a current reading opens it on the homepage", { skip }, async () => {
+  const current = currentReadings[0];
+  await send("Page.navigate", { url: `${origin}${base}/archive/#reading-${current.id}` });
+  await waitFor(`location.pathname === ${JSON.stringify(`${base}/`)} && document.getElementById("detail-title")?.textContent === ${JSON.stringify(current.title)}`, "本期讀物的歷史頁連結應在首頁開啟");
+});

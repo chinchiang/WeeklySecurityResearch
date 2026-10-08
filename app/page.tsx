@@ -1,15 +1,11 @@
-"use client";
-
 import { sitePath } from "./site-config";
 
-import { useMemo, useState } from "react";
-import { SourceMeta, SourceFilter, SourcesOverview } from "./components/source-meta";
-import { matchesOrigin } from "./data/provenance";
-import { CorrectionNotice, ScoreBreakdown } from "./components/reading-meta";
-import { useReadingProgress } from "./components/use-reading-progress";
-import { ReadingDialog, useReadingDialog } from "./components/reading-dialog";
+import { SourcesOverview } from "./components/sources-overview";
+import { OpenReadingButton, ProgressConsole, ReadingRoom } from "./components/reading-room";
+import { ReadingLibrary } from "./components/reading-library";
 import {
   CURRENT_WEEK,
+  archiveReadings,
   currentArchitectureReading,
   currentTopicFilters,
   correctionLog,
@@ -19,47 +15,21 @@ import {
   editorialMethod,
   isRetracted,
   priorityReading,
-  readingSearchText,
   weeklyReportIntegration,
 } from "./data/readings";
 function Mark({ children }: { children: React.ReactNode }) {
   return <span className="mark">{children}</span>;
 }
 
+// A shared /#reading-<id> link outlives its week: once the issue changes, send it to that week's permanent page.
+const elsewhere = Object.fromEntries(archiveReadings.map((reading) => [reading.id, sitePath(`/week/${reading.week.replaceAll(".", "-")}/#reading-${reading.id}`)]));
+const nextActions = [...currentReadings].filter((reading) => !isRetracted(reading)).sort((a, b) => a.rank - b.rank).slice(0, 5);
+
 export default function Home() {
-  const [origin, setOrigin] = useState("all");
-  const [topic, setTopic] = useState("全部");
-  const [decision, setDecision] = useState("全部判定");
-  const [query, setQuery] = useState("");
-  const [sort, setSort] = useState("priority");
-  const { completed, toggleComplete } = useReadingProgress();
-  const { selected, openReading, closeReading } = useReadingDialog(currentReadings);
-
-  const visibleReadings = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    const result = currentReadings.filter((reading) => {
-      const matchesSource = matchesOrigin(reading, origin);
-      const matchesTopic = topic === "全部" || reading.topics.includes(topic);
-      const matchesDecision =
-        decision === "全部判定" || reading.decision === decision;
-      return matchesSource && matchesTopic && matchesDecision && readingSearchText(reading).includes(normalized);
-    });
-
-    return result.sort((a, b) =>
-      sort === "newest"
-        ? b.dateValue.localeCompare(a.dateValue)
-        : a.rank - b.rank,
-    );
-  }, [origin, decision, query, sort, topic]);
-
-  const currentCompleted = completed.filter((id) =>
-    currentReadings.some((reading) => reading.id === id),
-  );
-  const progress = currentReadings.length ? Math.round((currentCompleted.length / currentReadings.length) * 100) : 0;
-
   return (
-    <main>
-      <header className="topbar">
+    <div className="site">
+      <a className="skip-link" href="#main">跳到主要內容</a>
+<header className="topbar">
         <a className="brand" href="#top" aria-label="回到頁首">
           <span className="brand-mark">研</span>
           <span>
@@ -81,12 +51,14 @@ export default function Home() {
         <p>研究閱讀室</p><a href="#top">本期總覽</a><a href="#index">精選閱讀</a>{currentArchitectureReading && <a href="#spotlight">架構長文</a>}<a href={sitePath("/archive/")} >歷史清單</a><a href="#progress">閱讀進度</a><a href="#verification">查核方法</a>
         <div className="sister-sites"><p>相關情報站</p><a href="https://chinchiang.github.io/DailySOCVitamin/">Daily SOC Vitamin ↗</a><a href="https://chinchiang.github.io/CyberRegulationWatch/">Cyber Regulation Watch ↗</a></div>
       </aside>
+      <ReadingRoom readings={currentReadings} elsewhere={elsewhere} titleId="detail-title" dialogContext="batch">
+      <main id="main">
       <section className="hero" id="top">
         <div className="hero-copy">
           <p className="eyebrow">WEEKLY RESEARCH · {CURRENT_WEEK}</p>
           <h1>科技・資安・架構<span>週讀</span></h1>
           <p className="hero-subtitle">製造業 AI Security、企業架構、OT／ICS、資料保護與產品安全。從研究證據，走到可驗證的控制。</p>
-          <div className="kpi-row" aria-label="本週清單統計">
+          <div className="kpi-row" role="group" aria-label="本週清單統計">
             <div className="kpi"><b>{currentStats.total}</b><span>本期入選</span></div>
             <div className="kpi purple"><b>{currentStats.deep}</b><span>深入審閱</span></div>
             <div className="kpi blue"><b>{currentStats.selective}</b><span>選讀</span></div>
@@ -113,11 +85,11 @@ export default function Home() {
             <p className="featured-subtitle">{priorityReading.subtitle}</p>
             <p className="featured-summary">{priorityReading.summary}</p>
             <div className="featured-actions">
-              <button className="primary-button" onClick={(event) => openReading(priorityReading, event.currentTarget)}>
+              <OpenReadingButton id={priorityReading.id} className="primary-button">
                 閱讀摘要 <span>→</span>
-              </button>
+              </OpenReadingButton>
               <a className="secondary-button" href={priorityReading.source} target="_blank" rel="noreferrer">
-                原始論文 ↗
+                原始來源 ↗
               </a>
               {priorityReading.pdf && <a className="text-link" href={priorityReading.pdf} target="_blank" rel="noreferrer">PDF ↓</a>}
             </div>
@@ -126,101 +98,18 @@ export default function Home() {
       </section>
 
       <section className="library" id="index">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">CURATED RESEARCH LIBRARY</p>
-            <h2>完整必讀名單</h2>
-          </div>
-          <p className="result-count">顯示 <b>{visibleReadings.length}</b> / {currentReadings.length} 項 · <a href={sitePath("/archive/")} >查看歷史資料 →</a></p>
-        </div>
-
-        <div className="control-panel">
-          <label className="search-box">
-            <span>⌕</span>
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="搜尋論文、作者、控制或風險…"
-              aria-label="搜尋閱讀清單"
-            />
-            {query && <button onClick={() => setQuery("")} aria-label="清除搜尋">×</button>}
-          </label>
-          <div className="filter-row" role="group" aria-label="主題篩選">
-            {currentTopicFilters.map((filter) => (
-              <button
-                key={filter}
-                className={topic === filter ? "active" : ""}
-                onClick={() => setTopic(filter)}
-                aria-pressed={topic === filter}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-          <SourceFilter value={origin} onChange={setOrigin} />
-          <select value={decision} onChange={(event) => setDecision(event.target.value)} aria-label="判定篩選">
-            <option>全部判定</option>
-            <option>深入審閱</option>
-            <option>選讀</option>
-          </select>
-          <select value={sort} onChange={(event) => setSort(event.target.value)} aria-label="排序方式">
-            <option value="priority">依優先順序</option>
-            <option value="newest">依發布日期</option>
-          </select>
-        </div>
-
-        <div className="reading-grid">
-          {visibleReadings.map((reading) => {
-            const isDone = completed.includes(reading.id);
-            return (
-              <article className={`reading-card ${isDone ? "completed" : ""} ${isRetracted(reading) ? "retracted" : ""}`} key={reading.id} id={`reading-${reading.id}-card`}>
-                <div className="card-topline">
-                  <span className="card-rank">#{String(reading.rank).padStart(2, "0")}</span>
-                  <span className={`decision ${reading.decision === "深入審閱" ? "deep" : "select"}`}>
-                    {reading.decision === "深入審閱" ? "◇" : "▢"} {reading.decision}
-                  </span>
-                </div>
-                <div className="card-kind"><span>{reading.kind}</span><i />{reading.date}<i />{reading.batch}</div>
-                <span className={`evidence-badge evidence-${reading.evidenceLevel}`}>{reading.evidenceLevel}</span>
-                <h3>{reading.title}</h3>
-                <p className="card-subtitle">{reading.subtitle}</p>
-                <SourceMeta reading={reading} /><CorrectionNotice reading={reading} />
-                <p className="card-summary">{reading.summary}</p>
-                <ScoreBreakdown reading={reading} />
-                {reading.metric && <div className="metric">{reading.metric}</div>}
-                <div className="topic-list">
-                  {reading.topics.map((item) => <span key={item}>{item}</span>)}
-                </div>
-                <div className="card-actions">
-                  <button onClick={(event) => openReading(reading, event.currentTarget)}>摘要與查核 <span>→</span></button>
-                  <a href={reading.source} target="_blank" rel="noreferrer" aria-label={`開啟 ${reading.title} 原始來源`}>來源 ↗</a>
-                  {reading.pdf && <a href={reading.pdf} target="_blank" rel="noreferrer" aria-label={`下載 ${reading.title} PDF`}>PDF ↓</a>}
-                </div>
-                <button
-                  className={`progress-toggle ${isDone ? "done" : ""}`}
-                  onClick={() => toggleComplete(reading.id)}
-                  aria-pressed={isDone}
-                  aria-label={`${isDone ? "已閱讀" : "標記為已閱讀"}：${reading.title}`}
-                >
-                  <span aria-hidden="true">{isDone ? "✓" : ""}</span>{isDone ? "已閱讀" : "標記為已閱讀"}
-                </button>
-              </article>
-            );
-          })}
-        </div>
-        {visibleReadings.length === 0 && (
-          <div className="empty-state"><b>NO MATCHING INTELLIGENCE</b><p>沒有符合目前條件的資料，請調整搜尋或篩選條件。</p></div>
-        )}
+        <ReadingLibrary variant="home" topicFilters={currentTopicFilters}>
         {currentEditorial.skipped.length > 0 && (
           <div className="method-note">
             <Mark>本週略過</Mark>{" "}
             {currentEditorial.skipped.map((item, index) => <span key={item.title}>{index > 0 && "；"}<a href={item.source} target="_blank" rel="noreferrer">{item.title}</a>：{item.reason}</span>)}
           </div>
         )}
+        </ReadingLibrary>
       </section>
 
       {currentArchitectureReading && (
-        <section id="spotlight" className="spotlight-section"><div className="section-heading"><div><p className="eyebrow">ENTERPRISE SECURITY ARCHITECTURE</p><h2>架構長文</h2></div></div><p>架構研究與 AI、產品安全共用同一份清單；本週的架構類讀物是〈{currentArchitectureReading.title}〉。</p><button className="secondary-button" onClick={(event) => openReading(currentArchitectureReading!, event.currentTarget)}>閱讀架構評述 →</button></section>
+        <section id="spotlight" className="spotlight-section"><div className="section-heading"><div><p className="eyebrow">ENTERPRISE SECURITY ARCHITECTURE</p><h2>架構長文</h2></div></div><p>架構研究與 AI、產品安全共用同一份清單；本週的架構類讀物是〈{currentArchitectureReading.title}〉。</p><OpenReadingButton id={currentArchitectureReading.id} className="secondary-button">閱讀架構評述 →</OpenReadingButton></section>
       )}
 
       <section className="report-integration" id="report-integration">
@@ -263,15 +152,11 @@ export default function Home() {
           <h2>本週閱讀進度</h2>
           <p>進度只儲存在目前瀏覽器，不會傳送到外部服務。</p>
         </div>
-        <div className="progress-console">
-          <div className="progress-value"><b>{progress}%</b><span>{currentCompleted.length} / {currentReadings.length} 已完成</span></div>
-          <div className="progress-track"><i style={{ width: `${progress}%` }} /></div>
-          <div className="progress-labels"><span>0%</span><span>閱讀目標</span><span>100%</span></div>
-        </div>
+        <ProgressConsole goalLabel="閱讀目標" />
         <div className="next-actions">
           <h3>建議下一步</h3>
           {/* 已撤稿的項目仍保留在清單中供追溯，但不再作為行動依據。 */}
-          <ol>{[...currentReadings].filter((reading) => !isRetracted(reading)).sort((a, b) => a.rank - b.rank).slice(0, 5).map((reading, index) => <li key={reading.id}><b>{String(index + 1).padStart(2, "0")}</b><span>{reading.action}</span></li>)}</ol>
+          <ol>{nextActions.map((reading, index) => <li key={reading.id}><b>{String(index + 1).padStart(2, "0")}</b><span>{reading.action}<small className="next-action-source">出自〈{reading.title}〉</small></span></li>)}</ol>
         </div>
       </section>
 
@@ -290,8 +175,8 @@ export default function Home() {
           <div className="rubric-heading"><div><Mark>公開評鑑 Rubric</Mark><h3>三軸判定與排序規則</h3></div><p>{editorialMethod.decisionRule}</p></div>
           <p className="score-scale">{editorialMethod.scoreScale}</p>
           <div className="rubric-table" role="table" aria-label="深入審閱與選讀判定準則">
-            <div className="rubric-row rubric-head" role="row"><span>評鑑軸</span><span>權重</span><span>深入審閱</span><span>選讀</span></div>
-            {editorialMethod.rubric.map((item) => <div className="rubric-row" role="row" key={item.axis}><b>{item.axis}</b><strong>{item.weight}</strong><p>{item.deep}</p><p>{item.selective}</p></div>)}
+            <div className="rubric-row rubric-head" role="row"><span role="columnheader">評鑑軸</span><span role="columnheader">權重</span><span role="columnheader">深入審閱</span><span role="columnheader">選讀</span></div>
+            {editorialMethod.rubric.map((item) => <div className="rubric-row" role="row" key={item.axis}><b role="rowheader">{item.axis}</b><strong role="cell">{item.weight}</strong><p role="cell">{item.deep}</p><p role="cell">{item.selective}</p></div>)}
           </div>
           <div className="ranking-rule"><b>排名邏輯</b><p>{editorialMethod.rankingRule}</p></div>
           <div className="ranking-rule"><b>更正與撤稿</b><p>{editorialMethod.correctionRule}</p></div>
@@ -321,23 +206,13 @@ export default function Home() {
         <div className="method-note"><Mark>判讀提醒</Mark> Preprint 的攻擊成功率尚未經獨立重現；廠商遙測僅代表其可見範圍，不能直接外推整體產業。</div>
       </section>
 
+      </main>
+      </ReadingRoom>
       <footer>
         <div className="brand footer-brand"><span className="brand-mark">研</span><span><strong>科技・資安・架構週讀</strong><small>RESEARCH · SECURITY · ARCHITECTURE</small></span></div>
         <p>本週更新：{CURRENT_WEEK} · 正體中文／臺灣慣用語</p>
         <a href={sitePath("/archive/")} >歷史資料庫 →</a>
       </footer>
-
-      {selected && (
-        <ReadingDialog
-          reading={selected}
-          titleId="detail-title"
-          context={selected.batch}
-          scoreNote={editorialMethod.decisionRule}
-          isDone={completed.includes(selected.id)}
-          onToggleComplete={() => toggleComplete(selected.id)}
-          onClose={closeReading}
-        />
-      )}
-    </main>
+    </div>
   );
 }

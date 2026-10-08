@@ -49,6 +49,21 @@ test("reading ids are unique and required fields are complete", () => {
   }
 });
 
+// CURRENT_WEEK, report file names and the week URLs all sort and slice these strings,
+// so a malformed week would silently pick the wrong current issue.
+test("weeks are Fridays written YYYY.MM.DD and dates match dateValue", () => {
+  assert.ok(readings.length > 0, "readings 不可為空：首頁、feed 與報告都假設至少有一期");
+  for (const reading of readings) {
+    assert.match(reading.week, /^\d{4}\.\d{2}\.\d{2}$/, `#${reading.id}：week「${reading.week}」必須是 YYYY.MM.DD。${RULES}`);
+    const friday = new Date(`${reading.week.replaceAll(".", "-")}T00:00:00Z`);
+    assert.equal(friday.getUTCDay(), 5, `#${reading.id}：week「${reading.week}」必須是該週週五的日期，不是執行日期。${RULES}`);
+    assert.match(reading.dateValue, /^\d{4}-\d{2}-\d{2}$/, `#${reading.id}：dateValue「${reading.dateValue}」必須是 YYYY-MM-DD。`);
+    assert.ok(!Number.isNaN(Date.parse(`${reading.dateValue}T00:00:00Z`)), `#${reading.id}：dateValue「${reading.dateValue}」不是有效日期。`);
+    // date may append a version label, e.g. "2026.09.29 · v1".
+    assert.ok(reading.date.startsWith(reading.dateValue.replaceAll("-", ".")), `#${reading.id}：date「${reading.date}」必須以 dateValue 的同一天開頭。`);
+  }
+});
+
 test("ranks are unique and contiguous within every week", () => {
   for (const week of new Set(readings.map((reading) => reading.week))) {
     const ranks = readings.filter((reading) => reading.week === week).map((reading) => reading.rank).sort((a, b) => a - b);

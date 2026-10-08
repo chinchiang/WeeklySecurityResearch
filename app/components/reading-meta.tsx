@@ -1,12 +1,10 @@
-"use client";
-
 import {
   DEEP_REVIEW_THRESHOLD,
   editorialMethod,
   isRetracted,
   weightedScore,
-  type Reading,
-} from "../data/readings";
+} from "../data/rubric";
+import type { Reading } from "../data/readings";
 
 /** 公開每一筆的三軸分數與加權總分，讓判定可逐項覆核。 */
 export function ScoreBreakdown({ reading }: { reading: Reading }) {
