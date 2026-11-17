@@ -19,7 +19,7 @@
     "build:report": "node --experimental-strip-types scripts/build-report.mjs"
   },
   "dependencies": {
-    "next": "16.4.3",
+    "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
